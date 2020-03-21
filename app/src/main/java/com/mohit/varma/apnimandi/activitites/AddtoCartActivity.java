@@ -32,12 +32,6 @@ public class AddtoCartActivity extends AppCompatActivity {
         mToolbar_setting_for_home(toolbar);
 
         items = new SQLiteDataBaseConnect(this).getitemarraylist();
-        //for debugging purpose and may be remove in future
-        for(Item item : items){
-            Log.d("Actual->", "onCreate: "+item.getActual_price());
-            Log.d("incre_decrement->", "onCreate: "+item.getIncre_decre_price());
-            Log.d("final->", "onCreate: "+item.getFinal_price());
-        }
 
         addToCardAdapter = new AddToCardAdapter(this,items);
         recyclerView = findViewById(R.id.addtocardRecyclerView);
