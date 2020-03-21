@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/cart"
+        app:showAsAction="ifRoom"
+        android:title="Cart"></item>
+
+    <item android:id="@+id/setting"
+        android:title="@string/setting"></item>
+
+    <item android:id="@+id/language"
+        android:title="@string/choose_language"></item>
+
+    <item android:id="@+id/about_footbite"
+        android:title="@string/about_footbite"></item>
+
+    <item android:id="@+id/exit"
+        android:title="@string/exit"></item>
+
+</menu>

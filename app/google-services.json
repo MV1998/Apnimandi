@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "941859162585",
+    "firebase_url": "https://apnimandi-c7058.firebaseio.com",
+    "project_id": "apnimandi-c7058",
+    "storage_bucket": "apnimandi-c7058.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941859162585:android:ceb0545fd8a88e72adb1c8",
+        "android_client_info": {
+          "package_name": "com.mohit.varma.apnimandi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941859162585-vjtacpfl52kfhs7hfhq1aopcbl70ck7m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohit.varma.apnimandi",
+            "certificate_hash": "3e4577277ec5a42ba2ef81a2905e94d5982c31bc"
+          }
+        },
+        {
+          "client_id": "941859162585-89s2le8n575hso7obk0pj59rc84t4637.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsUaa_YIBV4jiZr9-UKhGpq2V3MYuFyUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941859162585-89s2le8n575hso7obk0pj59rc84t4637.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:padding="5dp"
+    android:background="#3649ab">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/minusprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"></Button>
+
+        <TextView
+            android:id="@+id/incrementbyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textColor="#fff"
+            android:textSize="18sp"></TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:textStyle="bold"
+            android:textColor="#fff"
+            android:textSize="18sp"></TextView>
+
+        <TextView
+            android:textColor="#fff"
+            android:id="@+id/actualprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textSize="18sp"></TextView>
+
+        <TextView
+            android:textColor="#fff"
+            android:id="@+id/finalprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="= Rs. 20"
+            android:textSize="18sp"></TextView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/plusprice"
+            android:text="+"></Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:src="@drawable/third"
+            android:id="@+id/imagetoBefilled"></ImageView>
+
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/databasefoodname"
+                android:text="mohit"></TextView>
+
+            <TextView
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/databasefoodprice"
+                android:text="mohit"></TextView>
+
+            <TextView
+                android:id="@+id/cutoffprice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:textSize="12sp"
+                android:text="cutofprice"></TextView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/deletefromDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="delete"></Button>
+
+    </LinearLayout>
+
+
+<!--    -->
+<!--    <TextView-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:id="@+id/percentOff"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:text="20% off"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:layout_height="wrap_content"></TextView>-->
+
+<!--    <ImageView-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_below="@id/percentOff"-->
+<!--        android:id="@+id/imageOffruits"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:src="@drawable/fruitsforcategory"></ImageView>-->
+
+
+<!--    <TextView-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_below="@id/imageOffruits"-->
+<!--        android:id="@+id/itemName"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Pateto tea"></TextView>-->
+
+<!--    <TextView-->
+<!--        android:layout_marginLeft="10dp"-->
+<!--        android:layout_below="@id/itemName"-->
+<!--        android:id="@+id/priceofitem"-->
+<!--        android:textColor="#FFFFFF"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="12sp"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="250g - Rs.100 "></TextView>-->
+
+
+</RelativeLayout>

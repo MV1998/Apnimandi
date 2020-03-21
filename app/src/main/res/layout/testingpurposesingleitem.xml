@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:id="@+id/homeViewPager"></androidx.viewpager.widget.ViewPager>
+    <TextView
+        android:layout_below="@id/homeViewPager"
+        android:layout_width="match_parent"
+        android:text="Most Popular"
+        android:textSize="18sp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:padding="5dp"
+        android:id="@+id/mostpopularTextView"
+        android:layout_height="wrap_content"></TextView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:id="@+id/home_sub_recyclerView"
+        android:layout_below="@id/mostpopularTextView"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+</RelativeLayout>

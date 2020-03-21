@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">FoodBite</string>
+
+    <!--Home Fragment TextView-->
+    <string name="hello_blank_fragment">Home Fragment</string>
+
+    <!--strings for Navigation Drawer Toggle initialization-->
+    <string name="navigation_open">Open</string>
+    <string name="navigation_close">Close</string>
+
+    <string name="exception">Important Message</string>
+    <string name="positive_message">OK</string>
+    <string name="skip_button">Skip Login</string>
+    <string name="please_sign_in_text">Please, Sign In</string>
+    <string name="hind_mobile_number">Mobile Number</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="OTP_hint">One Time Password</string>
+    <string name="login_button">Login</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="invalid_mobile_number_msg">Please Enter Number or Invalid Phone Number</string>
+    <string name="wait_msg">Wait</string>
+    <string name="trying_to_getOTP_msg">Try To Get OTP...</string>
+    <string name="logging_msg">Logging...</string>
+    <string name="enter_otp_error_msg">Enter OTP</string>
+    <string name="category">Shop by category</string>
+    <string name="Cart">Cart</string>
+    <string name="previous_order">Previous Order</string>
+    <string name="about_app">About FoodBite</string>
+    <string name="logout">Logout</string>
+    <string name="anonymous_error_msg">Please Try Again Later..</string>
+    <string name="anonymous_welcome_msg">You are logged as Anonymous.</string>
+    <string name="refund_terms_policies"><![CDATA[Refund & Terms Policies]]></string>
+    <string name="frequent_asked_question">Frequently Asked Question</string>
+    <string name="setting">Settings</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="about_footbite">About FoodBite</string>
+    <string name="exit">Exit</string>
+    <string name="fruits">Fruits</string>
+    <string name="snacks">Snacks</string>
+    <string name="protein">Protein</string>
+    <string name="backing">Backing</string>
+    <string name="vegetable">Vegetables</string>
+    <string name="how_do_i_register">How do I register?</string>
+    <string name="how_do_i_register_ans">You can register by clicking on the \"Register\" link at the top right corner of the homepage. Please provide the information in the form that appears. You can review the terms and conditions, provide your payment mode details and submit the registration information.</string>
+    <string name="Are_there_any_charges_for_registration">Are there any charges for registration?</string>
+    <string name="Are_there_any_charges_for_registration_ans">No. Registration on bigbasket.com is absolutely free.</string>
+    <string name="do_i_have_to_necesarilly">Do I have to necessarily register to shop on bigbasket?</string>
+    <string name="do_i_have_to_necesarilly_ans">You can surf and add products to the cart without registration but only registered shoppers will be able to checkout and place orders. Registered members have to be logged in at the time of checking out the cart, they will be prompted to do so if they are not logged in.</string>
+    <string name="can_i_add_more_delivery_address">Can I add more than one delivery address in an account?</string>
+    <string name="can_i_add_more_delivery_address_ans">Yes, you can add multiple delivery addresses in your bigbasket account. However, remember that all items placed in a single order can only be delivered to one address. If you want different products delivered to different address you need to place them as separate orders.</string>
+    <string name="can_i_have_multiple_accounts">Can I have multiple registrations?</string>
+    <string name="can_i_have_multiple_accounts_ans">Each email address and contact phone number can only be associated with one bigbasket account.</string>
+    <string name="account_related">Account Related</string>
+    <string name="registration">Registration</string>
+    <string name="what_is_my_account">What is My Account?</string>
+    <string name="what_is_my_account_ans">My Account is the section you reach after you log in at bigbasket.com. My Account allows you to track your active orders, credit note details as well as see your order history and update your contact details.</string>
+    <string name="what_are_credit_notes"><![CDATA[What are credit notes & where can I see my credit notes?]]></string>
+    <string name="what_are_credit_notes_ans">Credit notes reflect the amount of money which you have pending in your bigbasket account to use against future purchases. This is calculated by deducting your total order value minus undelivered value. You can see this in \"My Account\" under credit note details.</string>
+    <string name="what_is_shopping_list">What is My Shopping List?</string>
+    <string name="what_is_shopping_list_ans">My Shopping List is a comprehensive list of all the items previously ordered by you on bigbasket.com. This enables you to shop quickly and easily in future.</string>
+
+    <integer name="splash_timeout">2000</integer>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/Category"
+        android:title="@string/category"
+        android:icon="@drawable/category"></item>
+
+    <item android:id="@+id/previous_order"
+        android:title="@string/previous_order"
+        android:icon="@drawable/previousicon"></item>
+
+    <item android:id="@+id/refund_terms_policy"
+        android:title="@string/refund_terms_policies"
+        android:icon="@drawable/return_image"></item>
+
+    <item android:id="@+id/frequent_asked_question"
+        android:title="@string/frequent_asked_question"
+        android:icon="@drawable/frequently_asked_q"></item>
+
+    <item android:id="@+id/logout"
+        android:title="@string/logout"
+        android:icon="@drawable/logout_primary_color_24dp"></item>
+
+</menu>
