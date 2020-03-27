@@ -5,8 +5,14 @@
         android:title="@string/category"
         android:icon="@drawable/category"></item>
 
+    <item android:id="@+id/cart"
+        android:visible="false"
+        android:title="@string/Cart"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"></item>
+
     <item android:id="@+id/previous_order"
         android:title="@string/previous_order"
+        android:visible="false"
         android:icon="@drawable/previousicon"></item>
 
     <item android:id="@+id/refund_terms_policy"
@@ -19,6 +25,7 @@
 
     <item android:id="@+id/logout"
         android:title="@string/logout"
+        android:visible="false"
         android:icon="@drawable/logout_primary_color_24dp"></item>
 
 </menu>

@@ -1,6 +1,7 @@
 package com.mohit.varma.apnimandi.activitites;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
@@ -34,46 +35,39 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.callback.AppNetworkCallBack;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
 import com.mohit.varma.apnimandi.utilites.Constants;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
 import java.util.concurrent.TimeUnit;
 
 public class RegistrationActivity extends AppCompatActivity implements NetworkChangedCallBack {
-
-
     public static final String TAG = RegistrationActivity.class.getCanonicalName();
 
     private TextInputEditText editText_user_mobile_number, editText_otp;
     private TextInputLayout for_number, for_otp;
     private MaterialButton send_otp_btn, app_login_btn, mSkipButton;
     private Intent intent;
-
     private String mVerificationId;
-
     private PhoneAuthProvider.ForceResendingToken mResendToken;
-
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
-
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-
     private ConnectivityManager connectivityManager;
     private AppNetworkCallBack appNetworkCallBack;
     private NetworkRequest networkRequestCellular;
-
     private MaterialButton materialButton;
-
     private View view;
     private ProgressDialog progressDialog;
-
     private InputMethodManager inputMethodManager;
-
     private boolean mNetworkState;
+    private Context context;
 
     /**
      * @param savedInstanceState
@@ -85,7 +79,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-
+        this.context = this;
         editText_user_mobile_number = findViewById(R.id.editext_to_put_user_mobile_number);
         editText_otp = findViewById(R.id.editext_to_put_otp);
 
@@ -95,10 +89,9 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
         for_number = findViewById(R.id.numberID);
         for_otp = findViewById(R.id.OTP_ID);
 
-        view = findViewById(R.id.register_context);
+        view = (View) findViewById(R.id.register_context);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
+        firebaseAuth = MyApplication.getFirebaseAuth();
 
         materialButton = findViewById(R.id.skip_button);
 
@@ -182,7 +175,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
                         mShowHideonSendOTPButton();
                         stringBuilder.append(Constants.MOBILE_COUNTRY_PREFIX);
                         stringBuilder.append(mobile_number);
-                        sendverificationcode(stringBuilder.toString());
+                        sendVerificationCode(stringBuilder.toString());
                         Log.d("Phone Number", "" + stringBuilder.toString());
                         progressDialog.show();
                     }
@@ -196,9 +189,13 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
         materialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                intent = new Intent(RegistrationActivity.this, FootBiteActivity.class);
-                startActivity(intent);
-                finish();
+                if (IsInternetConnectivity.isConnected(context)) {
+                    intent = new Intent(RegistrationActivity.this, FootBiteActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    ShowSnackBar.snackBar(context, view, context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
             }
         });
 
@@ -212,28 +209,26 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
                     progressDialog.setMessage(setString(R.string.logging_msg));
                     progressDialog.show();
                     progressDialog.setCancelable(false);
-                    verifyverificationcode(code);
+                    verifyVerificationCode(code);
                 } else {
                     editText_otp.setError(setString(R.string.enter_otp_error_msg));
                 }
 
             }
         });
-
-
     }
 
     /**
      * @param mPhoneNumber
      */
-    public void sendverificationcode(String mPhoneNumber) {
+    public void sendVerificationCode(String mPhoneNumber) {
         PhoneAuthProvider.getInstance(firebaseAuth).verifyPhoneNumber(mPhoneNumber, 60, TimeUnit.SECONDS, this, mCallbacks);
     }
 
     /**
      * @param otp
      */
-    public void verifyverificationcode(String otp) {
+    public void verifyVerificationCode(String otp) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
         signInWithPhoneAuthCredential(credential);
     }
@@ -250,7 +245,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("PhoneAuthActivity", "signInWithCredential:success");
-                            check_if_user_was_already_registered("+91" + editText_user_mobile_number.getText().toString());
+                            checkIfUserAlreadyRegisteredToApp("+91" + editText_user_mobile_number.getText().toString());
                             progressDialog.dismiss();
                             Intent intent = new Intent(RegistrationActivity.this, FootBiteActivity.class);
                             startActivity(intent);
@@ -270,7 +265,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
      * @param phone_number
      */
 
-    public void check_if_user_was_already_registered(String phone_number) {
+    public void checkIfUserAlreadyRegisteredToApp(String phone_number) {
         databaseReference.child("Users").orderByChild("phone_number").equalTo(phone_number).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -340,7 +335,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
     @Override
     protected void onStart() {
         super.onStart();
-        connectivityManager.registerNetworkCallback(networkRequestCellular,appNetworkCallBack);
+        connectivityManager.registerNetworkCallback(networkRequestCellular, appNetworkCallBack);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

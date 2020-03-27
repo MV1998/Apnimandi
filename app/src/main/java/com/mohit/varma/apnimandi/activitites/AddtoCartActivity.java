@@ -1,8 +1,9 @@
 package com.mohit.varma.apnimandi.activitites;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Filter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,7 +34,7 @@ public class AddtoCartActivity extends AppCompatActivity {
 
         items = new SQLiteDataBaseConnect(this).getitemarraylist();
 
-        addToCardAdapter = new AddToCardAdapter(this,items);
+        addToCardAdapter = new AddToCardAdapter(this, items);
         recyclerView = findViewById(R.id.addtocardRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -48,4 +49,6 @@ public class AddtoCartActivity extends AppCompatActivity {
         toolbar.setTitle("Cart");
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
     }
+
+
 }

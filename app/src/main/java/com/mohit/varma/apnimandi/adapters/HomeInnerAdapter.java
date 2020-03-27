@@ -24,19 +24,19 @@ import com.google.firebase.storage.StorageReference;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.database.SQLiteDataBaseConnect;
 import com.mohit.varma.apnimandi.model.Item;
+import com.mohit.varma.apnimandi.model.UItem;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.CustomViewHolder> {
 
     private Context context;
-    private ArrayList<Item> arrayList;
-    private ArrayList<Item> selectedItems;
-    private Bitmap bitmap;
+    private List<UItem> uItemList;
 
-    public HomeInnerAdapter(Context context, ArrayList<Item> arrayList) {
+    public HomeInnerAdapter(Context context, List<UItem> uItemList) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.uItemList = uItemList;
     }
 
     @NonNull
@@ -52,45 +52,30 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
-        Item item = arrayList.get(position);
-        holder.percentoff.setText(item.getPercentOff());
-        holder.nameoffood.setText(item.getItemName());
-        holder.priceoffood.setText(item.getItemPrice());
+        UItem item = uItemList.get(position);
+        holder.percentoff.setText(item.getmItemCutOffPrice()+"");
+        holder.nameoffood.setText(item.getmItemName()+"");
+        holder.priceoffood.setText(item.getmItemPrice()+"");
 
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference reference = firebaseStorage.getReferenceFromUrl("gs://apnimandi-c7058.appspot.com/image/mohit.jpg");
-        final long ONE_MEGABYTE = 1024 * 1024;
-        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
-
-        Glide.with(context).load(R.drawable.first)
-                .apply(new RequestOptions().circleCrop()).transition(new DrawableTransitionOptions().crossFade()).into(holder.imageView);
+        if(uItemList != null && uItemList.size()>0){
+            setImageToGlide(uItemList.get(position).getmItemImage(),holder.imageView);
+        }
 
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (new SQLiteDataBaseConnect(context).AdditemtoDatabase(arrayList.get(position))) {
+                /*if (new SQLiteDataBaseConnect(context).AdditemtoDatabase(uItemList.get(position))) {
                     Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, "Not saved", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return uItemList.size();
     }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -109,6 +94,13 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
             button = itemView.findViewById(R.id.buttontoadd);
 
         }
+    }
+
+    public void setImageToGlide(String image_url, ImageView imageView) {
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.market)
+                .error(R.drawable.market);
+        Glide.with(context).load(image_url).apply(options).apply(RequestOptions.centerInsideTransform()).into(imageView);
     }
 
 }

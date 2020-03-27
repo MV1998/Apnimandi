@@ -1,12 +1,12 @@
 package com.mohit.varma.apnimandi.model;
 
 import android.graphics.Bitmap;
-import android.os.Parcel;
 
 public class Item {
 
     private String percentOff;
     private int imageResourceId;
+    private Bitmap imageBitmap;
     private String itemName;
     private String itemPrice;
     private Bitmap bitmap;
@@ -19,6 +19,16 @@ public class Item {
     public Item(String percentOff, int imageResourceId, String itemName, String itemPrice, int actual_price, int incre_decre_price, int final_price) {
         this.percentOff = percentOff;
         this.imageResourceId = imageResourceId;
+        this.itemName = itemName;
+        this.itemPrice = itemPrice;
+        this.actual_price = actual_price;
+        this.incre_decre_price = incre_decre_price;
+        this.final_price = final_price;
+    }
+
+    public Item(String percentOff, Bitmap imageBitmap, String itemName, String itemPrice, int actual_price, int incre_decre_price, int final_price) {
+        this.percentOff = percentOff;
+        this.imageBitmap = imageBitmap;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.actual_price = actual_price;
@@ -53,19 +63,11 @@ public class Item {
         this.final_price = final_price;
     }
 
-    protected Item(Parcel in) {
-        percentOff = in.readString();
-        imageResourceId = in.readInt();
-        itemName = in.readString();
-        itemPrice = in.readString();
-    }
-
-
     public Bitmap getBitmap() {
         return bitmap;
     }
 
-    public String getPercentOff() {
+    public String getItemCutOffPrice() {
         return percentOff;
     }
 

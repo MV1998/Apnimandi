@@ -58,6 +58,10 @@
     <string name="what_are_credit_notes_ans">Credit notes reflect the amount of money which you have pending in your bigbasket account to use against future purchases. This is calculated by deducting your total order value minus undelivered value. You can see this in \"My Account\" under credit note details.</string>
     <string name="what_is_shopping_list">What is My Shopping List?</string>
     <string name="what_is_shopping_list_ans">My Shopping List is a comprehensive list of all the items previously ordered by you on bigbasket.com. This enables you to shop quickly and easily in future.</string>
+    <string name="No_item_added_yet">No Item Added Yet</string>
+    <string name="snackbar_ok_message">OK</string>
+    <string name="please_check_internet_connectivity">Please check your internet connectivity</string>
+    <string name="anonymous">Anonymous User</string>
 
-    <integer name="splash_timeout">2000</integer>
+    <integer name="splash_timeout">3000</integer>
 </resources>

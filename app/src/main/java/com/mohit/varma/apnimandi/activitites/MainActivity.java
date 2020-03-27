@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,17 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mohit.varma.apnimandi.R;
 
-import java.util.function.Function;
-
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "FUNCTION-INTERFACE->";
+    public static final String TAG = MainActivity.class.getSimpleName();
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     private FirebaseAuth firebaseAuth;
-    private Handler handler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        handler = new Handler();
+        Handler handler = new Handler();
         firebaseAuth = FirebaseAuth.getInstance();
-        splashrunner(handler, MainActivity.this);
+        splashRunner(handler, MainActivity.this);
 
 //        if(sharedPreferences.getBoolean("firsttime",true)){
 //            handler.postDelayed(new Runnable() {
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
     }
 
-    public void splashrunner(Handler handler, final Context context) {
+    public void splashRunner(Handler handler, final Context context) {
         handler.postDelayed(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -92,6 +86,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
-
 }

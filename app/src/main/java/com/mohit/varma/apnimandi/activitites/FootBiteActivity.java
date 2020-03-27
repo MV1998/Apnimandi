@@ -26,8 +26,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.fragments.CategoryFragment;
 import com.mohit.varma.apnimandi.fragments.FrequentlyAskedQuestionFragment;
@@ -36,7 +38,8 @@ import com.mohit.varma.apnimandi.fragments.PreviousOrderFragment;
 import com.mohit.varma.apnimandi.fragments.RefundTermsPolicyFragment;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
 import com.mohit.varma.apnimandi.utilites.Constants;
-import com.mohit.varma.apnimandi.utilites.Dialog;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
 import java.text.DateFormat;
@@ -51,7 +54,7 @@ public class FootBiteActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private View mHeaderView;
+    private View mHeaderView, rootView;
     private TextView mCustomerName;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -63,12 +66,12 @@ public class FootBiteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        set_homeFragmentatStart();
+        setHomeFragmentAtStarting();
         setContentView(R.layout.activity_foot_bite);
 
         //initialization of views and instance variables
         context = this;
-        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth = MyApplication.getFirebaseAuth();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReferenceFromUrl(Webservice.FIREBASE_ROOT_REFERENCE);
         toolbar = findViewById(R.id.toolbarCustom);
@@ -76,32 +79,43 @@ public class FootBiteActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         mHeaderView = navigationView.getHeaderView(0);
         mCustomerName = mHeaderView.findViewById(R.id.customer_header_name);
-        //end initializing process
-
-        if (firebaseAuth.getCurrentUser() != null) {
-            if(!firebaseAuth.getCurrentUser().isAnonymous()){
-                databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("States").setValue("Running " + DateFormat.getDateInstance().getCalendar().getTime().toString());
-                Toast.makeText(this, "Hello" + firebaseAuth.getCurrentUser().getPhoneNumber(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            firebaseAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    Toast.makeText(FootBiteActivity.this,Constants.getStringFromID(context,R.string.anonymous_welcome_msg), Toast.LENGTH_SHORT).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Dialog.createDialog(context,Constants.getStringFromID(context,R.string.anonymous_error_msg));
-                }
-            });
-        }
+        rootView = (View) findViewById(R.id.drawerLayout);
 
         //method required to set initial toolbar state
-        mToolbar_setting_for_home(toolbar);
+        mToolbarSettingForHome(toolbar);
 
         //method required to initiate toggle and attach it to drawer
         mSetToggleToDrawerLayout();
+
+
+        if (firebaseAuth != null) {
+            if (firebaseAuth.getCurrentUser() != null) {
+                if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                    showAddToCartAndPreviousSection(navigationView.getMenu());
+                    databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("States").setValue("Running " + DateFormat.getDateInstance().getCalendar().getTime().toString());
+                    Toast.makeText(this, "Hello" + firebaseAuth.getCurrentUser().getPhoneNumber(), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(FootBiteActivity.this, Constants.getStringFromID(context, R.string.anonymous_welcome_msg), Toast.LENGTH_SHORT).show();
+                    mCustomerName.setText(context.getResources().getString(R.string.anonymous));
+                }
+            } else {
+                firebaseAuth.signInAnonymously().addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                        if (firebaseUser.isAnonymous()) {
+                            Toast.makeText(FootBiteActivity.this, Constants.getStringFromID(context, R.string.anonymous_welcome_msg), Toast.LENGTH_SHORT).show();
+                            mCustomerName.setText(context.getResources().getString(R.string.anonymous));
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(FootBiteActivity.this, "not signed in anonymously", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
 
         //navigation drawer option item select listener
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -109,9 +123,21 @@ public class FootBiteActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.Category:
-                        drawerLayout.closeDrawers();
-                        fragment = new CategoryFragment();
-                        setFragment(fragment);
+                        if (IsInternetConnectivity.isConnected(context)) {
+                            drawerLayout.closeDrawers();
+                            fragment = new CategoryFragment();
+                            setFragment(fragment);
+                        } else {
+                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                        }
+                        break;
+                    case R.id.cart:
+                        if (IsInternetConnectivity.isConnected(context)) {
+                            Intent intent = new Intent(FootBiteActivity.this, AddtoCartActivity.class);
+                            startActivity(intent);
+                        } else {
+                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                        }
                         break;
                     case R.id.previous_order:
                         drawerLayout.closeDrawers();
@@ -130,9 +156,12 @@ public class FootBiteActivity extends AppCompatActivity {
                         break;
                     case R.id.logout:
                         drawerLayout.closeDrawers();
-                        if(firebaseAuth.getCurrentUser() != null){
-                            if (firebaseAuth.getCurrentUser().isAnonymous()) {
-                                Toast.makeText(FootBiteActivity.this, "You are Currently a Anonymous User,Please Exit.", Toast.LENGTH_SHORT).show();
+                        if (firebaseAuth.getCurrentUser() != null) {
+                            if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                                firebaseAuth.signOut();
+                                Intent intent = new Intent(context, RegistrationActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }
                         break;
@@ -158,10 +187,6 @@ public class FootBiteActivity extends AppCompatActivity {
         }
 
         switch (item.getItemId()) {
-            case R.id.cart:
-                Intent intent = new Intent(FootBiteActivity.this, AddtoCartActivity.class);
-                startActivity(intent);
-                break;
             case R.id.setting:
                 break;
             case R.id.language:
@@ -175,7 +200,7 @@ public class FootBiteActivity extends AppCompatActivity {
         return false;
     }
 
-    public void mToolbar_setting_for_home(Toolbar toolbar) {
+    public void mToolbarSettingForHome(Toolbar toolbar) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -201,7 +226,7 @@ public class FootBiteActivity extends AppCompatActivity {
         }
     }
 
-    public void set_homeFragmentatStart() {
+    public void setHomeFragmentAtStarting() {
         Fragment fragment = null;
         fragment = new HomeFragment();
         if (fragment != null) {
@@ -210,5 +235,19 @@ public class FootBiteActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.Container, fragment, "HOME_FRAGMENT");
             fragmentTransaction.commit();
         }
+    }
+
+    public void showAddToCartAndPreviousSection(Menu menu) {
+        if (menu != null) {
+            menu.findItem(R.id.cart).setVisible(true);
+            menu.findItem(R.id.previous_order).setVisible(true);
+            menu.findItem(R.id.logout).setVisible(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 }

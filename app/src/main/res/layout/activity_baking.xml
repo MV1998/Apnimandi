@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitites.BakingActivity">
+    tools:context=".activitites.BakingActivity"
+    android:id="@+id/BakingActivityRootView">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/BakingActivityToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/vegetable"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        style="?actionBarSize"
+        android:background="@color/colorPrimary"></androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/BakingActivityToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/BakingActivityRecyclerView"></androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/BakingActivityNoItemAddedYetTextView"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/No_item_added_yet"
+        android:textSize="@dimen/_18sdp"
+        android:textColor="@color/black"></TextView>
+
+</RelativeLayout>

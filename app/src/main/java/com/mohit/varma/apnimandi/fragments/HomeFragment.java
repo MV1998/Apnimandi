@@ -1,11 +1,14 @@
 package com.mohit.varma.apnimandi.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,18 +17,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.FootBiteActivity;
 import com.mohit.varma.apnimandi.adapters.HomeInnerAdapter;
 import com.mohit.varma.apnimandi.adapters.HomeAdapter;
+import com.mohit.varma.apnimandi.adapters.ItemAdapter;
+import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
 import com.mohit.varma.apnimandi.model.Item;
+import com.mohit.varma.apnimandi.model.UItem;
+import com.mohit.varma.apnimandi.utilites.Constants;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import static com.mohit.varma.apnimandi.utilites.Constants.ITEMS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,9 +49,15 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
 
     public static final String TAG = HomeFragment.class.getSimpleName();
 
-    private ImageView imageView;
-    private RecyclerView recyclerView;
-    private ArrayList<Item> arrayList;
+    private RecyclerView HomeFragmentRecyclerView;
+    private TextView FruitsActivityNoItemAddedYetTextView;
+    private Context context;
+    private DatabaseReference firebaseDatabase;
+    private String category;
+    private List<UItem> uItemList = new LinkedList<>();
+    private HomeInnerAdapter homeInnerAdapter;
+    private ProgressDialog progressDialog;
+    private List<String> list;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -47,52 +68,62 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        initViewsAndInstances(view);
+        showProgressDialog();
         setHasOptionsMenu(true);
-        recyclerView = view.findViewById(R.id.home_recyclerView);
 
-//        imageView = (ImageView) view.findViewById(R.id.imageView);
-//
-//        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-//        StorageReference reference = firebaseStorage.getReferenceFromUrl("gs://apnimandi-c7058.appspot.com/image/mohit.jpg");
-//        final long ONE_MEGABYTE = 1024 * 1024;
-//        reference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                // Data for "images/island.jpg" is returns, use this as needed
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-//                Glide.with(getActivity()).load(bitmap)
-//                        .apply(new RequestOptions().circleCrop()).transition(new DrawableTransitionOptions().crossFade()).into(imageView);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle any errors
-//            }
-//        });
+        list = new LinkedList<>();
 
-        arrayList = new ArrayList<>();
+        list.add("Most Popular" + "");
 
-        arrayList.add(new Item("30% off", R.drawable.first, "Pateto", "250g - 100", 200, 1, 200));
-        arrayList.add(new Item("40% off", R.drawable.second, "Onion", "250g - 100", 400, 1, 400));
-        arrayList.add(new Item("50% off", R.drawable.third, "Coriender", "250g - 100", 300, 1, 300));
-        arrayList.add(new Item("10% off", R.drawable.first, "Simple", "250g - 100", 500, 1, 500));
-        arrayList.add(new Item("50% off", R.drawable.third, "Zinger", "250g - 100", 600, 1, 600));
-        arrayList.add(new Item("20% off", R.drawable.first, "Alexder", "250g - 100", 700, 1, 700));
-        arrayList.add(new Item("70% off", R.drawable.first, "Ateder", "250g - 100", 200, 1, 200));
-
-        HomeInnerAdapter homeInnerAdapter = new HomeInnerAdapter(getActivity(), arrayList);
-
-        List<String> list = new LinkedList<>();
-
-        list.add("Most Popular" +
-                "");
-
-        HomeAdapter homeAdapter = new HomeAdapter(list,getActivity(), homeInnerAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(homeAdapter);
         Toast.makeText(getActivity(), "oncreateview", Toast.LENGTH_SHORT).show();
+
+        firebaseDatabase.child(ITEMS).child(Constants.MOST_POPULAR).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    uItemList.clear();
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        for (DataSnapshot Items : dataSnapshot.getChildren()) {
+                            UItem uItem = Items.getValue(UItem.class);
+                            uItemList.add(uItem);
+                        }
+                        Log.d(TAG, "onDataChange: " + new Gson().toJson(uItemList));
+                        dismissProgressDialog();
+                        if (uItemList != null && uItemList.size() > 0) {
+                            if (homeInnerAdapter != null) {
+                                dismissProgressDialog();
+                                HomeFragmentRecyclerView.setVisibility(View.VISIBLE);
+                                homeInnerAdapter.notifyDataSetChanged();
+                            } else {
+                                dismissProgressDialog();
+                                HomeFragmentRecyclerView.setVisibility(View.VISIBLE);
+                                setAdapter();
+                            }
+                        }
+                    } else {
+                        HomeFragmentRecyclerView.setVisibility(View.GONE);
+                        dismissProgressDialog();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return view;
+    }
+
+    public void initViewsAndInstances(View view) {
+        HomeFragmentRecyclerView = (RecyclerView) view.findViewById(R.id.HomeFragmentRecyclerView);
+        firebaseDatabase = new MyFirebaseDatabase().getReference();
+        this.context = getActivity();
+        progressDialog = new ProgressDialog(context);
     }
 
     @Override
@@ -153,4 +184,31 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
         Log.d(TAG, "networkState: "+result);
     }
 
+    public void showProgressDialog() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage("Wait...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+    }
+
+    public void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    public void setAdapter() {
+        if (uItemList != null && uItemList.size() > 0) {
+/*            itemFruitAdapter = new ItemAdapter(uItemList, context,category);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(itemFruitAdapter);*/
+            homeInnerAdapter = new HomeInnerAdapter(getActivity(), uItemList);
+            HomeAdapter homeAdapter = new HomeAdapter(list,getActivity(), homeInnerAdapter);
+            HomeFragmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            HomeFragmentRecyclerView.setHasFixedSize(true);
+            HomeFragmentRecyclerView.setAdapter(homeAdapter);
+        }
+    }
 }

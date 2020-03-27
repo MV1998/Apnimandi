@@ -47,7 +47,7 @@ public class AddToCardAdapter extends RecyclerView.Adapter<AddToCardAdapter.AddT
     public void onBindViewHolder(final AddToCartViewHolder holder, final int position) {
 
         final Item item = arrayList.get(position);
-        holder.cutoffprice.setText(item.getPercentOff());
+        holder.cutoffprice.setText(item.getItemCutOffPrice());
         holder.imageView.setImageBitmap(item.getBitmap());
         holder.nameofthefood.setText(item.getItemName());
         holder.priceofthefood.setText(item.getItemPrice());

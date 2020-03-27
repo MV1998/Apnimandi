@@ -2,7 +2,6 @@ package com.mohit.varma.apnimandi.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,10 +18,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.mohit.varma.apnimandi.R;
+import com.mohit.varma.apnimandi.activitites.BakingActivity;
 import com.mohit.varma.apnimandi.activitites.FruitsActivity;
+import com.mohit.varma.apnimandi.activitites.ProteinActivity;
+import com.mohit.varma.apnimandi.activitites.SnacksActivity;
 import com.mohit.varma.apnimandi.activitites.VegetablesActivity;
-
-import java.util.function.Consumer;
+import com.mohit.varma.apnimandi.utilites.Constants;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,8 +33,10 @@ import java.util.function.Consumer;
 
 public class CategoryFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = CategoryFragment.class.getSimpleName();
-    private FrameLayout CategoryFragmentFruitsFrameLayoutId,CategoryFragmentVegetablsFrameLayoutId;
-    private Intent intentFruit,intentVegetable;
+    private FrameLayout CategoryFragmentFruitsFrameLayoutId, CategoryFragmentVegetablsFrameLayoutId,
+            CategoryFragmentSnacksFrameLayoutId, CategoryFragmentProteinFrameLayoutId, CategoryFragmentBakingFrameLayoutId;
+    private Intent intentFruit, intentVegetable, intentSnacks, intentProtein, intentBacking;
+    private View CategoryFragmentRootView;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -54,16 +59,23 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void initViews(View view){
+    public void initViews(View view) {
         CategoryFragmentFruitsFrameLayoutId = (FrameLayout) view.findViewById(R.id.CategoryFragmentFruitsFrameLayoutId);
         CategoryFragmentVegetablsFrameLayoutId = (FrameLayout) view.findViewById(R.id.CategoryFragmentVegetablsFrameLayoutId);
+        CategoryFragmentSnacksFrameLayoutId = (FrameLayout) view.findViewById(R.id.CategoryFragmentSnacksFrameLayoutId);
+        CategoryFragmentProteinFrameLayoutId = (FrameLayout) view.findViewById(R.id.CategoryFragmentProteinFrameLayoutId);
+        CategoryFragmentBakingFrameLayoutId = (FrameLayout) view.findViewById(R.id.CategoryFragmentBakingFrameLayoutId);
+        CategoryFragmentRootView = (View) view.findViewById(R.id.CategoryFragmentRootView);
     }
 
-    public void setOnClickListener(){
+    public void setOnClickListener() {
         CategoryFragmentFruitsFrameLayoutId.setOnClickListener(this);
         CategoryFragmentVegetablsFrameLayoutId.setOnClickListener(this);
-
+        CategoryFragmentSnacksFrameLayoutId.setOnClickListener(this);
+        CategoryFragmentProteinFrameLayoutId.setOnClickListener(this);
+        CategoryFragmentBakingFrameLayoutId.setOnClickListener(this);
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,20 +124,26 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.forcategory,menu);
+        inflater.inflate(R.menu.forcategory, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.homeOptionMenuIDForCategory:
-                Fragment fragment = null;
-                fragment = new HomeFragment();
-                if (fragment != null) {
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.Container,fragment,"HOME_FRAGMENT");
-                    fragmentTransaction.commit();
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        Fragment fragment = null;
+                        fragment = new HomeFragment();
+                        if (fragment != null) {
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.Container, fragment, "HOME_FRAGMENT");
+                            fragmentTransaction.commit();
+                        }
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
                 }
                 break;
         }
@@ -135,23 +153,82 @@ public class CategoryFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        switch (id){
+        switch (id) {
             case R.id.CategoryFragmentFruitsFrameLayoutId:
-                startFruitsActivity();
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        startFruitsActivity();
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }
                 break;
             case R.id.CategoryFragmentVegetablsFrameLayoutId:
-                startVegetablesActivity();
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        startVegetablesActivity();
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }
+                break;
+            case R.id.CategoryFragmentSnacksFrameLayoutId:
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        startSnacksActivity();
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }
+                break;
+            case R.id.CategoryFragmentProteinFrameLayoutId:
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        startProteinActivity();
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }
+                break;
+            case R.id.CategoryFragmentBakingFrameLayoutId:
+                if (getActivity() != null) {
+                    if (IsInternetConnectivity.isConnected(getActivity())) {
+                        startBackingActivity();
+                    } else {
+                        ShowSnackBar.snackBar(getActivity(), CategoryFragmentRootView, getActivity().getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }
                 break;
         }
     }
 
-    public void startFruitsActivity(){
+    public void startFruitsActivity() {
         intentFruit = new Intent(getActivity(), FruitsActivity.class);
+        intentFruit.putExtra(Constants.ITEM_KEY, Constants.FRUIT);
         startActivity(intentFruit);
     }
 
-    public void startVegetablesActivity(){
+    public void startVegetablesActivity() {
         intentVegetable = new Intent(getActivity(), VegetablesActivity.class);
+        intentVegetable.putExtra(Constants.ITEM_KEY, Constants.VEGETABLE);
         startActivity(intentVegetable);
+    }
+
+    public void startSnacksActivity() {
+        intentSnacks = new Intent(getActivity(), SnacksActivity.class);
+        intentSnacks.putExtra(Constants.ITEM_KEY, Constants.SNACKS);
+        startActivity(intentSnacks);
+    }
+
+    public void startProteinActivity() {
+        intentProtein = new Intent(getActivity(), ProteinActivity.class);
+        intentProtein.putExtra(Constants.ITEM_KEY, Constants.PROTEIN);
+        startActivity(intentProtein);
+    }
+
+    public void startBackingActivity() {
+        intentBacking = new Intent(getActivity(), BakingActivity.class);
+        intentBacking.putExtra(Constants.ITEM_KEY, Constants.BACKING);
+        startActivity(intentBacking);
     }
 }

@@ -1,29 +1,47 @@
 package com.mohit.varma.apnimandi.activitites;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.adapters.FruitsAdapter;
-import com.mohit.varma.apnimandi.model.Item;
+import com.mohit.varma.apnimandi.adapters.ItemAdapter;
+import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
+import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.utilites.Constants;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static com.mohit.varma.apnimandi.utilites.Constants.ITEMS;
+import static com.mohit.varma.apnimandi.utilites.Constants.ITEM_KEY;
 
 public class FruitsActivity extends AppCompatActivity {
 
     public static final String TAG = FruitsActivity.class.getCanonicalName();
 
-    private ArrayList<Item> arrayList;
     private Toolbar FruitsActivityToolbar;
     private RecyclerView recyclerView;
+    private TextView FruitsActivityNoItemAddedYetTextView;
     private Context context;
+    private DatabaseReference firebaseDatabase;
+    private String category;
+    private List<UItem> uItemList = new LinkedList<>();
+    private ItemAdapter itemFruitAdapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,34 +49,119 @@ public class FruitsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fruits);
 
         initViewsAndInstances();
+        showProgressDialog();
+
+        if (getIntent().getStringExtra(ITEM_KEY) != null) {
+            if (!getIntent().getStringExtra(ITEM_KEY).isEmpty()) {
+                category = getIntent().getStringExtra(ITEM_KEY);
+            }
+        }
 
         setToolbar();
 
-        arrayList.add(new Item("30% off",R.drawable.first,"Pateto","250g - 100",200,1,200));
-        arrayList.add(new Item("40% off",R.drawable.second,"Onion","250g - 100",400,1,400));
-        arrayList.add(new Item("50% off",R.drawable.third,"Coriender","250g - 100",300,1,300));
-        arrayList.add(new Item("10% off",R.drawable.first,"Simple","250g - 100",500,1,500));
-        arrayList.add(new Item("50% off",R.drawable.third,"Zinger","250g - 100",600,1,600));
-        arrayList.add(new Item("20% off",R.drawable.first,"Alexder","250g - 100",700,1,700));
-        arrayList.add(new Item("70% off",R.drawable.first,"Ateder","250g - 100",200,1,200));
+        FruitsActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
-        FruitsAdapter fruitsAdapter = new FruitsAdapter(arrayList,context);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(fruitsAdapter);
+        firebaseDatabase.child(ITEMS).child(category).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                try {
+                    uItemList.clear();
+                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                        for (DataSnapshot Items : dataSnapshot.getChildren()) {
+                            UItem uItem = Items.getValue(UItem.class);
+                            uItemList.add(uItem);
+                        }
+                        dismissProgressDialog();
+                        if (uItemList != null && uItemList.size() > 0) {
+                            if (itemFruitAdapter != null) {
+                                dismissProgressDialog();
+                                recyclerView.setVisibility(View.VISIBLE);
+                                FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);
+                                itemFruitAdapter.notifyDataSetChanged();
+                            } else {
+                                dismissProgressDialog();
+                                recyclerView.setVisibility(View.VISIBLE);
+                                FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);
+                                setAdapter();
+                            }
+                        }
+                    } else {
+                        recyclerView.setVisibility(View.GONE);
+                        FruitsActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
+                        dismissProgressDialog();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    public void initViewsAndInstances(){
+    public void initViewsAndInstances() {
         FruitsActivityToolbar = (Toolbar) findViewById(R.id.FruitsActivityToolbar);
         recyclerView = findViewById(R.id.fruitsRecyclerViewWidget);
-        arrayList = new ArrayList<>();
+        FruitsActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.FruitsActivityNoItemAddedYetTextView);
+        firebaseDatabase = new MyFirebaseDatabase().getReference();
         this.context = this;
+        progressDialog = new ProgressDialog(context);
     }
 
-    public void setToolbar(){
+    public void setToolbar() {
         setSupportActionBar(FruitsActivityToolbar);
-        FruitsActivityToolbar.setTitleTextColor(Color.parseColor(Constants.getStringFromID(context,R.color.white)));
+        FruitsActivityToolbar.setTitleTextColor(Color.parseColor(Constants.getStringFromID(context, R.color.white)));
     }
 
+    public void setAdapter() {
+        if (uItemList != null && uItemList.size() > 0) {
+            itemFruitAdapter = new ItemAdapter(uItemList, context,category);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(itemFruitAdapter);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+
+    public void showProgressDialog() {
+        if (progressDialog != null && !progressDialog.isShowing()) {
+            progressDialog.setMessage("Wait...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+    }
+
+    public void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+        }
+    }
 }

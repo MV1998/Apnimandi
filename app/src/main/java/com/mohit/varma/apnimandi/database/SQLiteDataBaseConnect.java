@@ -92,7 +92,7 @@ public class SQLiteDataBaseConnect extends SQLiteOpenHelper {
         contentValues.put(ITEM_ACTUAL_PRICE,item.getActual_price());
         contentValues.put(INCREMENT_DECREMENT_VALUE,item.getIncre_decre_price());
         contentValues.put(FINAL_PRICE,item.getFinal_price());
-        contentValues.put(ITEM_CUTOFF_PRICE,item.getPercentOff());
+        contentValues.put(ITEM_CUTOFF_PRICE,item.getItemCutOffPrice());
         contentValues.put(ITEM_IMAGE,convertImagetoByteArray(item.getImageResourceId()));
         contentValues.put(ITEM_NAME,item.getItemName());
         contentValues.put(ITEM_PRICE,item.getItemPrice());

@@ -35,8 +35,7 @@
         app:itemIconTint="@color/colorPrimary"
         android:fitsSystemWindows="true"
         app:itemTextColor="@color/black"
-        app:menu="@menu/footbites_option"
+        app:menu="@menu/drawer_navigation_option"
         app:headerLayout="@layout/navigation_header_view"/>
-
 
 </androidx.drawerlayout.widget.DrawerLayout>

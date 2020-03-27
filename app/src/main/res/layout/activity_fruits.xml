@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitites.FruitsActivity">
+    tools:context=".activitites.FruitsActivity"
+    android:id="@+id/FruitsActivityRootView">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/FruitsActivityToolbar"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         app:title="@string/fruits"
         style="?actionBarSize"
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
         android:background="@color/colorPrimary">
 
     </androidx.appcompat.widget.Toolbar>
@@ -21,5 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/fruitsRecyclerViewWidget"></androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/FruitsActivityNoItemAddedYetTextView"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/No_item_added_yet"
+        android:textSize="@dimen/_18sdp"
+        android:textColor="@color/black"></TextView>
 
 </RelativeLayout>

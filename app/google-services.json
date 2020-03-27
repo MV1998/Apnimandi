@@ -15,11 +15,48 @@
       },
       "oauth_client": [
         {
-          "client_id": "941859162585-vjtacpfl52kfhs7hfhq1aopcbl70ck7m.apps.googleusercontent.com",
+          "client_id": "941859162585-oeukbu12e09sbiffestf49d3tqbn3spm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mohit.varma.apnimandi",
-            "certificate_hash": "3e4577277ec5a42ba2ef81a2905e94d5982c31bc"
+            "certificate_hash": "a6842159da87d8a65bf0edac1268b219067fff6b"
+          }
+        },
+        {
+          "client_id": "941859162585-89s2le8n575hso7obk0pj59rc84t4637.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsUaa_YIBV4jiZr9-UKhGpq2V3MYuFyUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941859162585-89s2le8n575hso7obk0pj59rc84t4637.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941859162585:android:b0b055c523aaf4caadb1c8",
+        "android_client_info": {
+          "package_name": "com.mohit.varma.apnimandiadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941859162585-ncn1bjkg7asjbptv69p8p3q2u9rq283n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohit.varma.apnimandiadmin",
+            "certificate_hash": "a6842159da87d8a65bf0edac1268b219067fff6b"
           }
         },
         {
