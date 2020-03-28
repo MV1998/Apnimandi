@@ -2,44 +2,51 @@ package com.mohit.varma.apnimandi.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.activitites.BakingActivity;
-import com.mohit.varma.apnimandi.activitites.FruitsActivity;
-import com.mohit.varma.apnimandi.activitites.ProteinActivity;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
-import com.mohit.varma.apnimandi.activitites.SnacksActivity;
-import com.mohit.varma.apnimandi.activitites.VegetablesActivity;
+import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
+import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
-import com.mohit.varma.apnimandi.utilites.Constants;
 
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHolder> {
-
+    public static final String TAG = ItemAdapter.class.getSimpleName();
     private List<UItem> items;
     private Context context;
     private FirebaseAuth firebaseAuth;
     private String category;
+    private DatabaseReference databaseReference;
 
-    public ItemAdapter(List<UItem> items, Context context,String category) {
+    public ItemAdapter(List<UItem> items, Context context, String category) {
         this.items = items;
         this.context = context;
         this.category = category;
         this.firebaseAuth = MyApplication.getFirebaseAuth();
+        this.databaseReference = new MyFirebaseDatabase().getReference();
     }
 
     @Override
@@ -60,47 +67,48 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Item addToCartItem = new Item();
-                if(new SQLiteDataBaseConnect(context).AdditemtoDatabase(items.get(position))){
-                    Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(context, "Not saved", Toast.LENGTH_SHORT).show();
-                }*/
                 if (firebaseAuth != null) {
                     if (firebaseAuth.getCurrentUser() != null) {
                         if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                            Log.d(TAG, "onClick: " + new Gson().toJson(items.get(position)));
+                            if (databaseReference != null) {
+                                if (firebaseAuth.getCurrentUser() != null) {
+                                    if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                        final UCart[] uCart = {new UCart(item.getmItemId(), item.getmItemCutOffPrice(), item.getmItemPrice(), item.getmItemName(), item.getmItemImage(), item.getmItemWeight(), item.getmItemCategory(), item.isPopular(), 1, item.getmItemPrice())};
+                                        if (uCart[0] != null) {
+                                            databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").orderByChild("mItemId").equalTo(item.getmItemId()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    if (dataSnapshot.exists()) {
+                                                        Toast.makeText(context, "This item already added.", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart")
+                                                                .push().setValue(uCart[0]).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Toast.makeText(context, "Item added to database", Toast.LENGTH_SHORT).show();
+                                                                uCart[0] = null;
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.d(TAG, "onFailure: failed");
+                                                            }
+                                                        });
+                                                    }
+                                                }
 
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             Intent intent = new Intent(context, RegistrationActivity.class);
                             context.startActivity(intent);
-                            if(category != null && !category.isEmpty()){
-                                switch (category){
-                                    case Constants.FRUIT:
-                                        ((FruitsActivity)context).finish();
-                                        break;
-                                    case Constants.VEGETABLE:
-                                        ((VegetablesActivity)context).finish();
-                                        break;
-                                    case Constants.SNACKS:
-                                        ((SnacksActivity)context).finish();
-                                        break;
-                                    case Constants.PROTEIN:
-                                        ((ProteinActivity)context).finish();
-                                        break;
-                                    case Constants.BACKING:
-                                        ((BakingActivity)context).finish();
-                                        break;
-                                }
-/*                                if(category.equalsIgnoreCase(Constants.FRUIT)){
-
-                                }else if(category.equalsIgnoreCase(Constants.VEGETABLE)){
-
-                                }else if(category.equalsIgnoreCase(Constants.SNACKS)){
-
-                                }else if(category.equalsIgnoreCase(Constants.PROTEIN)){
-
-                                }else if(category.equalsIgnoreCase(Constants.))*/
-                            }
                         }
                     }
                 }

@@ -1,8 +1,6 @@
 package com.mohit.varma.apnimandi.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,138 +10,245 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.database.SQLiteDataBaseConnect;
-import com.mohit.varma.apnimandi.model.Item;
+import com.mohit.varma.apnimandi.model.UCart;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.List;
 
-public class AddToCardAdapter extends RecyclerView.Adapter<AddToCardAdapter.AddToCartViewHolder>{
-
+public class AddToCardAdapter extends RecyclerView.Adapter<AddToCardAdapter.AddToCartViewHolder> {
+    public static final String TAG = AddToCardAdapter.class.getSimpleName();
     private Context context;
-    private List<Item> arrayList;
+    private List<UCart> uCartList;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private UCart updatedUCartItem;
+    private View rootView;
 
-
-
-    public AddToCardAdapter(Context context, List<Item> arrayList) {
+    public AddToCardAdapter(Context context, List<UCart> uCartList, DatabaseReference databaseReference,FirebaseAuth firebaseAuth,View rootView) {
         this.context = context;
-        this.arrayList = arrayList;
+        this.uCartList = uCartList;
+        this.databaseReference = databaseReference;
+        this.firebaseAuth = firebaseAuth;
+        this.rootView = rootView;
     }
 
     @Override
     public AddToCartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.singleforaddto,parent,false);
-
-        AddToCartViewHolder addToCartViewHolder = new AddToCartViewHolder(view);
-
-        return addToCartViewHolder;
-
+        View view = LayoutInflater.from(context).inflate(R.layout.single_item_view_for_add_to_cart, parent, false);
+        return new AddToCartViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final AddToCartViewHolder holder, final int position) {
-
-        final Item item = arrayList.get(position);
-        holder.cutoffprice.setText(item.getItemCutOffPrice());
-        holder.imageView.setImageBitmap(item.getBitmap());
-        holder.nameofthefood.setText(item.getItemName());
-        holder.priceofthefood.setText(item.getItemPrice());
-        holder.deleteitem.setOnClickListener(new View.OnClickListener() {
+        final UCart uCart = uCartList.get(position);
+        holder.SingleItemViewAddToCartItemCutOffPriceTextView.setText(uCart.getmItemCutOffPrice() + "");
+        holder.SingleItemViewAddToCartItemNameTextView.setText(uCart.getmItemName() + "");
+        holder.SingleItemViewAddToCartItemPriceTextView.setText(uCart.getmItemPrice() + "");
+        holder.SingleItemViewAddToCartItemActualPriceTextView.setText("" + uCart.getmItemPrice());
+        holder.SingleItemViewAddToCartIncrementOneByOneTextView.setText("" + uCart.getmItemPlusMinusValue());
+        holder.SingleItemViewAddToCartItemFinalPriceTextView.setText(" = " + uCart.getmItemFinalPrice());
+        if (uCartList != null && uCartList.size() > 0) {
+            setImageToGlide(uCart.getmItemImage(), holder.SingleItemViewAddToCartItemImageView);
+        }
+        holder.SingleItemViewAddToCartItemDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SQLiteDataBaseConnect(context).deleteItemfromDatabase(item.getKeyindex());
-                arrayList.remove(position);
-                notifyItemRemoved(position);
-                notifyDataSetChanged();
+                deleteUCartItem(uCartList.get(position));
+                /*if (firebaseAuth != null) {
+                    if (firebaseAuth.getCurrentUser() != null) {
+                        if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                            if (databaseReference != null) {
+                                if (firebaseAuth.getCurrentUser() != null) {
+                                    if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                        databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").orderByChild("mItemId").equalTo(uCart.getmItemId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                                    item.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                                                        @Override
+                                                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                            //ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_deleted_successfully));
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                //ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_id_not_found));
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }*/
             }
         });
 
-        holder.actual.setText(""+item.getActual_price());
-        holder.increment.setText(""+item.getIncre_decre_price());
-        holder.finalprice.setText(" = "+item.getFinal_price());
-        holder.minusprice.setOnClickListener(new View.OnClickListener() {
+        holder.SingleItemViewAddToCartItemPriceDecreaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                decrese(Integer.valueOf(holder.increment.getText().toString()),item.getActual_price(),holder.finalprice,holder.increment,item.getKeyindex());
+                decreaseOneByOne(Integer.valueOf(holder.SingleItemViewAddToCartIncrementOneByOneTextView.getText().toString()), uCart.getmItemPrice(), holder.SingleItemViewAddToCartItemFinalPriceTextView, holder.SingleItemViewAddToCartIncrementOneByOneTextView,uCartList.get(position));
             }
         });
-        holder.plusprice.setOnClickListener(new View.OnClickListener() {
+        holder.SingleItemViewAddToCartItemPriceIncrementButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                increse(Integer.valueOf(holder.increment.getText().toString()),item.getActual_price(),holder.finalprice,holder.increment,item.getKeyindex());
+                increaseOneByOne(Integer.valueOf(holder.SingleItemViewAddToCartIncrementOneByOneTextView.getText().toString()), uCart.getmItemPrice(), holder.SingleItemViewAddToCartItemFinalPriceTextView, holder.SingleItemViewAddToCartIncrementOneByOneTextView,uCartList.get(position));
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return arrayList.size();
+        return uCartList.size();
     }
 
-    public class AddToCartViewHolder extends RecyclerView.ViewHolder{
-
-
-        private Button minusprice,plusprice,deleteitem;
-        private TextView increment,actual,finalprice,nameofthefood,priceofthefood,cutoffprice;
-        private ImageView imageView;
-
+    public class AddToCartViewHolder extends RecyclerView.ViewHolder {
+        private Button SingleItemViewAddToCartItemPriceDecreaseButton, SingleItemViewAddToCartItemPriceIncrementButton, SingleItemViewAddToCartItemDeleteButton;
+        private TextView SingleItemViewAddToCartIncrementOneByOneTextView, SingleItemViewAddToCartItemActualPriceTextView, SingleItemViewAddToCartItemFinalPriceTextView, SingleItemViewAddToCartItemNameTextView, SingleItemViewAddToCartItemPriceTextView, SingleItemViewAddToCartItemCutOffPriceTextView;
+        private ImageView SingleItemViewAddToCartItemImageView;
 
         public AddToCartViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            minusprice = itemView.findViewById(R.id.minusprice);
-
-            increment = itemView.findViewById(R.id.incrementbyone);
-
-            actual = itemView.findViewById(R.id.actualprice);
-
-            finalprice = itemView.findViewById(R.id.finalprice);
-
-            plusprice = itemView.findViewById(R.id.plusprice);
-
-            imageView = itemView.findViewById(R.id.imagetoBefilled);
-
-            nameofthefood = itemView.findViewById(R.id.databasefoodname);
-
-            priceofthefood = itemView.findViewById(R.id.databasefoodprice);
-
-            cutoffprice = itemView.findViewById(R.id.cutoffprice);
-
-            deleteitem = itemView.findViewById(R.id.deletefromDB);
-
+            SingleItemViewAddToCartItemDeleteButton = itemView.findViewById(R.id.SingleItemViewAddToCartItemDeleteButton);
+            SingleItemViewAddToCartItemPriceDecreaseButton = itemView.findViewById(R.id.SingleItemViewAddToCartItemPriceDecreaseButton);
+            SingleItemViewAddToCartItemPriceIncrementButton = itemView.findViewById(R.id.SingleItemViewAddToCartItemPriceIncrementButton);
+            SingleItemViewAddToCartItemActualPriceTextView = itemView.findViewById(R.id.SingleItemViewAddToCartItemActualPriceTextView);
+            SingleItemViewAddToCartItemFinalPriceTextView = itemView.findViewById(R.id.SingleItemViewAddToCartItemFinalPriceTextView);
+            SingleItemViewAddToCartIncrementOneByOneTextView = itemView.findViewById(R.id.SingleItemViewAddToCartIncrementOneByOneTextView);
+            SingleItemViewAddToCartItemNameTextView = itemView.findViewById(R.id.SingleItemViewAddToCartItemNameTextView);
+            SingleItemViewAddToCartItemPriceTextView = itemView.findViewById(R.id.SingleItemViewAddToCartItemPriceTextView);
+            SingleItemViewAddToCartItemCutOffPriceTextView = itemView.findViewById(R.id.SingleItemViewAddToCartItemCutOffPriceTextView);
+            SingleItemViewAddToCartItemImageView = itemView.findViewById(R.id.SingleItemViewAddToCartItemImageView);
         }
     }
 
-    public Bitmap createBitmapfrombyteArray(byte[] bytes){
-        return BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+    public void increaseOneByOne(int multiplyBy, int itemCurrentPrice, TextView finalPriceTextView, TextView incrementOneByOneTextView,UCart uCart) {
+        int afterPlus = ++multiplyBy;
+        int finalPrice = itemCurrentPrice * afterPlus;
+        finalPriceTextView.setText(" = " + finalPrice);
+        incrementOneByOneTextView.setText("" + afterPlus);
+        updateUCartItem(afterPlus,finalPrice,uCart);
     }
 
-    public void increse(int takesValue,int multiplyValue,TextView textView,TextView incre,String id){
-        int plusresult = ++takesValue;
-        int multiresult = multiplyValue * plusresult;
-        textView.setText(" = "+multiresult);
-        incre.setText(""+plusresult);
-        new SQLiteDataBaseConnect(context).updateincrease(id,plusresult);
-        new SQLiteDataBaseConnect(context).updateFinalPrice(id,multiresult);
-        int totalPriceofallitem = new SQLiteDataBaseConnect(context).getTotalResesult();
-        Toast.makeText(context, "total = "+totalPriceofallitem, Toast.LENGTH_SHORT).show();
-    }
-
-    public void decrese(int takesValue,int multiplyValue, TextView textView,TextView decre,String id){
-        if(takesValue>1){
-            int minusresult = --takesValue;
-            int multireset = multiplyValue * minusresult;
-            textView.setText(" = "+multireset);
-            decre.setText(""+minusresult);
-            new SQLiteDataBaseConnect(context).updateincrease(id,minusresult);
-            new SQLiteDataBaseConnect(context).updateFinalPrice(id,multireset);
-            int totalPriceofallitem = new SQLiteDataBaseConnect(context).getTotalResesult();
-            Toast.makeText(context, "total = "+totalPriceofallitem, Toast.LENGTH_SHORT).show();
-        }else {
+    public void decreaseOneByOne(int multiplyBy, int itemCurrentPrice, TextView finalPriceTextView, TextView incrementOneByOneTextView,UCart uCart) {
+        if (multiplyBy > 1) {
+            int afterMinus = --multiplyBy;
+            int finalPrice = itemCurrentPrice * afterMinus;
+            finalPriceTextView.setText(" = " + finalPrice);
+            incrementOneByOneTextView.setText("" + afterMinus);
+            updateUCartItem(afterMinus,finalPrice,uCart);
+        } else {
             Toast.makeText(context, "Can't be decrease value by one", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setImageToGlide(String image_url, ImageView imageView) {
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.market)
+                .error(R.drawable.market);
+        Glide.with(context).load(image_url).apply(options).apply(RequestOptions.centerInsideTransform()).into(imageView);
+    }
+
+    public void deleteUCartItem(UCart uCart){
+        if(IsInternetConnectivity.isConnected(context)){
+            if (firebaseAuth != null) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                        if (databaseReference != null) {
+                            if (firebaseAuth.getCurrentUser() != null) {
+                                if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                    databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").orderByChild("mItemId").equalTo(uCart.getmItemId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                                item.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                                                    @Override
+                                                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                                        //ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_deleted_successfully));
+                                                    }
+                                                });
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            //ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_id_not_found));
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else {
+            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+        }
+    }
+
+    public void updateUCartItem(int multiplyBy,int finalPrice, UCart uCart){
+        if(IsInternetConnectivity.isConnected(context)){
+            if (firebaseAuth != null) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                        if (databaseReference != null) {
+                            if (firebaseAuth.getCurrentUser() != null) {
+                                if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                    updatedUCartItem = new UCart(uCart.getmItemId(),uCart.getmItemCutOffPrice(),uCart.getmItemPrice(),
+                                            uCart.getmItemName(),uCart.getmItemImage(),uCart.getmItemWeight(),uCart.getmItemCategory(),
+                                            uCart.isPopular(),multiplyBy,finalPrice);
+                                    if(updatedUCartItem != null){
+                                        databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).orderByChild("UCart").equalTo(uCart.getmItemId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                                    item.getRef().setValue(updatedUCartItem).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            //dismissProgressDialog();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            //dismissProgressDialog();
+                                                        }
+                                                    });
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else {
+            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
         }
     }
 }

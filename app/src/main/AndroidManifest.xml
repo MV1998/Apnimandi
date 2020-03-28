@@ -18,7 +18,7 @@
         <activity android:name=".activitites.ProteinActivity" />
         <activity android:name=".activitites.VegetablesActivity" />
         <activity android:name=".activitites.FruitsActivity" />
-        <activity android:name=".activitites.AddtoCartActivity"
+        <activity android:name=".activitites.AddToCartActivity"
             android:parentActivityName=".activitites.FootBiteActivity"></activity>
         <activity android:name=".activitites.WelcomeActivity" />
         <activity android:name=".activitites.ChooseLanguageActivity" />

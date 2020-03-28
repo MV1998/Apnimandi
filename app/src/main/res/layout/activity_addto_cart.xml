@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activitites.AddtoCartActivity">
+    tools:context=".activitites.AddToCartActivity"
+    android:id="@+id/AddToCartActivityRootView">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarCustom"
+        android:id="@+id/AddToCartActivityToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:title="@string/Cart"
         style="?actionBarSize"
-        android:background="@color/colorPrimary"></androidx.appcompat.widget.Toolbar>
+        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+        android:background="@color/colorPrimary">
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/AddToCartActivityRecyclerView"
+        android:layout_below="@id/AddToCartActivityToolBar"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:id="@+id/addtocardRecyclerView"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/AddToCartActivityNoItemAddedYetTextView"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/No_item_added_yet"
+        android:textSize="@dimen/_18sdp"
+        android:textColor="@color/black"></TextView>
+
+</RelativeLayout>

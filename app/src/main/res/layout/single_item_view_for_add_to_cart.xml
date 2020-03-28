@@ -4,23 +4,24 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:padding="5dp"
-    android:background="#3649ab">
+    android:background="#3649ab"
+    android:id="@+id/SingleItemViewAddToCartRootView">
 
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/SingleItemViewAddToCartLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/minusprice"
+            android:id="@+id/SingleItemViewAddToCartItemPriceDecreaseButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="-"></Button>
 
         <TextView
-            android:id="@+id/incrementbyone"
+            android:id="@+id/SingleItemViewAddToCartIncrementOneByOneTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
@@ -37,7 +38,7 @@
 
         <TextView
             android:textColor="#fff"
-            android:id="@+id/actualprice"
+            android:id="@+id/SingleItemViewAddToCartItemActualPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
@@ -45,32 +46,32 @@
 
         <TextView
             android:textColor="#fff"
-            android:id="@+id/finalprice"
+            android:id="@+id/SingleItemViewAddToCartItemFinalPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="= Rs. 20"
             android:textSize="18sp"></TextView>
 
         <Button
+            android:id="@+id/SingleItemViewAddToCartItemPriceIncrementButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/plusprice"
             android:text="+"></Button>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_below="@id/linearLayout1"
+        android:layout_below="@id/SingleItemViewAddToCartLinearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/SingleItemViewAddToCartItemImageView"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
-            android:src="@drawable/third"
-            android:id="@+id/imagetoBefilled"></ImageView>
+            android:src="@drawable/third"></ImageView>
 
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -79,33 +80,33 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/SingleItemViewAddToCartItemNameTextView"
                 android:textSize="18sp"
                 android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/databasefoodname"
                 android:text="mohit"></TextView>
 
             <TextView
+                android:id="@+id/SingleItemViewAddToCartItemPriceTextView"
                 android:textSize="18sp"
                 android:textColor="#fff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/databasefoodprice"
                 android:text="mohit"></TextView>
 
             <TextView
-                android:id="@+id/cutoffprice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/SingleItemViewAddToCartItemCutOffPriceTextView"
                 android:textColor="#fff"
                 android:textSize="12sp"
-                android:text="cutofprice"></TextView>
+                android:text="cutofprice"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"></TextView>
 
         </LinearLayout>
 
         <Button
-            android:id="@+id/deletefromDB"
+            android:id="@+id/SingleItemViewAddToCartItemDeleteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="delete"></Button>

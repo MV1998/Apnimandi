@@ -133,7 +133,7 @@ public class FootBiteActivity extends AppCompatActivity {
                         break;
                     case R.id.cart:
                         if (IsInternetConnectivity.isConnected(context)) {
-                            Intent intent = new Intent(FootBiteActivity.this, AddtoCartActivity.class);
+                            Intent intent = new Intent(FootBiteActivity.this, AddToCartActivity.class);
                             startActivity(intent);
                         } else {
                             ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));

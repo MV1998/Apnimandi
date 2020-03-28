@@ -3,22 +3,18 @@ package com.mohit.varma.apnimandi.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,17 +22,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.activitites.FootBiteActivity;
-import com.mohit.varma.apnimandi.adapters.HomeInnerAdapter;
 import com.mohit.varma.apnimandi.adapters.HomeAdapter;
-import com.mohit.varma.apnimandi.adapters.ItemAdapter;
+import com.mohit.varma.apnimandi.adapters.HomeInnerAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
-import com.mohit.varma.apnimandi.model.Item;
 import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.utilites.Constants;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
