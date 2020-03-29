@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,6 +49,7 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
     private HomeInnerAdapter homeInnerAdapter;
     private ProgressDialog progressDialog;
     private List<String> list;
+    private View HomeFragmentRootView;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -58,7 +58,6 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         initViewsAndInstances(view);
@@ -66,10 +65,7 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
         setHasOptionsMenu(true);
 
         list = new LinkedList<>();
-
-        list.add("Most Popular" + "");
-
-        Toast.makeText(getActivity(), "oncreateview", Toast.LENGTH_SHORT).show();
+        list.add(" ");
 
         firebaseDatabase.child(ITEMS).child(Constants.MOST_POPULAR).addValueEventListener(new ValueEventListener() {
             @Override
@@ -113,6 +109,7 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
 
     public void initViewsAndInstances(View view) {
         HomeFragmentRecyclerView = (RecyclerView) view.findViewById(R.id.HomeFragmentRecyclerView);
+        HomeFragmentRootView = (View) view.findViewById(R.id.HomeFragmentRootView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         this.context = getActivity();
         progressDialog = new ProgressDialog(context);
@@ -121,13 +118,11 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Toast.makeText(context, "onattach", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(getActivity(), "onviewcreated", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -173,7 +168,7 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
 
     @Override
     public void networkState(boolean result) {
-        Log.d(TAG, "networkState: "+result);
+        Log.d(TAG, "networkState: " + result);
     }
 
     public void showProgressDialog() {
@@ -192,12 +187,8 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-/*            itemFruitAdapter = new ItemAdapter(uItemList, context,category);
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setAdapter(itemFruitAdapter);*/
-            homeInnerAdapter = new HomeInnerAdapter(getActivity(), uItemList);
-            HomeAdapter homeAdapter = new HomeAdapter(list,getActivity(), homeInnerAdapter);
+            homeInnerAdapter = new HomeInnerAdapter(getActivity(), uItemList, HomeFragmentRootView);
+            HomeAdapter homeAdapter = new HomeAdapter(list, getActivity(), homeInnerAdapter);
             HomeFragmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             HomeFragmentRecyclerView.setHasFixedSize(true);
             HomeFragmentRecyclerView.setAdapter(homeAdapter);

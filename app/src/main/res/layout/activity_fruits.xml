@@ -22,7 +22,9 @@
         android:layout_below="@id/FruitsActivityToolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fruitsRecyclerViewWidget"></androidx.recyclerview.widget.RecyclerView>
+        android:id="@+id/fruitsRecyclerViewWidget"
+        android:background="@color/gray_color"
+        android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
 
     <TextView
         android:id="@+id/FruitsActivityNoItemAddedYetTextView"

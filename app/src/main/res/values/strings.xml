@@ -62,6 +62,14 @@
     <string name="snackbar_ok_message">OK</string>
     <string name="please_check_internet_connectivity">Please check your internet connectivity</string>
     <string name="anonymous">Anonymous User</string>
+    <string name="item_already_in_add_to_cart">Item is already added to cart.</string>
+    <string name="item_added_to_cart">Item add to cart.</string>
+    <string name="failed">failed</string>
+    <string name="please_order">Place Order</string>
+    <string name="shopping_now">Shopping</string>
+    <string name="remove_item">Remove</string>
+    <string name="add_to_cart">Add</string>
+    <string name="mohit_working_on_it">Mohit Working on this functionality.</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>

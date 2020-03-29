@@ -41,6 +41,7 @@ public class BakingActivity extends AppCompatActivity {
     private List<UItem> uItemList = new LinkedList<>();
     private ItemAdapter itemBackingAdapter;
     private ProgressDialog progressDialog;
+    private View BakingActivityRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +112,7 @@ public class BakingActivity extends AppCompatActivity {
         BakingActivityRecyclerView = (RecyclerView) findViewById(R.id.BakingActivityRecyclerView);
         BakingActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.BakingActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
+        BakingActivityRootView = (View) findViewById(R.id.BakingActivityRootView);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }
@@ -158,7 +160,7 @@ public class BakingActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-            itemBackingAdapter = new ItemAdapter(uItemList, context,category);
+            itemBackingAdapter = new ItemAdapter(uItemList, context,category,BakingActivityRootView);
             BakingActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             BakingActivityRecyclerView.setHasFixedSize(true);
             BakingActivityRecyclerView.setAdapter(itemBackingAdapter);

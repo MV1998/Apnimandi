@@ -6,31 +6,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHolder> {
@@ -40,77 +42,88 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
     private FirebaseAuth firebaseAuth;
     private String category;
     private DatabaseReference databaseReference;
+    private List<UCart> uCartList = new ArrayList<>();
+    private View rootView;
 
-    public ItemAdapter(List<UItem> items, Context context, String category) {
+    public ItemAdapter(List<UItem> items, Context context, String category, View rootView) {
         this.items = items;
         this.context = context;
         this.category = category;
+        this.rootView = rootView;
         this.firebaseAuth = MyApplication.getFirebaseAuth();
         this.databaseReference = new MyFirebaseDatabase().getReference();
+        getAllUCartItems();
     }
 
     @Override
     public FruitsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.itemview, parent, false);
+        //View view = LayoutInflater.from(context).inflate(R.layout.itemview, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.single_item_view,parent,false);
         return new FruitsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FruitsViewHolder holder, final int position) {
         UItem item = items.get(position);
-        holder.itemCutOffPrice.setText(item.getmItemCutOffPrice() + "");
-        holder.itemName.setText(item.getmItemName() + "");
-        holder.itemPrice.setText(item.getmItemWeight() + " " + item.getmItemPrice());
-        if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
-            setImageToGlide(item.getmItemImage(), holder.imageView);
+        if(item.getmItemWeight().endsWith("Off")){
+            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice());
+        }else {
+            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice()+"% Off");
         }
-        holder.button.setOnClickListener(new View.OnClickListener() {
+        if(item.getmItemWeight().endsWith("kg")){
+            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
+
+        }else {
+            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight()+"kg");
+        }
+
+        holder.SingleItemViewItemNameTextView.setText(item.getmItemName()+"");
+        holder.SingleItemViewItemFinalPriceTextView.setText(item.getmItemPrice()+"");
+
+        if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
+            setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
+        }
+
+        holder.SingleItemViewAddToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (firebaseAuth != null) {
-                    if (firebaseAuth.getCurrentUser() != null) {
-                        if (!firebaseAuth.getCurrentUser().isAnonymous()) {
-                            Log.d(TAG, "onClick: " + new Gson().toJson(items.get(position)));
-                            if (databaseReference != null) {
-                                if (firebaseAuth.getCurrentUser() != null) {
-                                    if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
-                                        final UCart[] uCart = {new UCart(item.getmItemId(), item.getmItemCutOffPrice(), item.getmItemPrice(), item.getmItemName(), item.getmItemImage(), item.getmItemWeight(), item.getmItemCategory(), item.isPopular(), 1, item.getmItemPrice())};
-                                        if (uCart[0] != null) {
-                                            databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").orderByChild("mItemId").equalTo(item.getmItemId()).addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                    if (dataSnapshot.exists()) {
-                                                        Toast.makeText(context, "This item already added.", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart")
-                                                                .push().setValue(uCart[0]).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                Toast.makeText(context, "Item added to database", Toast.LENGTH_SHORT).show();
-                                                                uCart[0] = null;
-                                                            }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Log.d(TAG, "onFailure: failed");
-                                                            }
-                                                        });
-                                                    }
+                if(IsInternetConnectivity.isConnected(context)){
+                    if (firebaseAuth != null) {
+                        if (firebaseAuth.getCurrentUser() != null) {
+                            if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                                if (databaseReference != null) {
+                                    if (firebaseAuth.getCurrentUser() != null) {
+                                        if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                            if (!UCartItemAlreadyExists(items.get(position).getmItemId())) {
+                                                final UCart uCart = new UCart(item.getmItemId(), item.getmItemCutOffPrice(), item.getmItemPrice(), item.getmItemName(), item.getmItemImage(), item.getmItemWeight(), item.getmItemCategory(), item.isPopular(), 1, item.getmItemPrice());
+                                                if (uCart != null) {
+                                                    databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart")
+                                                            .push().setValue(uCart).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_added_to_cart));
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.failed));
+                                                        }
+                                                    });
                                                 }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                                }
-                                            });
+                                            } else {
+                                                ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_already_in_add_to_cart));
+                                            }
                                         }
                                     }
                                 }
+                            } else {
+                                Intent intent = new Intent(context, RegistrationActivity.class);
+                                context.startActivity(intent);
                             }
-                        } else {
-                            Intent intent = new Intent(context, RegistrationActivity.class);
-                            context.startActivity(intent);
                         }
                     }
+                }else {
+                    ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
         });
@@ -122,17 +135,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
     }
 
     public class FruitsViewHolder extends RecyclerView.ViewHolder {
-        private TextView itemCutOffPrice, itemName, itemPrice;
-        private ImageView imageView;
-        private Button button;
+        private CardView SingleItemViewRootView;
+        private TextView SingleItemViewItemWeightTextView,SingleItemViewItemCutOffPriceTextView,SingleItemViewItemNameTextView,
+                SingleItemViewItemFinalPriceTextView;
+        private ImageView SingleItemViewItemImageView;
+        private MaterialButton SingleItemViewAddToCartButton;
 
         public FruitsViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemCutOffPrice = itemView.findViewById(R.id.percentOff);
-            itemName = itemView.findViewById(R.id.itemName);
-            itemPrice = itemView.findViewById(R.id.priceofitem);
-            imageView = itemView.findViewById(R.id.imageOffruits);
-            button = itemView.findViewById(R.id.buttontoadd);
+            SingleItemViewRootView = (CardView) itemView.findViewById(R.id.SingleItemViewRootView);
+            SingleItemViewItemWeightTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemWeightTextView);
+            SingleItemViewItemCutOffPriceTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemCutOffPriceTextView);
+            SingleItemViewItemNameTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemNameTextView);
+            SingleItemViewItemFinalPriceTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemFinalPriceTextView);
+            SingleItemViewItemImageView = (ImageView) itemView.findViewById(R.id.SingleItemViewItemImageView);
+            SingleItemViewAddToCartButton = (MaterialButton) itemView.findViewById(R.id.SingleItemViewAddToCartButton);
         }
     }
 
@@ -142,6 +159,58 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                 .error(R.drawable.market);
         Glide.with(context).load(image_url).apply(options).apply(RequestOptions.centerInsideTransform()).into(imageView);
     }
+
+    public void getAllUCartItems() {
+        if (firebaseAuth != null) {
+            if (firebaseAuth.getCurrentUser() != null) {
+                if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                    if (databaseReference != null) {
+                        if (firebaseAuth.getCurrentUser() != null) {
+                            if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        try {
+                                            uCartList.clear();
+                                            if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                                                for (DataSnapshot cartItems : dataSnapshot.getChildren()) {
+                                                    UCart uCart = cartItems.getValue(UCart.class);
+                                                    uCartList.add(uCart);
+                                                }
+                                                Log.d(TAG, "onDataChange: " + uCartList.size());
+                                            }
+                                            if (uCartList.size() == 0)
+                                                Log.d(TAG, "onDataChange: " + uCartList.size());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean UCartItemAlreadyExists(int id) {
+        if (uCartList != null && uCartList.size() > 0) {
+            for (int i = 0; i < uCartList.size(); i++) {
+                if (id == uCartList.get(i).getmItemId()) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return false;
+    }
+
 }
 
 

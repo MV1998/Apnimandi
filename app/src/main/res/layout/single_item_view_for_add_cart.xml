@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#e0e0e0"
+    android:clickable="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardUseCompatPadding="true"
+    app:cardElevation="@dimen/_10sdp"
+    app:ignore="NamespaceTypo"
+    card_view:contentPadding="@dimen/_5sdp"
+    android:id="@+id/SingleItemViewAddToCartRootView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/SingleItemViewAddToCartItemWeightTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="1Kg"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/black"></TextView>
+
+        <TextView
+            android:id="@+id/SingleItemViewAddToCartItemCutOffPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40% Off"
+            android:background="@color/green_color"
+            android:textColor="@color/white"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="@dimen/_3sdp"
+            android:paddingRight="@dimen/_3sdp"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <ImageView
+            android:id="@+id/SingleItemViewAddToCartItemDeleteButton"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_delete_black_24dp"
+            android:visibility="gone"
+            ></ImageView>
+
+        <ImageView
+            android:id="@+id/SingleItemViewAddToCartItemImageView"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:src="@drawable/mohit"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/_5sdp"
+            android:layout_below="@id/SingleItemViewAddToCartItemWeightTextView"></ImageView>
+
+        <TextView
+            android:id="@+id/SingleItemViewAddToCartItemNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Patato"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/black"
+            android:layout_below="@id/SingleItemViewAddToCartItemImageView"
+            android:layout_marginTop="@dimen/_5sdp"></TextView>
+
+        <LinearLayout
+            android:id="@+id/SingleItemViewAddToCartLinearLayoutHorizontalContainerForItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/SingleItemViewAddToCartItemNameTextView"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/_2sdp">
+
+            <TextView
+                android:id="@+id/SingleItemViewAddToCartItemFinalPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rs. 100"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:layout_below="@id/SingleItemViewAddToCartItemImageView"
+                ></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/SingleItemViewAddToCartLinearLayoutHorizontalContainerForMathFunctionality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/SingleItemViewAddToCartLinearLayoutHorizontalContainerForItemPrice"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/SingleItemViewAddToCartItemPriceDecreaseButton"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:background="@drawable/ic_remove_circle_black_24dp"></ImageView>
+
+            <TextView
+                android:id="@+id/SingleItemViewAddToCartIncrementOneByOneTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:layout_below="@id/SingleItemViewAddToCartItemImageView"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:layout_marginLeft="@dimen/_2sdp"
+                ></TextView>
+
+            <ImageView
+                android:id="@+id/SingleItemViewAddToCartItemPriceIncrementButton"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_add_circle_black_24dp"
+                ></ImageView>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/SingleItemViewAddToCartRemoveButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:text="@string/remove_item"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/SingleItemViewAddToCartLinearLayoutHorizontalContainerForMathFunctionality"
+            android:layout_alignParentLeft="true">
+
+        </com.google.android.material.button.MaterialButton>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

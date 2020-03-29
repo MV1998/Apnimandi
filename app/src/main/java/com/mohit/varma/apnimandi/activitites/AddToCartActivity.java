@@ -6,28 +6,28 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.AddToCardAdapter;
-import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
-import com.mohit.varma.apnimandi.model.Item;
 import com.mohit.varma.apnimandi.model.UCart;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,13 +37,16 @@ public class AddToCartActivity extends AppCompatActivity {
     private RecyclerView AddToCartActivityRecyclerView;
     private AddToCardAdapter addToCardAdapter;
     private Toolbar AddToCartActivityToolBar;
-    private TextView AddToCartActivityNoItemAddedYetTextView;
+    private TextView AddToCartActivityNoItemAddedYetTextView,AddToCartActivityBottomRelativeLayoutTotalPriceTextView,
+            AddToCartActivityBottomRelativeLayoutTotalItemTextView;
     private View AddToCartActivityRootView;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private List<UCart> uCartList = new LinkedList<>();
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private RelativeLayout AddToCartActivityBottomRelativeLayout;
+    private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton,AddToCartActivityBottomRelativeLayoutPlaceOrderButton;
 
 
     @Override
@@ -53,18 +56,7 @@ public class AddToCartActivity extends AppCompatActivity {
 
         initViews();
         showProgressDialog();
-
         setToolBar(AddToCartActivityToolBar);
-/*
-        items = new SQLiteDataBaseConnect(this).getitemarraylist();
-
-        addToCardAdapter = new AddToCardAdapter(this, items);
-        recyclerView = findViewById(R.id.addtocardRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(addToCardAdapter);
-        addToCardAdapter.notifyDataSetChanged();*/
-
         if (firebaseAuth != null) {
             if (firebaseAuth.getCurrentUser() != null) {
                 if (!firebaseAuth.getCurrentUser().isAnonymous()) {
@@ -83,7 +75,9 @@ public class AddToCartActivity extends AppCompatActivity {
                                                 }
                                                 dismissProgressDialog();
                                                 if (uCartList != null && uCartList.size() > 0) {
-                                                    Log.d(TAG, "onDataChange: " + new Gson().toJson(uCartList));
+                                                    Log.d(TAG, "onDataChange: "+ getTotalItemPriceOfAllItem(uCartList));
+                                                    AddToCartActivityBottomRelativeLayoutTotalPriceTextView.setText("Grand Total: \u20B9"+ getTotalItemPriceOfAllItem(uCartList));
+                                                    AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size()+" Items");
                                                     if (addToCardAdapter != null) {
                                                         dismissProgressDialog();
                                                         AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
@@ -95,10 +89,13 @@ public class AddToCartActivity extends AppCompatActivity {
                                                         AddToCartActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                                         setAdapter();
                                                     }
+                                                }else {
+                                                    AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
                                                 }
                                             } else {
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
                                                 AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
+                                                AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
                                                 dismissProgressDialog();
                                             }
                                         } catch (Exception e) {
@@ -124,6 +121,28 @@ public class AddToCartActivity extends AppCompatActivity {
             }
         });
 
+        AddToCartActivityBottomRelativeLayoutShoppingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(IsInternetConnectivity.isConnected(context)){
+                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.mohit_working_on_it));
+                }else {
+                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
+            }
+        });
+
+        AddToCartActivityBottomRelativeLayoutPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(IsInternetConnectivity.isConnected(context)){
+                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.mohit_working_on_it));
+                }else {
+                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
+            }
+        });
+
     }
 
     public void setToolBar(Toolbar toolbar) {
@@ -138,7 +157,12 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityRecyclerView = (RecyclerView) findViewById(R.id.AddToCartActivityRecyclerView);
         AddToCartActivityToolBar = (Toolbar) findViewById(R.id.AddToCartActivityToolBar);
         AddToCartActivityRootView = (View) findViewById(R.id.AddToCartActivityRootView);
+        AddToCartActivityBottomRelativeLayout = (RelativeLayout) findViewById(R.id.AddToCartActivityBottomRelativeLayout);
         AddToCartActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.AddToCartActivityNoItemAddedYetTextView);
+        AddToCartActivityBottomRelativeLayoutTotalPriceTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalPriceTextView);
+        AddToCartActivityBottomRelativeLayoutTotalItemTextView =(TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalItemTextView);
+        AddToCartActivityBottomRelativeLayoutShoppingButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutShoppingButton);
+        AddToCartActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutPlaceOrderButton);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();
         this.context = this;
@@ -183,9 +207,17 @@ public class AddToCartActivity extends AppCompatActivity {
     public void setAdapter() {
         if (uCartList != null && uCartList.size() > 0) {
             addToCardAdapter = new AddToCardAdapter(context,uCartList,firebaseDatabase,firebaseAuth,AddToCartActivityRootView);
-            AddToCartActivityRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+            AddToCartActivityRecyclerView.setLayoutManager(new GridLayoutManager(context,2));
             AddToCartActivityRecyclerView.setHasFixedSize(true);
             AddToCartActivityRecyclerView.setAdapter(addToCardAdapter);
         }
+    }
+
+    public int getTotalItemPriceOfAllItem(List<UCart> uCartList){
+        int total =0;
+        for(UCart uCart : uCartList){
+            total = total+uCart.getmItemFinalPrice();
+        }
+        return total;
     }
 }

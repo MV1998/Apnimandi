@@ -41,6 +41,7 @@ public class ProteinActivity extends AppCompatActivity {
     private List<UItem> uItemList = new LinkedList<>();
     private ItemAdapter itemProteinAdapter;
     private ProgressDialog progressDialog;
+    private View ProteinActivityRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,7 @@ public class ProteinActivity extends AppCompatActivity {
         ProteinActivityRecyclerView = (RecyclerView) findViewById(R.id.ProteinActivityRecyclerView);
         ProteinActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.ProteinActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
+        ProteinActivityRootView = (View) findViewById(R.id.ProteinActivityRootView);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }
@@ -159,7 +161,7 @@ public class ProteinActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-            itemProteinAdapter = new ItemAdapter(uItemList, context,category);
+            itemProteinAdapter = new ItemAdapter(uItemList, context,category,ProteinActivityRootView);
             ProteinActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             ProteinActivityRecyclerView.setHasFixedSize(true);
             ProteinActivityRecyclerView.setAdapter(itemProteinAdapter);

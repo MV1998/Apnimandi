@@ -42,6 +42,7 @@ public class FruitsActivity extends AppCompatActivity {
     private List<UItem> uItemList = new LinkedList<>();
     private ItemAdapter itemFruitAdapter;
     private ProgressDialog progressDialog;
+    private View FruitsActivityRootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +113,7 @@ public class FruitsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.fruitsRecyclerViewWidget);
         FruitsActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.FruitsActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
+        FruitsActivityRootView = (View) findViewById(R.id.FruitsActivityRootView);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }
@@ -123,7 +125,7 @@ public class FruitsActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-            itemFruitAdapter = new ItemAdapter(uItemList, context,category);
+            itemFruitAdapter = new ItemAdapter(uItemList, context,category,FruitsActivityRootView);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(itemFruitAdapter);

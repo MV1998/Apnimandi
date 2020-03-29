@@ -27,15 +27,15 @@
                 android:layout_height="@dimen/_100sdp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/light_black">
                     <TextView
-                        android:paddingLeft="@dimen/_10sdp"
                         android:textSize="@dimen/_18sdp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/color_category_txt_background"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="@string/fruits"></TextView>
                 </RelativeLayout>
             </FrameLayout>
@@ -48,15 +48,15 @@
                 android:layout_height="@dimen/_100sdp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/light_black">
                     <TextView
-                        android:paddingLeft="@dimen/_10sdp"
                         android:textSize="@dimen/_18sdp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/color_category_txt_background"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="@string/vegetable"></TextView>
                 </RelativeLayout>
             </FrameLayout>
@@ -70,15 +70,15 @@
                 android:layout_height="@dimen/_100sdp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/light_black">
                     <TextView
-                        android:paddingLeft="@dimen/_10sdp"
                         android:textSize="@dimen/_18sdp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/color_category_txt_background"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="@string/snacks"></TextView>
                 </RelativeLayout>
             </FrameLayout>
@@ -88,18 +88,19 @@
                 android:elevation="@dimen/_4sdp"
                 android:layout_width="match_parent"
                 android:background="@drawable/proteinforcategory"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_height="@dimen/_100sdp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/light_black">
                     <TextView
-                        android:paddingLeft="@dimen/_10sdp"
                         android:textSize="@dimen/_18sdp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/color_category_txt_background"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="@string/protein"></TextView>
                 </RelativeLayout>
             </FrameLayout>
@@ -113,15 +114,15 @@
                 android:layout_height="@dimen/_100sdp">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/light_black">
                     <TextView
-                        android:paddingLeft="@dimen/_10sdp"
                         android:textSize="@dimen/_18sdp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/color_category_txt_background"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:text="@string/backing"></TextView>
                 </RelativeLayout>
             </FrameLayout>

@@ -17,21 +17,85 @@
         android:background="@color/colorPrimary">
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/AddToCartActivityRecyclerView"
-        android:layout_below="@id/AddToCartActivityToolBar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent"
+        android:layout_below="@id/AddToCartActivityToolBar"
+        android:layout_above="@id/AddToCartActivityBottomRelativeLayout">
 
-    <TextView
-        android:id="@+id/AddToCartActivityNoItemAddedYetTextView"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/AddToCartActivityRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/_5sdp"
+            android:background="@color/gray_color"></androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/AddToCartActivityNoItemAddedYetTextView"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/No_item_added_yet"
+            android:textSize="@dimen/_18sdp"
+            android:textColor="@color/black"></TextView>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/AddToCartActivityBottomRelativeLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/No_item_added_yet"
-        android:textSize="@dimen/_18sdp"
-        android:textColor="@color/black"></TextView>
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/_10sdp"
+        android:background="@drawable/shape_framelayout">
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total: "
+            android:textColor="@color/black"
+            android:layout_alignParentLeft="true"
+            android:textSize="@dimen/_14sdp"></TextView>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3 Item"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp"
+            android:layout_alignParentRight="true"></TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutShoppingButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:text="@string/shopping_now"
+            android:layout_below="@id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/_10sdp">
+
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutPlaceOrderButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/please_order"
+            android:layout_below="@id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
+            android:layout_alignParentRight="true">
+
+        </com.google.android.material.button.MaterialButton>
+
+    </RelativeLayout>
 
 </RelativeLayout>

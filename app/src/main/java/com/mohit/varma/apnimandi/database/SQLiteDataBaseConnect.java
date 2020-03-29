@@ -191,7 +191,6 @@ public class SQLiteDataBaseConnect extends SQLiteOpenHelper {
         return total;
     }
 
-
     public boolean deleteItemfromDatabase(String id){
         return this.getWritableDatabase().delete(DataBaseInfo.TABLE_NAME, KEY_ID + "=?", new String[]{id}) > 0;
     }
