@@ -65,7 +65,7 @@
     <string name="item_already_in_add_to_cart">Item is already added to cart.</string>
     <string name="item_added_to_cart">Item add to cart.</string>
     <string name="failed">failed</string>
-    <string name="please_order">Place Order</string>
+    <string name="please_order">Checkout</string>
     <string name="shopping_now">Shopping</string>
     <string name="remove_item">Remove</string>
     <string name="add_to_cart">Add</string>

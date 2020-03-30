@@ -56,10 +56,20 @@ public class AddToCardAdapter extends RecyclerView.Adapter<AddToCardAdapter.AddT
     @Override
     public void onBindViewHolder(final AddToCartViewHolder holder, final int position) {
         final UCart uCart = uCartList.get(position);
-        holder.SingleItemViewAddToCartItemCutOffPriceTextView.setText(uCart.getmItemCutOffPrice() + "% Off");
+
+        if(uCart.getmItemWeight().endsWith("Off")){
+            holder.SingleItemViewAddToCartItemCutOffPriceTextView.setText(uCart.getmItemCutOffPrice());
+        }else {
+            holder.SingleItemViewAddToCartItemCutOffPriceTextView.setText(uCart.getmItemCutOffPrice()+"% Off");
+        }
         holder.SingleItemViewAddToCartItemNameTextView.setText(uCart.getmItemName() + "");
-        //holder.SingleItemViewAddToCartItemPriceTextView.setText(uCart.getmItemPrice() + "");
-        holder.SingleItemViewAddToCartItemWeightTextView.setText(uCart.getmItemWeight()+"");
+        if(uCart.getmItemWeight().endsWith("kg")){
+            holder.SingleItemViewAddToCartItemWeightTextView.setText(uCart.getmItemWeight());
+
+        }else {
+            holder.SingleItemViewAddToCartItemWeightTextView.setText(uCart.getmItemWeight()+"kg");
+        }
+
         holder.SingleItemViewAddToCartIncrementOneByOneTextView.setText("" + uCart.getmItemPlusMinusValue());
         holder.SingleItemViewAddToCartItemFinalPriceTextView.setText("\u20B9" + uCart.getmItemFinalPrice());
         if (uCartList != null && uCartList.size() > 0) {
@@ -198,7 +208,7 @@ public class AddToCardAdapter extends RecyclerView.Adapter<AddToCardAdapter.AddT
                             if (firebaseAuth.getCurrentUser() != null) {
                                 if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
                                     updatedUCartItem = new UCart(uCart.getmItemId(), uCart.getmItemCutOffPrice(), uCart.getmItemPrice(),
-                                            uCart.getmItemName(), uCart.getmItemImage(), uCart.getmItemWeight(), uCart.getmItemCategory(),
+                                            uCart.getmItemName(), uCart.getmItemImage(), multiplyBy+"", uCart.getmItemCategory(),
                                             uCart.isPopular(), multiplyBy, finalPrice);
                                     if (updatedUCartItem != null) {
                                         databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart").orderByChild("mItemId").equalTo(uCart.getmItemId()).addListenerForSingleValueEvent(new ValueEventListener() {

@@ -7,20 +7,22 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <application
-        android:hardwareAccelerated="true"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/market"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activitites.ItemDescriptionActivity"></activity>
         <activity android:name=".activitites.FootBiteActivity" />
         <activity android:name=".activitites.BakingActivity" />
         <activity android:name=".activitites.SnacksActivity" />
         <activity android:name=".activitites.ProteinActivity" />
         <activity android:name=".activitites.VegetablesActivity" />
         <activity android:name=".activitites.FruitsActivity" />
-        <activity android:name=".activitites.AddToCartActivity"
-            android:parentActivityName=".activitites.FootBiteActivity"></activity>
+        <activity
+            android:name=".activitites.AddToCartActivity"
+            android:parentActivityName=".activitites.FootBiteActivity" />
         <activity android:name=".activitites.WelcomeActivity" />
         <activity android:name=".activitites.ChooseLanguageActivity" />
         <activity android:name=".activitites.RegistrationActivity" />
@@ -36,4 +38,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>

@@ -1,6 +1,8 @@
 package com.mohit.varma.apnimandi.model;
 
-public class UItem {
+import java.io.Serializable;
+
+public class UItem implements Serializable{
     private int mItemId;
     private int mItemCutOffPrice;
     private int mItemPrice;

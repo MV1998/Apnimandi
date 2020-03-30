@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:id="@+id/homeViewPager"
-        android:layout_alignParentBottom="true"></androidx.viewpager.widget.ViewPager>
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_10sdp"></androidx.viewpager.widget.ViewPager>
 
 </RelativeLayout>

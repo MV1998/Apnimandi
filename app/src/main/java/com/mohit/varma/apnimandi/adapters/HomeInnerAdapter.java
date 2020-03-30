@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,12 +24,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
+import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
+import com.mohit.varma.apnimandi.serializables.SerializableUCart;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +81,24 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
         if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
             setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
         }
+
+        holder.SingleItemViewRootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (IsInternetConnectivity.isConnected(context)){
+                        Intent intent = new Intent(context, ItemDescriptionActivity.class);
+                        SerializableUCart serializableUCart = new SerializableUCart(uItemList.get(position));
+                        intent.putExtra("current_item",(Serializable) serializableUCart);
+                        context.startActivity(intent);
+                    }else {
+                        ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
         holder.SingleItemViewAddToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override

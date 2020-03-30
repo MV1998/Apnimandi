@@ -125,7 +125,7 @@ public class AddToCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(IsInternetConnectivity.isConnected(context)){
-                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.mohit_working_on_it));
+                    onBackPressed();
                 }else {
                     ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.please_check_internet_connectivity));
                 }

@@ -2,8 +2,12 @@ package com.mohit.varma.apnimandi.activitites;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +26,8 @@ import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.utilites.Constants;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -125,7 +131,7 @@ public class FruitsActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-            itemFruitAdapter = new ItemAdapter(uItemList, context,category,FruitsActivityRootView);
+            itemFruitAdapter = new ItemAdapter(uItemList, context, category, FruitsActivityRootView);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(itemFruitAdapter);
@@ -165,5 +171,27 @@ public class FruitsActivity extends AppCompatActivity {
                 progressDialog.show();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.option_menu_for_each_category_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.EachCategoryAddToCart:
+                if (IsInternetConnectivity.isConnected(context)) {
+                    Intent intent = new Intent(context, AddToCartActivity.class);
+                    startActivity(intent);
+                } else {
+                    ShowSnackBar.snackBar(context, FruitsActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
+        }
+        return true;
     }
 }

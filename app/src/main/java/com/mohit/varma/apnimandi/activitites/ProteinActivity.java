@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,6 +26,8 @@ import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.utilites.Constants;
+import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -166,5 +172,27 @@ public class ProteinActivity extends AppCompatActivity {
             ProteinActivityRecyclerView.setHasFixedSize(true);
             ProteinActivityRecyclerView.setAdapter(itemProteinAdapter);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.option_menu_for_each_category_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.EachCategoryAddToCart:
+                if (IsInternetConnectivity.isConnected(context)) {
+                    Intent intent = new Intent(context, AddToCartActivity.class);
+                    startActivity(intent);
+                } else {
+                    ShowSnackBar.snackBar(context, ProteinActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
+        }
+        return true;
     }
 }

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activitites.FruitsActivity"
-    android:id="@+id/FruitsActivityRootView">
+    android:id="@+id/FruitsActivityRootView"
+    android:background="@color/gray_color">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/FruitsActivityToolbar"
@@ -18,12 +19,21 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/FruitsActivitySearchView"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_centerHorizontal="true"
         android:layout_below="@id/FruitsActivityToolbar"
+        app:searchIcon="@drawable/ic_search_black_24dp"
+        android:background="@drawable/shape_framelayout"
+        android:layout_margin="@dimen/_10sdp"></androidx.appcompat.widget.SearchView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fruitsRecyclerViewWidget"
+        android:layout_below="@id/FruitsActivitySearchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fruitsRecyclerViewWidget"
-        android:background="@color/gray_color"
         android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
 
     <TextView

@@ -1,17 +1,16 @@
-package com.mohit.varma.apnimandi.adapters;
+package com.mohit.varma.apnimandi.activitites;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -23,10 +22,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
-import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
@@ -34,105 +32,78 @@ import com.mohit.varma.apnimandi.serializables.SerializableUCart;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHolder> {
-    public static final String TAG = ItemAdapter.class.getSimpleName();
-    private List<UItem> items;
-    private Context context;
+public class ItemDescriptionActivity extends AppCompatActivity {
+    public static final String TAG = ItemDescriptionActivity.class.getSimpleName();
+    private ImageView ItemDescriptionActivityItemImageView;
+    private Toolbar ItemDescriptionActivityToolbar;
+    private TextView ItemDescriptionActivityItemName, ItemDescriptionActivityItemPrice;
+    private MaterialButton ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton;
+    private View ItemDescriptionActivityRootView;
     private FirebaseAuth firebaseAuth;
-    private String category;
     private DatabaseReference databaseReference;
+    private UItem item;
+    private SerializableUCart serializableUCart;
+    private Context context;
     private List<UCart> uCartList = new ArrayList<>();
-    private View rootView;
 
-    public ItemAdapter(List<UItem> items, Context context, String category, View rootView) {
-        this.items = items;
-        this.context = context;
-        this.category = category;
-        this.rootView = rootView;
-        this.firebaseAuth = MyApplication.getFirebaseAuth();
-        this.databaseReference = new MyFirebaseDatabase().getReference();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_item_description);
+
+        initViews();
         getAllUCartItems();
-    }
 
-    @Override
-    public FruitsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //View view = LayoutInflater.from(context).inflate(R.layout.itemview, parent, false);
-        View view = LayoutInflater.from(context).inflate(R.layout.single_item_view,parent,false);
-        return new FruitsViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(FruitsViewHolder holder, final int position) {
-        UItem item = items.get(position);
-        if(item.getmItemWeight().endsWith("Off")){
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice());
-        }else {
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice()+"% Off");
-        }
-        if(item.getmItemWeight().endsWith("kg")){
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
-
-        }else {
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight()+"kg");
+        if (getIntent().getSerializableExtra("current_item") != null) {
+            serializableUCart = (SerializableUCart) getIntent().getSerializableExtra("current_item");
+            if (serializableUCart != null) {
+                item = serializableUCart.getuItem();
+            }
         }
 
-        holder.SingleItemViewItemNameTextView.setText(item.getmItemName()+"");
-        holder.SingleItemViewItemFinalPriceTextView.setText(item.getmItemPrice()+"");
-
-        if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
-            setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
+        if (item != null) {
+            Log.d(TAG, "onCreate: " + new Gson().toJson(item));
+            setImageToGlide(item.getmItemImage(), ItemDescriptionActivityItemImageView);
         }
 
-        holder.SingleItemViewRootView.setOnClickListener(new View.OnClickListener() {
+        ItemDescriptionActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    if (IsInternetConnectivity.isConnected(context)){
-                        Intent intent = new Intent(context, ItemDescriptionActivity.class);
-                        SerializableUCart serializableUCart = new SerializableUCart(items.get(position));
-                        intent.putExtra("current_item",(Serializable) serializableUCart);
-                        context.startActivity(intent);
-                    }else {
-                        ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+                onBackPressed();
             }
         });
 
-        holder.SingleItemViewAddToCartButton.setOnClickListener(new View.OnClickListener() {
+        ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(IsInternetConnectivity.isConnected(context)){
+                if (IsInternetConnectivity.isConnected(context)) {
                     if (firebaseAuth != null) {
                         if (firebaseAuth.getCurrentUser() != null) {
                             if (!firebaseAuth.getCurrentUser().isAnonymous()) {
                                 if (databaseReference != null) {
                                     if (firebaseAuth.getCurrentUser() != null) {
                                         if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
-                                            if (!UCartItemAlreadyExists(items.get(position).getmItemId())) {
+                                            if (!UCartItemAlreadyExists(item.getmItemId())) {
                                                 final UCart uCart = new UCart(item.getmItemId(), item.getmItemCutOffPrice(), item.getmItemPrice(), item.getmItemName(), item.getmItemImage(), item.getmItemWeight(), item.getmItemCategory(), item.isPopular(), 1, item.getmItemPrice());
                                                 if (uCart != null) {
                                                     databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("UCart")
                                                             .push().setValue(uCart).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
-                                                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_added_to_cart));
+                                                            ShowSnackBar.snackBar(context, ItemDescriptionActivityRootView, context.getResources().getString(R.string.item_added_to_cart));
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
-                                                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.failed));
+                                                            ShowSnackBar.snackBar(context, ItemDescriptionActivityRootView, context.getResources().getString(R.string.failed));
                                                         }
                                                     });
                                                 }
                                             } else {
-                                                ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_already_in_add_to_cart));
+                                                ShowSnackBar.snackBar(context, ItemDescriptionActivityRootView, context.getResources().getString(R.string.item_already_in_add_to_cart));
                                             }
                                         }
                                     }
@@ -143,35 +114,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                             }
                         }
                     }
-                }else {
-                    ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                } else {
+                    ShowSnackBar.snackBar(context, ItemDescriptionActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
-
-    public class FruitsViewHolder extends RecyclerView.ViewHolder {
-        private CardView SingleItemViewRootView;
-        private TextView SingleItemViewItemWeightTextView,SingleItemViewItemCutOffPriceTextView,SingleItemViewItemNameTextView,
-                SingleItemViewItemFinalPriceTextView;
-        private ImageView SingleItemViewItemImageView;
-        private MaterialButton SingleItemViewAddToCartButton;
-
-        public FruitsViewHolder(@NonNull View itemView) {
-            super(itemView);
-            SingleItemViewRootView = (CardView) itemView.findViewById(R.id.SingleItemViewRootView);
-            SingleItemViewItemWeightTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemWeightTextView);
-            SingleItemViewItemCutOffPriceTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemCutOffPriceTextView);
-            SingleItemViewItemNameTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemNameTextView);
-            SingleItemViewItemFinalPriceTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemFinalPriceTextView);
-            SingleItemViewItemImageView = (ImageView) itemView.findViewById(R.id.SingleItemViewItemImageView);
-            SingleItemViewAddToCartButton = (MaterialButton) itemView.findViewById(R.id.SingleItemViewAddToCartButton);
-        }
+    public void initViews() {
+        ItemDescriptionActivityItemImageView = (ImageView) findViewById(R.id.ItemDescriptionActivityItemImageView);
+        ItemDescriptionActivityToolbar = (Toolbar) findViewById(R.id.ItemDescriptionActivityToolbar);
+        ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton);
+        ItemDescriptionActivityRootView = (View) findViewById(R.id.ItemDescriptionActivityRootView);
+        this.context = this;
+        firebaseAuth = MyApplication.getFirebaseAuth();
+        databaseReference = new MyFirebaseDatabase().getReference();
     }
 
     public void setImageToGlide(String image_url, ImageView imageView) {
@@ -179,6 +136,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                 .placeholder(R.drawable.market)
                 .error(R.drawable.market);
         Glide.with(context).load(image_url).apply(options).apply(RequestOptions.centerInsideTransform()).into(imageView);
+    }
+
+    public boolean UCartItemAlreadyExists(int id) {
+        if (uCartList != null && uCartList.size() > 0) {
+            for (int i = 0; i < uCartList.size(); i++) {
+                if (id == uCartList.get(i).getmItemId()) {
+                    return true;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return false;
     }
 
     public void getAllUCartItems() {
@@ -218,21 +188,4 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
             }
         }
     }
-
-    public boolean UCartItemAlreadyExists(int id) {
-        if (uCartList != null && uCartList.size() > 0) {
-            for (int i = 0; i < uCartList.size(); i++) {
-                if (id == uCartList.get(i).getmItemId()) {
-                    return true;
-                } else {
-                    continue;
-                }
-            }
-        }
-        return false;
-    }
-
 }
-
-
-

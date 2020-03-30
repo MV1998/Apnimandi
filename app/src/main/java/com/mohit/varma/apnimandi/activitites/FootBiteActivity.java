@@ -133,6 +133,7 @@ public class FootBiteActivity extends AppCompatActivity {
                         break;
                     case R.id.cart:
                         if (IsInternetConnectivity.isConnected(context)) {
+                            drawerLayout.closeDrawers();
                             Intent intent = new Intent(FootBiteActivity.this, AddToCartActivity.class);
                             startActivity(intent);
                         } else {
