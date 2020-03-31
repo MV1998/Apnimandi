@@ -1,13 +1,18 @@
 package com.mohit.varma.apnimandi.activitites;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,6 +20,8 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,8 +108,11 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
 
         inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-        mShowHideonScreenStarts();
+        if (!isSmsPermissionGranted()) {
+            showRequestPermissionsInfoAlertDialog();
+        }
 
+        mShowHideonScreenStarts();
 
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         networkRequestCellular = new NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR).build();
@@ -110,16 +120,16 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
-
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 String code = credential.getSmsCode();
                 Log.d(TAG, "onVerificationCompleted:" + credential);
                 if (code != null) {
+                    progressDialog.dismiss();
+                    mShowHideonSendOTPButton();
                     Log.d("PhoneAuthActivity", "onVerificationCompleted:" + credential);
                     editText_otp.setText(credential.getSmsCode());
-                    progressDialog.dismiss();
-                    ShowSnackBar.snackBar(context,view,context.getResources().getString(R.string.we_have_sent_otp));
+                    ShowSnackBar.snackBar(context, view, context.getResources().getString(R.string.we_have_sent_otp));
                 } else {
                     verifyWithoutOTP(credential);
                 }
@@ -135,9 +145,11 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     // ...
+                    ShowSnackBar.snackBar(context, view, e.getMessage());
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     // ...
+                    ShowSnackBar.snackBar(context, view, e.getMessage());
                 }
 
                 // Show a message and update the UI
@@ -157,31 +169,55 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
                 mVerificationId = s;
                 mResendToken = token;
             }
+
+            @Override
+            public void onCodeAutoRetrievalTimeOut(@NonNull String s) {
+                super.onCodeAutoRetrievalTimeOut(s);
+                Log.d(TAG, "onCodeAutoRetrievalTimeOut: " + s);
+                ShowSnackBar.snackBar(context, view, context.getResources().getString(R.string.sms_retrival_timeout));
+            }
         };
 
 
         send_otp_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mNetworkState) {
-                    inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    String mobile_number = editText_user_mobile_number.getText().toString();
-                    if (mobile_number.isEmpty() || mobile_number.length() <= 9) {
-                        Snackbar.make(view, R.string.invalid_mobile_number_msg, Snackbar.LENGTH_LONG).show();
+                if (isSmsPermissionGranted()) {
+                    if (mNetworkState) {
+                        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        String mobile_number = editText_user_mobile_number.getText().toString();
+                        if (mobile_number.isEmpty() || mobile_number.length() <= 9) {
+                            Snackbar.make(view, R.string.invalid_mobile_number_msg, Snackbar.LENGTH_LONG).show();
+                        } else {
+                            progressDialog.setTitle(R.string.wait_msg);
+                            progressDialog.setMessage(setString(R.string.trying_to_getOTP_msg));
+                            progressDialog.setCancelable(false);
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(Constants.MOBILE_COUNTRY_PREFIX);
+                            stringBuilder.append(mobile_number);
+                            sendVerificationCode(stringBuilder.toString());
+                            Log.d("Phone Number", "" + stringBuilder.toString());
+                            progressDialog.show();
+                            new CountDownTimer(60000, 1000) {
+
+                                @Override
+                                public void onTick(long l) {
+                                    progressDialog.setMessage("Resend OTP in " + l / 1000 + " Seconds");
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    if (progressDialog.isShowing()) {
+                                        progressDialog.dismiss();
+                                    }
+                                }
+                            }.start();
+                        }
                     } else {
-                        progressDialog.setTitle(R.string.wait_msg);
-                        progressDialog.setMessage(setString(R.string.trying_to_getOTP_msg));
-                        progressDialog.setCancelable(false);
-                        StringBuilder stringBuilder = new StringBuilder();
-                        mShowHideonSendOTPButton();
-                        stringBuilder.append(Constants.MOBILE_COUNTRY_PREFIX);
-                        stringBuilder.append(mobile_number);
-                        sendVerificationCode(stringBuilder.toString());
-                        Log.d("Phone Number", "" + stringBuilder.toString());
-                        progressDialog.show();
+                        Snackbar.make(view, R.string.no_internet_connection, Snackbar.LENGTH_LONG).show();
                     }
                 } else {
-                    Snackbar.make(view, R.string.no_internet_connection, Snackbar.LENGTH_LONG).show();
+                    showRequestPermissionsInfoAlertDialog();
                 }
 
             }
@@ -234,7 +270,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
         signInWithPhoneAuthCredential(credential);
     }
 
-    public void verifyWithoutOTP(PhoneAuthCredential phoneAuthCredential){
+    public void verifyWithoutOTP(PhoneAuthCredential phoneAuthCredential) {
         signInWithPhoneAuthCredential(phoneAuthCredential);
     }
 
@@ -284,6 +320,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }
@@ -348,5 +385,71 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
     protected void onPause() {
         super.onPause();
         connectivityManager.unregisterNetworkCallback(appNetworkCallBack);
+    }
+
+    public boolean isSmsPermissionGranted() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    /**
+     * Request runtime SMS permission
+     */
+    private void requestReadAndSendSmsPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)) {
+            // You may display a non-blocking explanation here, read more in the documentation:
+        }
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS}, 100);
+    }
+
+
+    public void showRequestPermissionsInfoAlertDialog() {
+        showRequestPermissionsInfoAlertDialog(true);
+    }
+
+    /**
+     * Displays an AlertDialog explaining the user why the SMS permission is going to be requests
+     *
+     * @param makeSystemRequest if set to true the system permission will be shown when the dialog is dismissed.
+     */
+    public void showRequestPermissionsInfoAlertDialog(final boolean makeSystemRequest) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.permission_alert_dialog_title); // Your own title
+        builder.setMessage(R.string.permission_dialog_message); // Your own message
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                // Display system runtime permission request?
+                if (makeSystemRequest) {
+                    requestReadAndSendSmsPermission();
+                }
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 100: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // SMS related task you need to do.
+
+                } else {
+                    showRequestPermissionsInfoAlertDialog();
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

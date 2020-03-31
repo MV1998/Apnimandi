@@ -71,6 +71,9 @@
     <string name="add_to_cart">Add</string>
     <string name="mohit_working_on_it">Mohit Working on this functionality.</string>
     <string name="we_have_sent_otp">We have sent an OTP to verify phone number on entered mobile number.</string>
+    <string name="sms_retrival_timeout">SMS auto retrieve timeout, please try again later.</string>
+    <string name="permission_alert_dialog_title">SMS Permission</string>
+    <string name="permission_dialog_message">Please OK to read sms for auto recognize OTP code.</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>
