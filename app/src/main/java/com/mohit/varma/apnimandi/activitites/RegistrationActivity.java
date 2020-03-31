@@ -114,16 +114,17 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
                 String code = credential.getSmsCode();
+                Log.d(TAG, "onVerificationCompleted:" + credential);
                 if (code != null) {
                     Log.d("PhoneAuthActivity", "onVerificationCompleted:" + credential);
                     editText_otp.setText(credential.getSmsCode());
                     progressDialog.dismiss();
+                    ShowSnackBar.snackBar(context,view,context.getResources().getString(R.string.we_have_sent_otp));
                 } else {
-
+                    verifyWithoutOTP(credential);
                 }
                 //signInWithPhoneAuthCredential(credential);
             }
-
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
@@ -231,6 +232,10 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
     public void verifyVerificationCode(String otp) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
         signInWithPhoneAuthCredential(credential);
+    }
+
+    public void verifyWithoutOTP(PhoneAuthCredential phoneAuthCredential){
+        signInWithPhoneAuthCredential(phoneAuthCredential);
     }
 
     /**

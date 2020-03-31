@@ -39,7 +39,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private Toolbar AddToCartActivityToolBar;
     private TextView AddToCartActivityNoItemAddedYetTextView,AddToCartActivityBottomRelativeLayoutTotalPriceTextView,
             AddToCartActivityBottomRelativeLayoutTotalItemTextView;
-    private View AddToCartActivityRootView;
+    private View AddToCartActivityRootView,AddToCartActivityShadowView;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private List<UCart> uCartList = new LinkedList<>();
@@ -91,11 +91,13 @@ public class AddToCartActivity extends AppCompatActivity {
                                                     }
                                                 }else {
                                                     AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
+                                                    AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 }
                                             } else {
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
                                                 AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                                                 AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
+                                                AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 dismissProgressDialog();
                                             }
                                         } catch (Exception e) {
@@ -163,6 +165,7 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutTotalItemTextView =(TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalItemTextView);
         AddToCartActivityBottomRelativeLayoutShoppingButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutShoppingButton);
         AddToCartActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutPlaceOrderButton);
+        AddToCartActivityShadowView = (View) findViewById(R.id.AddToCartActivityShadowView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();
         this.context = this;
