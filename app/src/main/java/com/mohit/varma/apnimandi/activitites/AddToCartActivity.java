@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private TextView AddToCartActivityNoItemAddedYetTextView,AddToCartActivityBottomRelativeLayoutTotalPriceTextView,
             AddToCartActivityBottomRelativeLayoutTotalItemTextView,AddToCartActivityBottomRelativeLayoutSubTotalCountTextView,
             AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView,AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView;
+    private RelativeLayout AddToCartActivityNoItemAddedYetLinearLayout;
     private View AddToCartActivityRootView,AddToCartActivityShadowView;
     private Context context;
     private DatabaseReference firebaseDatabase;
@@ -49,7 +51,6 @@ public class AddToCartActivity extends AppCompatActivity {
     private RelativeLayout AddToCartActivityBottomRelativeLayout;
     private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton,AddToCartActivityBottomRelativeLayoutPlaceOrderButton;
     private long deliveryFee,subTotal,grandTotal;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,25 +84,25 @@ public class AddToCartActivity extends AppCompatActivity {
                                                     grandTotal = subTotal+deliveryFee;
                                                     AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9"+grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size()+" Items");
+                                                    AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
+                                                    AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.GONE);
                                                     if (addToCardAdapter != null) {
                                                         dismissProgressDialog();
-                                                        AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
-                                                        AddToCartActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                                         addToCardAdapter.notifyDataSetChanged();
                                                     } else {
                                                         dismissProgressDialog();
-                                                        AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
-                                                        AddToCartActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                                         setAdapter();
                                                     }
                                                 }else {
                                                     AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
                                                     //AddToCartActivityShadowView.setVisibility(View.GONE);
+                                                    AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
                                                 }
                                             } else {
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
-                                                AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
+/*                                                AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);*/
                                                 AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
+                                                AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
                                                 //AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 dismissProgressDialog();
                                             }
@@ -193,6 +194,7 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutSubTotalCountTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutSubTotalCountTextView);
         AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView);
         AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView);
+        AddToCartActivityNoItemAddedYetLinearLayout = (RelativeLayout) findViewById(R.id.AddToCartActivityNoItemAddedYetLinearLayout);
         //AddToCartActivityShadowView = (View) findViewById(R.id.AddToCartActivityShadowView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();

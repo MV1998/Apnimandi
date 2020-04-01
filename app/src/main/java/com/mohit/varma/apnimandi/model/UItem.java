@@ -14,7 +14,6 @@ public class UItem implements Serializable{
     private UItemDescription uItemDescription;
 
     public UItem() {
-
     }
 
     public UItem(int mItemId, int mItemCutOffPrice, int mItemPrice, String mItemName, String mItemImage, String mItemWeight, String mItemCategory,boolean isPopular,UItemDescription uItemDescription) {

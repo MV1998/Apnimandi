@@ -28,6 +28,7 @@ import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
+import com.mohit.varma.apnimandi.model.UItemDescription;
 import com.mohit.varma.apnimandi.serializables.SerializableUCart;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
@@ -39,7 +40,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     public static final String TAG = ItemDescriptionActivity.class.getSimpleName();
     private ImageView ItemDescriptionActivityItemImageView;
     private Toolbar ItemDescriptionActivityToolbar;
-    private TextView ItemDescriptionActivityItemName, ItemDescriptionActivityItemPrice;
+    private TextView ItemDescriptionActivityItemName, ItemDescriptionActivityItemPrice,ItemDescriptionActivityDetailTextView,
+            ItemDescriptionActivityCaloriesTextView,ItemDescriptionActivityFatTextView,ItemDescriptionActivityProteinTextView;
     private MaterialButton ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton;
     private View ItemDescriptionActivityRootView;
     private FirebaseAuth firebaseAuth;
@@ -48,6 +50,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     private SerializableUCart serializableUCart;
     private Context context;
     private List<UCart> uCartList = new ArrayList<>();
+    private UItemDescription uItemDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,15 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         if (item != null) {
             Log.d(TAG, "onCreate: " + new Gson().toJson(item));
             setImageToGlide(item.getmItemImage(), ItemDescriptionActivityItemImageView);
+            ItemDescriptionActivityItemName.setText(""+item.getmItemName());
+            ItemDescriptionActivityItemPrice.setText("\u20B9"+item.getmItemPrice()+"/kg");
+            uItemDescription = item.getuItemDescription();
+            if(uItemDescription != null){
+                ItemDescriptionActivityDetailTextView.setText(uItemDescription.getItemDescription());
+                ItemDescriptionActivityCaloriesTextView.setText(uItemDescription.getItemCalories());
+                ItemDescriptionActivityFatTextView.setText(uItemDescription.getItemFat());
+                ItemDescriptionActivityProteinTextView.setText(uItemDescription.getItemProtein());
+            }
         }
 
         ItemDescriptionActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -126,6 +138,14 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         ItemDescriptionActivityToolbar = (Toolbar) findViewById(R.id.ItemDescriptionActivityToolbar);
         ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton);
         ItemDescriptionActivityRootView = (View) findViewById(R.id.ItemDescriptionActivityRootView);
+        ItemDescriptionActivityItemName = (TextView) findViewById(R.id.ItemDescriptionActivityItemName);
+        ItemDescriptionActivityItemPrice = (TextView) findViewById(R.id.ItemDescriptionActivityItemPrice);
+
+        ItemDescriptionActivityDetailTextView = (TextView) findViewById(R.id.ItemDescriptionActivityDetailTextView);
+        ItemDescriptionActivityCaloriesTextView = (TextView) findViewById(R.id.ItemDescriptionActivityCaloriesTextView);
+        ItemDescriptionActivityFatTextView = (TextView) findViewById(R.id.ItemDescriptionActivityFatTextView);
+        ItemDescriptionActivityProteinTextView = (TextView) findViewById(R.id.ItemDescriptionActivityProteinTextView);
+
         this.context = this;
         firebaseAuth = MyApplication.getFirebaseAuth();
         databaseReference = new MyFirebaseDatabase().getReference();

@@ -117,6 +117,7 @@
                         android:textSize="@dimen/_14sdp"></TextView>
 
                     <TextView
+                        android:id="@+id/ItemDescriptionActivityDetailTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A mango is a juicy stone fruit (drupe) produced from numerous species of tropical trees belonging to the flowering plant genus Mangifera, cultivated mostly for their edible fruit. Most of these species are found in nature as wild mangoes."
@@ -180,6 +181,7 @@
                                 android:textColor="@color/black"></TextView>
 
                             <TextView
+                                android:id="@+id/ItemDescriptionActivityCaloriesTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="60"
@@ -210,6 +212,7 @@
                                 android:textColor="@color/black"></TextView>
 
                             <TextView
+                                android:id="@+id/ItemDescriptionActivityFatTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0.4g"
@@ -232,6 +235,7 @@
                                 android:textColor="@color/black"></TextView>
 
                             <TextView
+                                android:id="@+id/ItemDescriptionActivityProteinTextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0.8g"
@@ -265,6 +269,7 @@
         android:background="@color/gray_color"
         android:padding="@dimen/_10sdp">
 
+<!--
         <LinearLayout
             android:id="@+id/SingleItemViewAddToCartLinearLayoutHorizontalContainerForMathFunctionality"
             android:layout_width="wrap_content"
@@ -300,6 +305,7 @@
                 ></ImageView>
 
         </LinearLayout>
+-->
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton"

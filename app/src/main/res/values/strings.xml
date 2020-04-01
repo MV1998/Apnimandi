@@ -77,8 +77,9 @@
     <string name="my_ordered">My Ordered</string>
     <string name="please_click_back_again_to_exit">Please click back again to exit.</string>
     <string name="subtotal">Subtotal :</string>
-    <string name="delivery_fee">Delivery Fee :</string>
+    <string name="delivery_fee">Delivery Charge :</string>
     <string name="grand_total">Grand Total :</string>
+    <string name="your_cart_empty">Your cart is empty.</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>
