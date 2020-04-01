@@ -194,4 +194,5 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
             HomeFragmentRecyclerView.setAdapter(homeAdapter);
         }
     }
+
 }

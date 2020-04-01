@@ -66,18 +66,10 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
         UItem item = uItemList.get(position);
-        if(item.getmItemWeight().endsWith("Off")){
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice());
-        }else {
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice()+"% Off");
-        }
-        if(item.getmItemWeight().endsWith("kg")){
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
-        }else {
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight()+"kg");
-        }
-        holder.SingleItemViewItemNameTextView.setText(item.getmItemName()+"");
-        holder.SingleItemViewItemFinalPriceTextView.setText(item.getmItemPrice()+"");
+        holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice() + "% Off");
+        holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
+        holder.SingleItemViewItemNameTextView.setText(item.getmItemName() + "");
+        holder.SingleItemViewItemFinalPriceTextView.setText("\u20B9"+item.getmItemPrice());
         if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
             setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
         }
@@ -86,15 +78,15 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
             @Override
             public void onClick(View view) {
                 try {
-                    if (IsInternetConnectivity.isConnected(context)){
+                    if (IsInternetConnectivity.isConnected(context)) {
                         Intent intent = new Intent(context, ItemDescriptionActivity.class);
                         SerializableUCart serializableUCart = new SerializableUCart(uItemList.get(position));
-                        intent.putExtra("current_item",(Serializable) serializableUCart);
+                        intent.putExtra("current_item", (Serializable) serializableUCart);
                         context.startActivity(intent);
-                    }else {
+                    } else {
                         ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -148,7 +140,7 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
         private CardView SingleItemViewRootView;
-        private TextView SingleItemViewItemWeightTextView,SingleItemViewItemCutOffPriceTextView,SingleItemViewItemNameTextView,
+        private TextView SingleItemViewItemWeightTextView, SingleItemViewItemCutOffPriceTextView, SingleItemViewItemNameTextView,
                 SingleItemViewItemFinalPriceTextView;
         private ImageView SingleItemViewItemImageView;
         private MaterialButton SingleItemViewAddToCartButton;

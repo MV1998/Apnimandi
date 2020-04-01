@@ -61,27 +61,17 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
     @Override
     public FruitsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //View view = LayoutInflater.from(context).inflate(R.layout.itemview, parent, false);
-        View view = LayoutInflater.from(context).inflate(R.layout.single_item_view,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.single_item_view, parent, false);
         return new FruitsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FruitsViewHolder holder, final int position) {
         UItem item = items.get(position);
-        if(item.getmItemWeight().endsWith("Off")){
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice());
-        }else {
-            holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice()+"% Off");
-        }
-        if(item.getmItemWeight().endsWith("kg")){
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
-
-        }else {
-            holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight()+"kg");
-        }
-
-        holder.SingleItemViewItemNameTextView.setText(item.getmItemName()+"");
-        holder.SingleItemViewItemFinalPriceTextView.setText(item.getmItemPrice()+"");
+        holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice() + "% Off");
+        holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
+        holder.SingleItemViewItemNameTextView.setText(item.getmItemName() + "");
+        holder.SingleItemViewItemFinalPriceTextView.setText("\u20B9"+item.getmItemPrice());
 
         if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
             setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
@@ -91,15 +81,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
             @Override
             public void onClick(View view) {
                 try {
-                    if (IsInternetConnectivity.isConnected(context)){
+                    if (IsInternetConnectivity.isConnected(context)) {
                         Intent intent = new Intent(context, ItemDescriptionActivity.class);
                         SerializableUCart serializableUCart = new SerializableUCart(items.get(position));
-                        intent.putExtra("current_item",(Serializable) serializableUCart);
+                        intent.putExtra("current_item", (Serializable) serializableUCart);
                         context.startActivity(intent);
-                    }else {
+                    } else {
                         ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -108,7 +98,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
         holder.SingleItemViewAddToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(IsInternetConnectivity.isConnected(context)){
+                if (IsInternetConnectivity.isConnected(context)) {
                     if (firebaseAuth != null) {
                         if (firebaseAuth.getCurrentUser() != null) {
                             if (!firebaseAuth.getCurrentUser().isAnonymous()) {
@@ -143,7 +133,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                             }
                         }
                     }
-                }else {
+                } else {
                     ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
@@ -157,7 +147,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
 
     public class FruitsViewHolder extends RecyclerView.ViewHolder {
         private CardView SingleItemViewRootView;
-        private TextView SingleItemViewItemWeightTextView,SingleItemViewItemCutOffPriceTextView,SingleItemViewItemNameTextView,
+        private TextView SingleItemViewItemWeightTextView, SingleItemViewItemCutOffPriceTextView, SingleItemViewItemNameTextView,
                 SingleItemViewItemFinalPriceTextView;
         private ImageView SingleItemViewItemImageView;
         private MaterialButton SingleItemViewAddToCartButton;

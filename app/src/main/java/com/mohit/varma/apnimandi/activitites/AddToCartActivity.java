@@ -38,7 +38,8 @@ public class AddToCartActivity extends AppCompatActivity {
     private AddToCardAdapter addToCardAdapter;
     private Toolbar AddToCartActivityToolBar;
     private TextView AddToCartActivityNoItemAddedYetTextView,AddToCartActivityBottomRelativeLayoutTotalPriceTextView,
-            AddToCartActivityBottomRelativeLayoutTotalItemTextView;
+            AddToCartActivityBottomRelativeLayoutTotalItemTextView,AddToCartActivityBottomRelativeLayoutSubTotalCountTextView,
+            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView,AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView;
     private View AddToCartActivityRootView,AddToCartActivityShadowView;
     private Context context;
     private DatabaseReference firebaseDatabase;
@@ -47,6 +48,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private RelativeLayout AddToCartActivityBottomRelativeLayout;
     private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton,AddToCartActivityBottomRelativeLayoutPlaceOrderButton;
+    private long deliveryFee,subTotal,grandTotal;
 
 
     @Override
@@ -76,7 +78,10 @@ public class AddToCartActivity extends AppCompatActivity {
                                                 dismissProgressDialog();
                                                 if (uCartList != null && uCartList.size() > 0) {
                                                     Log.d(TAG, "onDataChange: "+ getTotalItemPriceOfAllItem(uCartList));
-                                                    AddToCartActivityBottomRelativeLayoutTotalPriceTextView.setText("Grand Total: \u20B9"+ getTotalItemPriceOfAllItem(uCartList));
+                                                    subTotal= getTotalItemPriceOfAllItem(uCartList);
+                                                    AddToCartActivityBottomRelativeLayoutSubTotalCountTextView.setText("\u20B9"+subTotal);
+                                                    grandTotal = subTotal+deliveryFee;
+                                                    AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9"+grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size()+" Items");
                                                     if (addToCardAdapter != null) {
                                                         dismissProgressDialog();
@@ -91,13 +96,13 @@ public class AddToCartActivity extends AppCompatActivity {
                                                     }
                                                 }else {
                                                     AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
-                                                    AddToCartActivityShadowView.setVisibility(View.GONE);
+                                                    //AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 }
                                             } else {
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
                                                 AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                                                 AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
-                                                AddToCartActivityShadowView.setVisibility(View.GONE);
+                                                //AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 dismissProgressDialog();
                                             }
                                         } catch (Exception e) {
@@ -110,6 +115,25 @@ public class AddToCartActivity extends AppCompatActivity {
                                     }
                                 });
                             }
+
+                            firebaseDatabase.child("Admin").child("deliveryFee").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists()){
+                                        if(dataSnapshot.getValue()!= null){
+                                            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView.setText("\u20B9"+dataSnapshot.getValue()+"");
+                                            deliveryFee = (long) dataSnapshot.getValue();
+                                            grandTotal = subTotal + deliveryFee;
+                                            AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9"+grandTotal);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
                 }
@@ -165,7 +189,11 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutTotalItemTextView =(TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalItemTextView);
         AddToCartActivityBottomRelativeLayoutShoppingButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutShoppingButton);
         AddToCartActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutPlaceOrderButton);
-        AddToCartActivityShadowView = (View) findViewById(R.id.AddToCartActivityShadowView);
+
+        AddToCartActivityBottomRelativeLayoutSubTotalCountTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutSubTotalCountTextView);
+        AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView);
+        AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView);
+        //AddToCartActivityShadowView = (View) findViewById(R.id.AddToCartActivityShadowView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();
         this.context = this;

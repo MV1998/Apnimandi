@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/_80sdp"
+    android:id="@+id/AddToCartActivityBottomRelativeLayout"
+    app:behavior_skipCollapsed="true"
+    android:padding="@dimen/_10sdp"
+    android:background="@drawable/shape_framelayout"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/AddToCartActivityHorizontalLine3"
+            android:layout_alignParentLeft="true"
+            android:text="@string/subtotal"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <View
+            android:id="@+id/AddToCartActivityHorizontalLine1"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@color/gray_color"></View>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutDeliveryPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AddToCartActivityHorizontalLine1"
+            android:layout_alignParentLeft="true"
+            android:text="@string/delivery_fee"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <View
+            android:id="@+id/AddToCartActivityHorizontalLine2"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutDeliveryPriceTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@color/gray_color"></View>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalPriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AddToCartActivityHorizontalLine2"
+            android:layout_alignParentLeft="true"
+            android:text="@string/grand_total"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="3 Item"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <View
+            android:id="@+id/AddToCartActivityHorizontalLine3"
+            android:layout_width="@dimen/_300sdp"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:background="@color/gray_color"></View>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutSubTotalCountTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/AddToCartActivityHorizontalLine3"
+            android:layout_alignParentRight="true"
+            android:text="₹190"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/AddToCartActivityHorizontalLine1"
+            android:layout_alignParentRight="true"
+            android:text="₹30"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <TextView
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/AddToCartActivityHorizontalLine2"
+            android:layout_alignParentRight="true"
+            android:text="₹220"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutShoppingButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AddToCartActivityBottomRelativeLayoutTotalPriceTextView"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:insetLeft="4dp"
+            android:text="@string/shopping_now">
+
+        </com.google.android.material.button.MaterialButton>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AddToCartActivityBottomRelativeLayoutPlaceOrderButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:insetLeft="4dp"
+            android:text="@string/please_order">
+
+        </com.google.android.material.button.MaterialButton>
+
+</RelativeLayout>

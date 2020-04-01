@@ -10,6 +10,11 @@
         android:title="@string/Cart"
         android:icon="@drawable/ic_shopping_cart_black_24dp"></item>
 
+    <item android:id="@+id/myOrdered"
+        android:visible="false"
+        android:title="@string/my_ordered"
+        android:icon="@drawable/ic_icons8_purchase_order_64"></item>
+
     <item android:id="@+id/previous_order"
         android:title="@string/previous_order"
         android:visible="false"

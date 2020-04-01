@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,6 +63,7 @@ public class FootBiteActivity extends AppCompatActivity {
 
     private Context context;
     private Fragment fragment = null;
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,12 +245,28 @@ public class FootBiteActivity extends AppCompatActivity {
             menu.findItem(R.id.cart).setVisible(true);
             menu.findItem(R.id.previous_order).setVisible(true);
             menu.findItem(R.id.logout).setVisible(true);
+            menu.findItem(R.id.myOrdered).setVisible(true);
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+    }
 
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_click_back_again_to_exit));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }

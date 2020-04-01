@@ -47,7 +47,6 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.TestingHolder>
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(context);
         holder.viewPager.setAdapter(viewPagerAdapter);
         settimer(holder.viewPager);
-        holder.textView.setText("Most Popular");
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         holder.recyclerView.setHasFixedSize(true);
         holder.recyclerView.setAdapter(homeInnerAdapter);
@@ -60,13 +59,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.TestingHolder>
 
     class TestingHolder extends RecyclerView.ViewHolder {
         private ViewPager viewPager;
-        private TextView textView;
         private RecyclerView recyclerView;
 
         public TestingHolder(@NonNull View itemView) {
             super(itemView);
             viewPager = itemView.findViewById(R.id.homeViewPager);
-            textView = itemView.findViewById(R.id.mostpopularTextView);
             recyclerView = itemView.findViewById(R.id.home_sub_recyclerView);
         }
     }
