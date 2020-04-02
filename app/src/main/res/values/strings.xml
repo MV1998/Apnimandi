@@ -80,6 +80,7 @@
     <string name="delivery_fee">Delivery Charge :</string>
     <string name="grand_total">Grand Total :</string>
     <string name="your_cart_empty">Your cart is empty.</string>
+    <string name="order_now">Order Now</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>

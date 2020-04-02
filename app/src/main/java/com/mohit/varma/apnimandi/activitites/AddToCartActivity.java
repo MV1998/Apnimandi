@@ -2,11 +2,11 @@ package com.mohit.varma.apnimandi.activitites;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,19 +38,19 @@ public class AddToCartActivity extends AppCompatActivity {
     private RecyclerView AddToCartActivityRecyclerView;
     private AddToCardAdapter addToCardAdapter;
     private Toolbar AddToCartActivityToolBar;
-    private TextView AddToCartActivityNoItemAddedYetTextView,AddToCartActivityBottomRelativeLayoutTotalPriceTextView,
-            AddToCartActivityBottomRelativeLayoutTotalItemTextView,AddToCartActivityBottomRelativeLayoutSubTotalCountTextView,
-            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView,AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView;
+    private TextView AddToCartActivityBottomRelativeLayoutTotalItemTextView, AddToCartActivityBottomRelativeLayoutSubTotalCountTextView,
+            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView, AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView;
     private RelativeLayout AddToCartActivityNoItemAddedYetLinearLayout;
-    private View AddToCartActivityRootView,AddToCartActivityShadowView;
+    private View AddToCartActivityRootView;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private List<UCart> uCartList = new LinkedList<>();
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private RelativeLayout AddToCartActivityBottomRelativeLayout;
-    private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton,AddToCartActivityBottomRelativeLayoutPlaceOrderButton;
-    private long deliveryFee,subTotal,grandTotal;
+    private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton, AddToCartActivityBottomRelativeLayoutPlaceOrderButton,
+            AddToCartActivityBottomRelativeLayoutOrderNowButton;
+    private long deliveryFee, subTotal, grandTotal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +78,12 @@ public class AddToCartActivity extends AppCompatActivity {
                                                 }
                                                 dismissProgressDialog();
                                                 if (uCartList != null && uCartList.size() > 0) {
-                                                    Log.d(TAG, "onDataChange: "+ getTotalItemPriceOfAllItem(uCartList));
-                                                    subTotal= getTotalItemPriceOfAllItem(uCartList);
-                                                    AddToCartActivityBottomRelativeLayoutSubTotalCountTextView.setText("\u20B9"+subTotal);
-                                                    grandTotal = subTotal+deliveryFee;
-                                                    AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9"+grandTotal);
-                                                    AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size()+" Items");
+                                                    Log.d(TAG, "onDataChange: " + getTotalItemPriceOfAllItem(uCartList));
+                                                    subTotal = getTotalItemPriceOfAllItem(uCartList);
+                                                    AddToCartActivityBottomRelativeLayoutSubTotalCountTextView.setText("\u20B9" + subTotal);
+                                                    grandTotal = subTotal + deliveryFee;
+                                                    AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9" + grandTotal);
+                                                    AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size() + " Items");
                                                     AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
                                                     AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.GONE);
                                                     if (addToCardAdapter != null) {
@@ -93,17 +93,14 @@ public class AddToCartActivity extends AppCompatActivity {
                                                         dismissProgressDialog();
                                                         setAdapter();
                                                     }
-                                                }else {
+                                                } else {
                                                     AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
-                                                    //AddToCartActivityShadowView.setVisibility(View.GONE);
                                                     AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
                                                 }
                                             } else {
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
-/*                                                AddToCartActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);*/
                                                 AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
                                                 AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
-                                                //AddToCartActivityShadowView.setVisibility(View.GONE);
                                                 dismissProgressDialog();
                                             }
                                         } catch (Exception e) {
@@ -120,12 +117,12 @@ public class AddToCartActivity extends AppCompatActivity {
                             firebaseDatabase.child("Admin").child("deliveryFee").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.exists()){
-                                        if(dataSnapshot.getValue()!= null){
-                                            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView.setText("\u20B9"+dataSnapshot.getValue()+"");
+                                    if (dataSnapshot.exists()) {
+                                        if (dataSnapshot.getValue() != null) {
+                                            AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView.setText("\u20B9" + dataSnapshot.getValue() + "");
                                             deliveryFee = (long) dataSnapshot.getValue();
                                             grandTotal = subTotal + deliveryFee;
-                                            AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9"+grandTotal);
+                                            AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9" + grandTotal);
                                         }
                                     }
                                 }
@@ -151,10 +148,10 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutShoppingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(IsInternetConnectivity.isConnected(context)){
+                if (IsInternetConnectivity.isConnected(context)) {
                     onBackPressed();
-                }else {
-                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.please_check_internet_connectivity));
+                } else {
+                    ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
         });
@@ -162,11 +159,20 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(IsInternetConnectivity.isConnected(context)){
-                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.mohit_working_on_it));
-                }else {
-                    ShowSnackBar.snackBar(context,AddToCartActivityRootView,context.getResources().getString(R.string.please_check_internet_connectivity));
+                if (IsInternetConnectivity.isConnected(context)) {
+                    ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.mohit_working_on_it));
+                } else {
+                    ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
+            }
+        });
+
+        AddToCartActivityBottomRelativeLayoutOrderNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FootBiteActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -185,17 +191,14 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityToolBar = (Toolbar) findViewById(R.id.AddToCartActivityToolBar);
         AddToCartActivityRootView = (View) findViewById(R.id.AddToCartActivityRootView);
         AddToCartActivityBottomRelativeLayout = (RelativeLayout) findViewById(R.id.AddToCartActivityBottomRelativeLayout);
-        AddToCartActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.AddToCartActivityNoItemAddedYetTextView);
-        AddToCartActivityBottomRelativeLayoutTotalPriceTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalPriceTextView);
-        AddToCartActivityBottomRelativeLayoutTotalItemTextView =(TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalItemTextView);
+        AddToCartActivityBottomRelativeLayoutTotalItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutTotalItemTextView);
         AddToCartActivityBottomRelativeLayoutShoppingButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutShoppingButton);
         AddToCartActivityBottomRelativeLayoutPlaceOrderButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutPlaceOrderButton);
-
+        AddToCartActivityBottomRelativeLayoutOrderNowButton = (MaterialButton) findViewById(R.id.AddToCartActivityBottomRelativeLayoutOrderNowButton);
         AddToCartActivityBottomRelativeLayoutSubTotalCountTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutSubTotalCountTextView);
         AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView);
         AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView = (TextView) findViewById(R.id.AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView);
         AddToCartActivityNoItemAddedYetLinearLayout = (RelativeLayout) findViewById(R.id.AddToCartActivityNoItemAddedYetLinearLayout);
-        //AddToCartActivityShadowView = (View) findViewById(R.id.AddToCartActivityShadowView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();
         this.context = this;
@@ -239,17 +242,17 @@ public class AddToCartActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uCartList != null && uCartList.size() > 0) {
-            addToCardAdapter = new AddToCardAdapter(context,uCartList,firebaseDatabase,firebaseAuth,AddToCartActivityRootView);
-            AddToCartActivityRecyclerView.setLayoutManager(new GridLayoutManager(context,2));
+            addToCardAdapter = new AddToCardAdapter(context, uCartList, firebaseDatabase, firebaseAuth, AddToCartActivityRootView);
+            AddToCartActivityRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
             AddToCartActivityRecyclerView.setHasFixedSize(true);
             AddToCartActivityRecyclerView.setAdapter(addToCardAdapter);
         }
     }
 
-    public int getTotalItemPriceOfAllItem(List<UCart> uCartList){
-        int total =0;
-        for(UCart uCart : uCartList){
-            total = total+uCart.getmItemFinalPrice();
+    public int getTotalItemPriceOfAllItem(List<UCart> uCartList) {
+        int total = 0;
+        for (UCart uCart : uCartList) {
+            total = total + uCart.getmItemFinalPrice();
         }
         return total;
     }

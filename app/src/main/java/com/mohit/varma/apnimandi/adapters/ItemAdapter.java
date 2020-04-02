@@ -48,6 +48,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
     private List<UCart> uCartList = new ArrayList<>();
     private View rootView;
 
+    public ItemAdapter() {
+    }
+
     public ItemAdapter(List<UItem> items, Context context, String category, View rootView) {
         this.items = items;
         this.context = context;

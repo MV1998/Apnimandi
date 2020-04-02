@@ -38,7 +38,7 @@
                 android:id="@+id/AddToCartActivityNoItemAddedYetLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:orientation="vertical">
 
                 <ImageView
@@ -50,6 +50,7 @@
                     android:src="@drawable/orange_shopping_cart"></ImageView>
 
                 <TextView
+                    android:id="@+id/AddToCartActivityBottomRelativeLayouCartEmptyTextVieww"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -59,28 +60,21 @@
                     android:layout_below="@id/AddToCartActivityNoItemAddedYetImageView"
                     android:textColor="@color/black"></TextView>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/AddToCartActivityBottomRelativeLayoutOrderNowButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="@dimen/_140sdp"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/your_cart_empty"
-                    android:textSize="@dimen/_14sdp"
-                    android:layout_below="@id/AddToCartActivityNoItemAddedYetImageView"
-                    android:textColor="@color/black"></TextView>
+                    android:insetLeft="4dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="@string/order_now"
+                    android:layout_below="@id/AddToCartActivityBottomRelativeLayouCartEmptyTextVieww"
+                    android:layout_centerHorizontal="true">
+
+                </com.google.android.material.button.MaterialButton>
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/AddToCartActivityNoItemAddedYetTextView"
-                android:visibility="gone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="@string/No_item_added_yet"
-                android:textSize="@dimen/_18sdp"
-                android:textColor="@color/black"></TextView>
 
         </RelativeLayout>
 
