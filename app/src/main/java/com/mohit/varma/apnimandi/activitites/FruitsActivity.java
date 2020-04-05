@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +44,9 @@ public class FruitsActivity extends AppCompatActivity {
 
     private Toolbar FruitsActivityToolbar;
     private RecyclerView recyclerView;
-    private TextView FruitsActivityNoItemAddedYetTextView;
+    private CardView FruitsActivitySearchCardView;
+    private TextView FruitsActivityNoItemAddedYetTextView,FruitsActivityQueryHint;
+    private SearchView FruitsActivitySearchView;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -87,17 +92,20 @@ public class FruitsActivity extends AppCompatActivity {
                         if (uItemList != null && uItemList.size() > 0) {
                             if (itemFruitAdapter != null) {
                                 dismissProgressDialog();
+                                FruitsActivitySearchCardView.setVisibility(View.VISIBLE);
                                 recyclerView.setVisibility(View.VISIBLE);
                                 FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 itemFruitAdapter.notifyDataSetChanged();
                             } else {
                                 dismissProgressDialog();
+                                FruitsActivitySearchCardView.setVisibility(View.VISIBLE);
                                 recyclerView.setVisibility(View.VISIBLE);
                                 FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 setAdapter();
                             }
                         }
                     } else {
+                        FruitsActivitySearchCardView.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.GONE);
                         FruitsActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                         dismissProgressDialog();
@@ -112,6 +120,33 @@ public class FruitsActivity extends AppCompatActivity {
 
             }
         });
+
+        FruitsActivitySearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                FruitsActivityQueryHint.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+        FruitsActivitySearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FruitsActivityQueryHint.setVisibility(View.GONE);
+            }
+        });
+        FruitsActivitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                itemFruitAdapter.filter(text);
+                return false;
+            }
+        });
     }
 
     public void initViewsAndInstances() {
@@ -119,6 +154,9 @@ public class FruitsActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.fruitsRecyclerViewWidget);
         FruitsActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.FruitsActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
+        FruitsActivityQueryHint = findViewById(R.id.FruitsActivityQueryHint);
+        FruitsActivitySearchView = findViewById(R.id.FruitsActivitySearchView);
+        FruitsActivitySearchCardView = findViewById(R.id.FruitsActivitySearchCardView);
         FruitsActivityRootView = (View) findViewById(R.id.FruitsActivityRootView);
         this.context = this;
         progressDialog = new ProgressDialog(context);

@@ -2,7 +2,9 @@ package com.mohit.varma.apnimandi.activitites;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +42,9 @@ public class SnacksActivity extends AppCompatActivity {
 
     private Toolbar SnacksActivityToolbar;
     private RecyclerView SnacksActivityRecyclerView;
-    private TextView SnacksActivityNoItemAddedYetTextView;
+    private CardView SnacksActivitySearchCardView;
+    private SearchView SnacksActivitySearchView;
+    private TextView SnacksActivityNoItemAddedYetTextView,SnacksActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -79,17 +83,20 @@ public class SnacksActivity extends AppCompatActivity {
                         if (uItemList != null && uItemList.size() > 0) {
                             if (itemSnacksAdapter != null) {
                                 dismissProgressDialog();
+                                SnacksActivitySearchCardView.setVisibility(View.VISIBLE);
                                 SnacksActivityRecyclerView.setVisibility(View.VISIBLE);
                                 SnacksActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 itemSnacksAdapter.notifyDataSetChanged();
                             } else {
                                 dismissProgressDialog();
+                                SnacksActivitySearchCardView.setVisibility(View.VISIBLE);
                                 SnacksActivityRecyclerView.setVisibility(View.VISIBLE);
                                 SnacksActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 setAdapter();
                             }
                         }
                     } else {
+                        SnacksActivitySearchCardView.setVisibility(View.GONE);
                         SnacksActivityRecyclerView.setVisibility(View.GONE);
                         SnacksActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                         dismissProgressDialog();
@@ -112,6 +119,32 @@ public class SnacksActivity extends AppCompatActivity {
             }
         });
 
+        SnacksActivitySearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                SnacksActivityQueryHint.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+        SnacksActivitySearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SnacksActivityQueryHint.setVisibility(View.GONE);
+            }
+        });
+        SnacksActivitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                itemSnacksAdapter.filter(text);
+                return false;
+            }
+        });
     }
 
     public void initViewsAndInstances() {
@@ -120,6 +153,9 @@ public class SnacksActivity extends AppCompatActivity {
         SnacksActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.SnacksActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         SnacksActivityRootView = (View) findViewById(R.id.SnacksActivityRootView);
+        SnacksActivitySearchView = findViewById(R.id.SnacksActivitySearchView);
+        SnacksActivitySearchCardView = findViewById(R.id.SnacksActivitySearchCardView);
+        SnacksActivityQueryHint = findViewById(R.id.SnacksActivityQueryHint);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }

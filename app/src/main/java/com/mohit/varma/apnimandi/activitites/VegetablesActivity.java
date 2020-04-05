@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,7 +42,9 @@ public class VegetablesActivity extends AppCompatActivity {
 
     private Toolbar VegetablesActivityToolbar;
     private RecyclerView VegetablesActivityRecyclerView;
-    private TextView VegetablesActivityNoItemAddedYetTextView;
+    private SearchView VegetablesActivitySearchView;
+    private CardView VegetablesActivitySearchCardView;
+    private TextView VegetablesActivityNoItemAddedYetTextView,VegetablesActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -79,17 +83,20 @@ public class VegetablesActivity extends AppCompatActivity {
                         if (uItemList != null && uItemList.size() > 0) {
                             if (itemVegetablesAdapter != null) {
                                 dismissProgressDialog();
+                                VegetablesActivitySearchCardView.setVisibility(View.VISIBLE);
                                 VegetablesActivityRecyclerView.setVisibility(View.VISIBLE);
                                 VegetablesActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 itemVegetablesAdapter.notifyDataSetChanged();
                             } else {
                                 dismissProgressDialog();
+                                VegetablesActivitySearchCardView.setVisibility(View.VISIBLE);
                                 VegetablesActivityRecyclerView.setVisibility(View.VISIBLE);
                                 VegetablesActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 setAdapter();
                             }
                         }
                     } else {
+                        VegetablesActivitySearchCardView.setVisibility(View.GONE);
                         VegetablesActivityRecyclerView.setVisibility(View.GONE);
                         VegetablesActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                         dismissProgressDialog();
@@ -105,10 +112,38 @@ public class VegetablesActivity extends AppCompatActivity {
             }
         });
 
+        VegetablesActivitySearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                VegetablesActivityQueryHint.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
         VegetablesActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        VegetablesActivitySearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VegetablesActivityQueryHint.setVisibility(View.GONE);
+            }
+        });
+        VegetablesActivitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                itemVegetablesAdapter.filter(text);
+                return false;
             }
         });
 
@@ -119,7 +154,10 @@ public class VegetablesActivity extends AppCompatActivity {
         VegetablesActivityRecyclerView = (RecyclerView) findViewById(R.id.VegetablesActivityRecyclerView);
         VegetablesActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.VegetablesActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
+        VegetablesActivitySearchView = findViewById(R.id.VegetablesActivitySearchView);
+        VegetablesActivityQueryHint = findViewById(R.id.VegetablesActivityQueryHint);
         VegetablesActivityRootView = (View) findViewById(R.id.VegetablesActivityRootView);
+        VegetablesActivitySearchCardView = findViewById(R.id.VegetablesActivitySearchCardView);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }

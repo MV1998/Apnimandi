@@ -90,6 +90,8 @@
     <string name="phone_number">Phone Number</string>
     <string name="summary">Order Summary</string>
     <string name="please_enter_address">Please enter address.</string>
+    <string name="search_item_by_name">Search Item By Name</string>
+    <string name="order_placed">Order Successfuly Placed</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>

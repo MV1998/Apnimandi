@@ -2,7 +2,9 @@ package com.mohit.varma.apnimandi.activitites;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +36,9 @@ public class BakingActivity extends AppCompatActivity {
 
     private Toolbar BakingActivityToolbar;
     private RecyclerView BakingActivityRecyclerView;
-    private TextView BakingActivityNoItemAddedYetTextView;
+    private TextView BakingActivityNoItemAddedYetTextView,BakingActivityQueryHint;
+    private CardView BakingActivitySearchCardView;
+    private SearchView BakingActivitySearchView;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -73,17 +77,20 @@ public class BakingActivity extends AppCompatActivity {
                         if (uItemList != null && uItemList.size() > 0) {
                             if (itemBackingAdapter != null) {
                                 dismissProgressDialog();
+                                BakingActivitySearchCardView.setVisibility(View.VISIBLE);
                                 BakingActivityRecyclerView.setVisibility(View.VISIBLE);
                                 BakingActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 itemBackingAdapter.notifyDataSetChanged();
                             } else {
                                 dismissProgressDialog();
+                                BakingActivitySearchCardView.setVisibility(View.VISIBLE);
                                 BakingActivityRecyclerView.setVisibility(View.VISIBLE);
                                 BakingActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 setAdapter();
                             }
                         }
                     } else {
+                        BakingActivitySearchCardView.setVisibility(View.GONE);
                         BakingActivityRecyclerView.setVisibility(View.GONE);
                         BakingActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                         dismissProgressDialog();
@@ -105,6 +112,35 @@ public class BakingActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        BakingActivitySearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                BakingActivityQueryHint.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        BakingActivitySearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BakingActivityQueryHint.setVisibility(View.GONE);
+            }
+        });
+
+        BakingActivitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                itemBackingAdapter.filter(text);
+                return false;
+            }
+        });
     }
 
     public void initViewsAndInstances() {
@@ -113,6 +149,9 @@ public class BakingActivity extends AppCompatActivity {
         BakingActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.BakingActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         BakingActivityRootView = (View) findViewById(R.id.BakingActivityRootView);
+        BakingActivitySearchCardView = findViewById(R.id.BakingActivitySearchCardView);
+        BakingActivityQueryHint = findViewById(R.id.BakingActivityQueryHint);
+        BakingActivitySearchView = findViewById(R.id.BakingActivitySearchView);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }

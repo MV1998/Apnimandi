@@ -7,19 +7,31 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
+import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.SummaryItemAdapter;
+import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
+import com.mohit.varma.apnimandi.model.OrderStatus;
+import com.mohit.varma.apnimandi.model.Orders;
+import com.mohit.varma.apnimandi.model.PaymentMethod;
+import com.mohit.varma.apnimandi.model.PaymentStatus;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UserAddress;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.ArrayList;
@@ -34,12 +46,16 @@ public class CheckoutActivity extends AppCompatActivity {
     private TextView CheckoutActivityAddChangeAddress, CheckoutActivityUserName, CheckoutActivityAddressLine1,
             CheckoutActivityAddressLine2, CheckoutActivityCityCode, CheckoutActivityPhoneNumber;
     private MaterialButton CheckoutActivityPlaceOrderButton;
-    private View CheckoutActivityRootView;
+    private View CheckoutActivityRootView, bottomSheetView;
     private RecyclerView CheckoutActivityRecyclerView;
+    private BottomSheetBehavior bottomSheetBehavior;
     private List<UCart> uCartList = new ArrayList<>();
     private SummaryItemAdapter summaryItemAdapter;
     private Context context;
+    private Session session;
     private long grandTotal;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
     private UserAddress userAddress = null;
 
     @Override
@@ -49,8 +65,15 @@ public class CheckoutActivity extends AppCompatActivity {
 
         initViews();
 
-/*        intent.putExtra("UCartItem",(Serializable) uCartList);
-        intent.putExtra("UCartGrandTotalPrice",grandTotal);UCartGrandTotalPrice*/
+        userAddress = session.getAddress();
+        if (userAddress != null) {
+            setVisibleAddressPanel();
+            CheckoutActivityUserName.setText(userAddress.getUserName());
+            CheckoutActivityAddressLine1.setText(userAddress.getAddressLine1());
+            CheckoutActivityAddressLine2.setText(userAddress.getAddressLine2());
+            CheckoutActivityCityCode.setText(userAddress.getCityCode());
+            CheckoutActivityPhoneNumber.setText(userAddress.getPhoneNumber());
+        }
 
         if (getIntent().getSerializableExtra("UCartItem") != null && getIntent().getSerializableExtra("UCartGrandTotalPrice") != null) {
             uCartList = (List<UCart>) getIntent().getSerializableExtra("UCartItem");
@@ -87,13 +110,51 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (IsInternetConnectivity.isConnected(context)) {
                     if (userAddress != null) {
-
-                    }else {
+                        session.setAddress(userAddress);
+                        if (firebaseAuth != null) {
+                            if (firebaseAuth.getCurrentUser() != null) {
+                                if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                                    if (databaseReference != null) {
+                                        if (firebaseAuth.getCurrentUser() != null) {
+                                            if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                                Orders orders = new Orders(123, "10/12/1998", userAddress, uCartList, OrderStatus.ORDER_PLACED, PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.UNPAID, grandTotal);
+                                                if (orders != null) {
+                                                    Log.d(TAG, "onClick: " + new Gson().toJson(orders));
+                                                    databaseReference.child("Orders").child(firebaseAuth.getCurrentUser().getPhoneNumber())
+                                                            .push()
+                                                            .setValue(orders)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.order_placed));
+                                                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
                         ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_enter_address));
                     }
                 } else {
                     ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
+            }
+        });
+
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // React to state change
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // React to dragging events
             }
         });
     }
@@ -109,7 +170,12 @@ public class CheckoutActivity extends AppCompatActivity {
         CheckoutActivityPlaceOrderButton = findViewById(R.id.CheckoutActivityPlaceOrderButton);
         CheckoutActivityRootView = findViewById(R.id.CheckoutActivityRootView);
         CheckoutActivityRecyclerView = findViewById(R.id.CheckoutActivityRecyclerView);
+        bottomSheetView = findViewById(R.id.AddToCartActivityBottomRelativeLayout);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
         context = this;
+        session = new Session(context);
+        databaseReference = new MyFirebaseDatabase().getReference();
+        firebaseAuth = MyApplication.getFirebaseAuth();
     }
 
     @Override
@@ -138,7 +204,6 @@ public class CheckoutActivity extends AppCompatActivity {
         CheckoutActivityCityCode.setVisibility(View.VISIBLE);
         CheckoutActivityPhoneNumber.setVisibility(View.VISIBLE);
     }
-
 
     public void setAdapter() {
         if (uCartList != null && uCartList.size() > 0) {

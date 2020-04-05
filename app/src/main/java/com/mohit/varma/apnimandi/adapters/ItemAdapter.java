@@ -37,10 +37,12 @@ import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHolder> {
     public static final String TAG = ItemAdapter.class.getSimpleName();
     private List<UItem> items;
+    private List<UItem> searchItems;
     private Context context;
     private FirebaseAuth firebaseAuth;
     private String category;
@@ -53,6 +55,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
 
     public ItemAdapter(List<UItem> items, Context context, String category, View rootView) {
         this.items = items;
+        this.searchItems = new ArrayList<>();
+        this.searchItems.addAll(items);
         this.context = context;
         this.category = category;
         this.rootView = rootView;
@@ -223,6 +227,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
             }
         }
         return false;
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        this.items.clear();
+        if (charText.length() == 0) {
+            this.items.addAll(searchItems);
+        } else {
+            for (UItem wp : searchItems) {
+                if (wp.getmItemName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    this.items.add(wp);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
 }

@@ -1,11 +1,5 @@
 package com.mohit.varma.apnimandi.activitites;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +10,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +42,9 @@ public class ProteinActivity extends AppCompatActivity {
 
     private Toolbar ProteinActivityToolbar;
     private RecyclerView ProteinActivityRecyclerView;
-    private TextView ProteinActivityNoItemAddedYetTextView;
+    private SearchView ProteinActivitySearchView;
+    private CardView ProteinActivitySearchCardView;
+    private TextView ProteinActivityNoItemAddedYetTextView, ProteinActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -79,17 +83,20 @@ public class ProteinActivity extends AppCompatActivity {
                         if (uItemList != null && uItemList.size() > 0) {
                             if (itemProteinAdapter != null) {
                                 dismissProgressDialog();
+                                ProteinActivitySearchCardView.setVisibility(View.VISIBLE);
                                 ProteinActivityRecyclerView.setVisibility(View.VISIBLE);
                                 ProteinActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 itemProteinAdapter.notifyDataSetChanged();
                             } else {
                                 dismissProgressDialog();
+                                ProteinActivitySearchCardView.setVisibility(View.VISIBLE);
                                 ProteinActivityRecyclerView.setVisibility(View.VISIBLE);
                                 ProteinActivityNoItemAddedYetTextView.setVisibility(View.GONE);
                                 setAdapter();
                             }
                         }
                     } else {
+                        ProteinActivitySearchCardView.setVisibility(View.GONE);
                         ProteinActivityRecyclerView.setVisibility(View.GONE);
                         ProteinActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
                         dismissProgressDialog();
@@ -112,6 +119,34 @@ public class ProteinActivity extends AppCompatActivity {
             }
         });
 
+        ProteinActivitySearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                ProteinActivityQueryHint.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+        ProteinActivitySearchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProteinActivityQueryHint.setVisibility(View.GONE);
+            }
+        });
+
+        ProteinActivitySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText;
+                itemProteinAdapter.filter(text);
+                return false;
+            }
+        });
     }
 
     public void initViewsAndInstances() {
@@ -120,6 +155,9 @@ public class ProteinActivity extends AppCompatActivity {
         ProteinActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.ProteinActivityNoItemAddedYetTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         ProteinActivityRootView = (View) findViewById(R.id.ProteinActivityRootView);
+        ProteinActivitySearchView = findViewById(R.id.ProteinActivitySearchView);
+        ProteinActivitySearchCardView = findViewById(R.id.ProteinActivitySearchCardView);
+        ProteinActivityQueryHint = findViewById(R.id.ProteinActivityQueryHint);
         this.context = this;
         progressDialog = new ProgressDialog(context);
     }
@@ -167,7 +205,7 @@ public class ProteinActivity extends AppCompatActivity {
 
     public void setAdapter() {
         if (uItemList != null && uItemList.size() > 0) {
-            itemProteinAdapter = new ItemAdapter(uItemList, context,category,ProteinActivityRootView);
+            itemProteinAdapter = new ItemAdapter(uItemList, context, category, ProteinActivityRootView);
             ProteinActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
             ProteinActivityRecyclerView.setHasFixedSize(true);
             ProteinActivityRecyclerView.setAdapter(itemProteinAdapter);

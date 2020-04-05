@@ -56,7 +56,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/AddAddressActivityUserName"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        style="@style/FootBiteEditTextStyle">
 
                     </com.google.android.material.textfield.TextInputEditText>
 
@@ -84,6 +85,7 @@
                         android:id="@+id/AddAddressActivityAddressLine1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/FootBiteEditTextStyle"
                         >
 
                     </com.google.android.material.textfield.TextInputEditText>
@@ -101,6 +103,7 @@
                         android:id="@+id/AddAddressActivityAddressLine2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/FootBiteEditTextStyle"
                         >
 
                     </com.google.android.material.textfield.TextInputEditText>
@@ -126,6 +129,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/AddAddressActivityCityCode"
                         android:layout_width="match_parent"
+                        style="@style/FootBiteEditTextStyle"
                         android:layout_height="wrap_content">
 
                     </com.google.android.material.textfield.TextInputEditText>
@@ -143,6 +147,7 @@
                         android:id="@+id/AddAddressActivityPhoneNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        style="@style/FootBiteEditTextStyle"
                         >
 
                     </com.google.android.material.textfield.TextInputEditText>

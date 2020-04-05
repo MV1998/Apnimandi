@@ -158,4 +158,6 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <include layout="@layout/bottom_sheet"></include>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

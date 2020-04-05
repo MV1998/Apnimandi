@@ -9,7 +9,10 @@
         <item name="actionMenuTextColor">@color/menuTextColor</item>
         <item name="android:textColorSecondary">@color/white</item>
         <item name="drawerArrowStyle">@style/DrawerStyle</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:editTextColor">@color/white</item>
     </style>
+
 
     <style name="DrawerStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/menuTextColor</item>
@@ -24,13 +27,8 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="YourActionBarSearch" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="searchIcon">@drawable/ic_search_black_24dp</item>
-        <item name="queryBackground">@string/common_google_play_services_notification_channel_name</item>
-        <item name="submitBackground">@null</item>
-        <item name="searchHintIcon">@drawable/ic_search_black_24dp</item>
-        <item name="defaultQueryHint">the simple</item>
-        <item name="closeIcon">@drawable/ic_search_black_24dp</item>
+    <style name="FootBiteEditTextStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>
