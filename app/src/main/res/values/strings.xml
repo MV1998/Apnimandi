@@ -81,6 +81,15 @@
     <string name="grand_total">Grand Total :</string>
     <string name="your_cart_empty">Your cart is empty.</string>
     <string name="order_now">Order Now</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="add_address">Add Address</string>
+    <string name="user_name">Full Name</string>
+    <string name="add_address_line1">Address Line 1</string>
+    <string name="add_address_line2">Address Line 2</string>
+    <string name="city_code">City Code</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="summary">Order Summary</string>
+    <string name="please_enter_address">Please enter address.</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>

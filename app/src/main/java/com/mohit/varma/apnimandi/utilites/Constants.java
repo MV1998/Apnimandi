@@ -16,6 +16,9 @@ public class Constants {
     public static final String BACKING = "Backing";
     public static final String MOST_POPULAR = "MostPopularItems";
 
+    public static final int REQUEST_CODE_FOR_ADDRESS = 100;
+    public static final String USER_ADDRESS_KEY = "user_address_key";
+
     public static String getStringFromID(Context context,int id){
         return context.getResources().getString(id);
     }

@@ -30,6 +30,7 @@ import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -160,7 +161,11 @@ public class AddToCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (IsInternetConnectivity.isConnected(context)) {
-                    ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.mohit_working_on_it));
+                    Intent intent = new Intent(context,CheckoutActivity.class);
+                    intent.putExtra("UCartItem",(Serializable) uCartList);
+                    intent.putExtra("UCartGrandTotalPrice",grandTotal);
+                    Log.d(TAG, "onClick: " + grandTotal);
+                    startActivity(intent);
                 } else {
                     ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
@@ -170,9 +175,13 @@ public class AddToCartActivity extends AppCompatActivity {
         AddToCartActivityBottomRelativeLayoutOrderNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, FootBiteActivity.class);
-                startActivity(intent);
-                finish();
+                if (IsInternetConnectivity.isConnected(context)) {
+                    Intent intent = new Intent(context, FootBiteActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    ShowSnackBar.snackBar(context, AddToCartActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                }
             }
         });
 

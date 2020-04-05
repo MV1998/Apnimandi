@@ -1,6 +1,8 @@
 package com.mohit.varma.apnimandi.model;
 
-public class UCart {
+import java.io.Serializable;
+
+public class UCart implements Serializable {
 
     private int mItemId;
     private int mItemCutOffPrice;

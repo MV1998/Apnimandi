@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/gray_color"></View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/SummarySingleItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="Mango"
+            android:padding="@dimen/_5sdp"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <TextView
+            android:id="@+id/SummarySingleItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/SummarySingleItemPrice"
+            android:text="1"
+            android:padding="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_20sdp"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+        <TextView
+            android:id="@+id/SummarySingleItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="Rs. 120"
+            android:padding="@dimen/_5sdp"
+            android:textSize="@dimen/_12sdp"></TextView>
+
+    </RelativeLayout>
+
+<!--    <View
+        android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/gray_color"></View>-->
+</LinearLayout>
