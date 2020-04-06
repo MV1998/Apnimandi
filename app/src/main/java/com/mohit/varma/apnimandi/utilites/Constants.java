@@ -2,6 +2,14 @@ package com.mohit.varma.apnimandi.utilites;
 
 import android.content.Context;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
+
 public class Constants {
 
     public static final String MOBILE_COUNTRY_PREFIX = "+91";
@@ -19,8 +27,28 @@ public class Constants {
     public static final int REQUEST_CODE_FOR_ADDRESS = 100;
     public static final String USER_ADDRESS_KEY = "user_address_key";
 
+    public static final String ORDER_PLACED = "Order Placed";
+    public static final String SHIPPED = "Order Shipped";
+    public static final String CANCELLED = "Order Cancelled";
+    public static final String DELIVERED = "Order Delivered";
+    public static final String PROCESSING = "Order Processing";
+
     public static String getStringFromID(Context context,int id){
         return context.getResources().getString(id);
     }
 
+    public static int generateUniqueId() {
+        UUID idOne = UUID.randomUUID();
+        String str=""+idOne;
+        int uid=str.hashCode();
+        String filterStr=""+uid;
+        str=filterStr.replaceAll("-", "");
+        return Integer.parseInt(str);
+    }
+
+    public static String getLocalDate() throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat dateOnly = new SimpleDateFormat("MM/dd/yyyy");
+        return  dateOnly.format(cal.getTime());
+    }
 }

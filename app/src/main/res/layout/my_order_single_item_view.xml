@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="#e0e0e0"
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    card_view:cardCornerRadius="@dimen/_5sdp"
+    card_view:cardUseCompatPadding="true"
+    app:cardElevation="@dimen/_10sdp"
+    app:ignore="NamespaceTypo"
+    card_view:contentPaddingBottom="@dimen/_5sdp"
+    android:id="@+id/MyOrderSingleItemRootView">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/MyOrderSingleItemOrderNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order No. 7693489234"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_alignParentLeft="true"
+                android:padding="@dimen/_5sdp"
+                android:textSize="@dimen/_14sdp"></TextView>
+
+            <TextView
+                android:id="@+id/MyOrderSingleItemGrandTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rs. 345"
+                android:textStyle="bold"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/_14sdp"></TextView>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/MyOrderSingleItemOrderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order Shipped"
+            android:textSize="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:textColor="@color/colorPrimaryDark"
+            ></TextView>
+
+        <View
+            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/gray_color"></View>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/MyOrderSingleItemRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
+        <View
+            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@color/gray_color"></View>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/MyOrderSingleItemCancelOrderButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:text="@string/cancel"
+                android:layout_alignParentLeft="true">
+
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/MyOrderSingleItemTrackOrderButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:text="@string/track_order"
+                android:layout_alignParentRight="true">
+
+            </com.google.android.material.button.MaterialButton>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

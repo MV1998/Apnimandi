@@ -30,21 +30,24 @@ import com.mohit.varma.apnimandi.model.PaymentMethod;
 import com.mohit.varma.apnimandi.model.PaymentStatus;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UserAddress;
+import com.mohit.varma.apnimandi.utilites.Constants;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mohit.varma.apnimandi.utilites.Constants.REQUEST_CODE_FOR_ADDRESS;
 import static com.mohit.varma.apnimandi.utilites.Constants.USER_ADDRESS_KEY;
+import static com.mohit.varma.apnimandi.utilites.Constants.generateUniqueId;
 
 public class CheckoutActivity extends AppCompatActivity {
     public static final String TAG = CheckoutActivity.class.getSimpleName();
     private Toolbar CheckoutActivityToolBar;
     private TextView CheckoutActivityAddChangeAddress, CheckoutActivityUserName, CheckoutActivityAddressLine1,
-            CheckoutActivityAddressLine2, CheckoutActivityCityCode, CheckoutActivityPhoneNumber;
+            CheckoutActivityAddressLine2, CheckoutActivityCityCode, CheckoutActivityPhoneNumber,BottomSheetRelativeLayoutOrderIdTextView;
     private MaterialButton CheckoutActivityPlaceOrderButton;
     private View CheckoutActivityRootView, bottomSheetView;
     private RecyclerView CheckoutActivityRecyclerView;
@@ -86,63 +89,69 @@ public class CheckoutActivity extends AppCompatActivity {
             }
         }
 
-        CheckoutActivityToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
+        CheckoutActivityToolBar.setNavigationOnClickListener(v -> onBackPressed());
+
+        CheckoutActivityAddChangeAddress.setOnClickListener(v -> {
+            if (IsInternetConnectivity.isConnected(context)) {
+                Intent intent = new Intent(context, AddAddressActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_FOR_ADDRESS);
+            } else {
+                ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
             }
         });
 
-        CheckoutActivityAddChangeAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (IsInternetConnectivity.isConnected(context)) {
-                    Intent intent = new Intent(context, AddAddressActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_FOR_ADDRESS);
-                } else {
-                    ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
-                }
-            }
-        });
+        CheckoutActivityPlaceOrderButton.setOnClickListener(v -> {
+            if (IsInternetConnectivity.isConnected(context)) {
+                if (userAddress != null) {
+                    session.setAddress(userAddress);
+                    if (firebaseAuth != null) {
+                        if (firebaseAuth.getCurrentUser() != null) {
+                            if (!firebaseAuth.getCurrentUser().isAnonymous()) {
+                                if (databaseReference != null) {
+                                    if (firebaseAuth.getCurrentUser() != null) {
+                                        if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                                            int UniqueId = generateUniqueId();
+                                            Orders orders = null;
+                                            try {
+                                                orders = new Orders(UniqueId, Constants.getLocalDate(), userAddress, uCartList, OrderStatus.ORDER_PLACED, PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.UNPAID, grandTotal);
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (orders != null) {
+                                                Log.d(TAG, "onClick: " + new Gson().toJson(orders));
+                                                databaseReference.child("Orders")
+                                                        .push()
+                                                        .setValue(orders)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.order_placed));
+                                                                BottomSheetRelativeLayoutOrderIdTextView.setText("Your Order Number: "+UniqueId);
+                                                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                                                            }
+                                                        });
+                                                databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber())
+                                                        .child("MyOrders")
+                                                        .push()
+                                                        .setValue(orders).addOnSuccessListener(aVoid -> {
+                                                    databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber())
+                                                            .child("UCart")
+                                                            .removeValue((var1, var2) -> {
 
-        CheckoutActivityPlaceOrderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (IsInternetConnectivity.isConnected(context)) {
-                    if (userAddress != null) {
-                        session.setAddress(userAddress);
-                        if (firebaseAuth != null) {
-                            if (firebaseAuth.getCurrentUser() != null) {
-                                if (!firebaseAuth.getCurrentUser().isAnonymous()) {
-                                    if (databaseReference != null) {
-                                        if (firebaseAuth.getCurrentUser() != null) {
-                                            if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
-                                                Orders orders = new Orders(123, "10/12/1998", userAddress, uCartList, OrderStatus.ORDER_PLACED, PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.UNPAID, grandTotal);
-                                                if (orders != null) {
-                                                    Log.d(TAG, "onClick: " + new Gson().toJson(orders));
-                                                    databaseReference.child("Orders").child(firebaseAuth.getCurrentUser().getPhoneNumber())
-                                                            .push()
-                                                            .setValue(orders)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.order_placed));
-                                                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                                                                }
                                                             });
-                                                }
+                                                });
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    } else {
-                        ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_enter_address));
                     }
                 } else {
-                    ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                    ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_enter_address));
                 }
+            } else {
+                ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
             }
         });
 
@@ -150,6 +159,9 @@ public class CheckoutActivity extends AppCompatActivity {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 // React to state change
+                if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    onBackPressed();
+                }
             }
 
             @Override
@@ -160,7 +172,7 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     public void initViews() {
-        CheckoutActivityToolBar = (Toolbar) findViewById(R.id.CheckoutActivityToolBar);
+        CheckoutActivityToolBar = findViewById(R.id.CheckoutActivityToolBar);
         CheckoutActivityAddChangeAddress = findViewById(R.id.CheckoutActivityAddChangeAddress);
         CheckoutActivityUserName = findViewById(R.id.CheckoutActivityUserName);
         CheckoutActivityAddressLine1 = findViewById(R.id.CheckoutActivityAddressLine1);
@@ -172,6 +184,7 @@ public class CheckoutActivity extends AppCompatActivity {
         CheckoutActivityRecyclerView = findViewById(R.id.CheckoutActivityRecyclerView);
         bottomSheetView = findViewById(R.id.AddToCartActivityBottomRelativeLayout);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
+        BottomSheetRelativeLayoutOrderIdTextView = findViewById(R.id.BottomSheetRelativeLayoutOrderIdTextView);
         context = this;
         session = new Session(context);
         databaseReference = new MyFirebaseDatabase().getReference();

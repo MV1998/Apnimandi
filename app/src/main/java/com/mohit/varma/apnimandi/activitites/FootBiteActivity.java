@@ -38,12 +38,15 @@ import com.mohit.varma.apnimandi.fragments.HomeFragment;
 import com.mohit.varma.apnimandi.fragments.PreviousOrderFragment;
 import com.mohit.varma.apnimandi.fragments.RefundTermsPolicyFragment;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
+import com.mohit.varma.apnimandi.model.UserAddress;
 import com.mohit.varma.apnimandi.utilites.Constants;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 
 public class FootBiteActivity extends AppCompatActivity {
 
@@ -63,6 +66,7 @@ public class FootBiteActivity extends AppCompatActivity {
 
     private Context context;
     private Fragment fragment = null;
+    private Session session;
     boolean doubleBackToExitPressedOnce = false;
 
     @Override
@@ -73,6 +77,7 @@ public class FootBiteActivity extends AppCompatActivity {
 
         //initialization of views and instance variables
         context = this;
+        session = new Session(context);
         firebaseAuth = MyApplication.getFirebaseAuth();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReferenceFromUrl(Webservice.FIREBASE_ROOT_REFERENCE);
@@ -94,8 +99,18 @@ public class FootBiteActivity extends AppCompatActivity {
             if (firebaseAuth.getCurrentUser() != null) {
                 if (!firebaseAuth.getCurrentUser().isAnonymous()) {
                     showAddToCartAndPreviousSection(navigationView.getMenu());
-                    databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("States").setValue("Running " + DateFormat.getDateInstance().getCalendar().getTime().toString());
+                    try {
+                        databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("States").setValue("Running " + Constants.getLocalDate());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(this, "Hello" + firebaseAuth.getCurrentUser().getPhoneNumber(), Toast.LENGTH_SHORT).show();
+                    UserAddress userAddress = session.getAddress();
+                    if(userAddress != null){
+                        if(userAddress.getUserName()!= null && !userAddress.getUserName().isEmpty()){
+                            mCustomerName.setText(session.getAddress().getUserName()+"");
+                        }
+                    }
                 }else {
                     Toast.makeText(FootBiteActivity.this, Constants.getStringFromID(context, R.string.anonymous_welcome_msg), Toast.LENGTH_SHORT).show();
                     mCustomerName.setText(context.getResources().getString(R.string.anonymous));
@@ -129,6 +144,15 @@ public class FootBiteActivity extends AppCompatActivity {
                             drawerLayout.closeDrawers();
                             fragment = new CategoryFragment();
                             setFragment(fragment);
+                        } else {
+                            ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
+                        }
+                        break;
+                    case R.id.myOrdered:
+                        if (IsInternetConnectivity.isConnected(context)) {
+                            drawerLayout.closeDrawers();
+                            Intent intent = new Intent(FootBiteActivity.this, MyOrdersActivity.class);
+                            startActivity(intent);
                         } else {
                             ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                         }

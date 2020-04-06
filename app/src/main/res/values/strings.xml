@@ -91,7 +91,14 @@
     <string name="summary">Order Summary</string>
     <string name="please_enter_address">Please enter address.</string>
     <string name="search_item_by_name">Search Item By Name</string>
-    <string name="order_placed">Order Successfuly Placed</string>
+    <string name="order_placed">Order Successfully Placed</string>
+    <string name="your_order_placed">Your order has been placed. You can track the delivery in \"MyOrders\" section.</string>
+    <string name="thank_you">Thank you for your order.</string>
+    <string name="your_order_number">Your Order Number: 902340343</string>
+    <string name="orders">My Order\'s</string>
+    <string name="cancel">Cancel Order</string>
+    <string name="track_order">Track Order</string>
+    <string name="will_reach">We will reach out to you shortly with you order.</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>
