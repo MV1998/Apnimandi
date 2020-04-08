@@ -1,5 +1,7 @@
 package com.mohit.varma.apnimandi.model;
 
-public enum PaymentStatus {
+import java.io.Serializable;
+
+public enum PaymentStatus implements Serializable {
     PAID,UNPAID
 }

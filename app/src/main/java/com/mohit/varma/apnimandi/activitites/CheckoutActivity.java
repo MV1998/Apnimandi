@@ -160,7 +160,9 @@ public class CheckoutActivity extends AppCompatActivity {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 // React to state change
                 if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    onBackPressed();
+                    Intent intent = new Intent(context,MyOrdersActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
 

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray_color"
     android:orientation="vertical"
+    android:id="@+id/MyOrdersActivityRootView"
     tools:context=".activitites.MyOrdersActivity">
 
     <androidx.appcompat.widget.Toolbar

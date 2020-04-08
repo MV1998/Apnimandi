@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,8 +62,8 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
 
         if(ordersList != null && ordersList.size()>0){
             if(ordersList.get(position).getOrderStatus() == OrderStatus.CANCELLED){
-                holder.MyOrderSingleItemCancelOrderButton.setText("Order Cancelled");
-                holder.MyOrderSingleItemCancelOrderButton.setClickable(false);
+                holder.MyOrderSingleItemCancelOrderButton.setVisibility(View.GONE);
+                holder.MyOrderSingleItemTrackOrderButton.setVisibility(View.GONE);
             }else {
                 holder.MyOrderSingleItemCancelOrderButton.setText("Cancel Order");
                 holder.MyOrderSingleItemCancelOrderButton.setClickable(true);
@@ -99,22 +98,28 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
 
                     }
                 });
-                databaseReference.child("Orders").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("MyOrders").orderByChild("orderId").equalTo(orders.getOrderId()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists())
-                        {
-                            for (DataSnapshot item : dataSnapshot.getChildren()) {
-                                item.getRef().setValue(orders);
-                            }
+                if(firebaseAuth != null) {
+                    if (firebaseAuth.getCurrentUser() != null) {
+                        if (firebaseAuth.getCurrentUser().getPhoneNumber() != null && !firebaseAuth.getCurrentUser().getPhoneNumber().isEmpty()) {
+                            databaseReference.child("Users").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("MyOrders").orderByChild("orderId").equalTo(orders.getOrderId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.exists())
+                                    {
+                                        for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                            item.getRef().setValue(orders);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                }
             }
         });
     }
