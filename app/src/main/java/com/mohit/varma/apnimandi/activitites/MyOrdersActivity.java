@@ -1,150 +1,100 @@
 package com.mohit.varma.apnimandi.activitites;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.adapters.ItemAdapter;
-import com.mohit.varma.apnimandi.adapters.MyOrderAdapter;
-import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
-import com.mohit.varma.apnimandi.model.Orders;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.mohit.varma.apnimandi.fragments.OngoingOrdersFragment;
+import com.mohit.varma.apnimandi.fragments.PastOrdersFragment;
 
 public class MyOrdersActivity extends AppCompatActivity {
     private static final String TAG = "MyOrdersActivity";
-    private RecyclerView MyOrdersActivityRecyclerView;
     private Toolbar MyOrdersActivityToolbar;
-    private DatabaseReference databaseReference;
-    private ProgressDialog progressDialog;
+    private TextView MyOrdersActivityOngoingOrdersTextView,MyOrdersActivityPastOrdersTextView;
+    private Fragment fragment;
+    private FragmentTransaction fragmentTransaction;
     private Context context;
-    private List<Orders> ordersList = new ArrayList<>();
-    private MyOrderAdapter myOrderAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
-
         initViews();
-
-        MyOrdersActivityToolbar.setNavigationOnClickListener(navigation->{
+        MyOrdersActivityToolbar.setNavigationOnClickListener(navigation -> {
             onBackPressed();
         });
+        initializeOnGoingFragment();
+        setListener();
+    }
 
-        databaseReference.child("Orders").addValueEventListener(new ValueEventListener() {
+    public void initViews() {
+        MyOrdersActivityOngoingOrdersTextView = findViewById(R.id.MyOrdersActivityOngoingOrdersTextView);
+        MyOrdersActivityPastOrdersTextView = findViewById(R.id.MyOrdersActivityPastOrdersTextView);
+        MyOrdersActivityToolbar = findViewById(R.id.MyOrdersActivityToolbar);
+        this.context = this;
+    }
+
+    public void setListener() {
+        MyOrdersActivityOngoingOrdersTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onClick(View v) {
                 try {
-                    ordersList.clear();
-                    if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
-                        for (DataSnapshot Items : dataSnapshot.getChildren()) {
-                            Orders uItem = Items.getValue(Orders.class);
-                            ordersList.add(uItem);
-                        }
-                        dismissProgressDialog();
-                        if(ordersList != null && ordersList.size()>0){
-                            Log.d(TAG, "onDataChange: " + new Gson().toJson(ordersList));
-                        }
-                        if (ordersList != null && ordersList.size() > 0) {
-                            if (myOrderAdapter != null) {
-                                dismissProgressDialog();
-/*                                FruitsActivitySearchCardView.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);*/
-                                myOrderAdapter.notifyDataSetChanged();
-                            } else {
-                                dismissProgressDialog();
-/*                                FruitsActivitySearchCardView.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                FruitsActivityNoItemAddedYetTextView.setVisibility(View.GONE);*/
-                                setAdapter();
-                            }
-                        }
-                    } else {
-/*                        FruitsActivitySearchCardView.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.GONE);
-                        FruitsActivityNoItemAddedYetTextView.setVisibility(View.VISIBLE);
-                        dismissProgressDialog();*/
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    MyOrdersActivityOngoingOrdersTextView.setTextColor(context.getColor(R.color.colorPrimary));
+                    MyOrdersActivityPastOrdersTextView.setTextColor(context.getColor(R.color.black));
+                }catch (Exception e){
+
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                fragment = null;
+                fragment = new OngoingOrdersFragment();
+                if (fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.OrdersContainer, fragment, "OngoingOrdersFragment");
+                    fragmentTransaction.commit();
+                }
             }
         });
 
-    }
+        MyOrdersActivityPastOrdersTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    MyOrdersActivityOngoingOrdersTextView.setTextColor(context.getColor(R.color.black));
+                    MyOrdersActivityPastOrdersTextView.setTextColor(context.getColor(R.color.colorPrimary));
+                }catch (Exception e){
 
-    public void initViews(){
-        MyOrdersActivityToolbar = findViewById(R.id.MyOrdersActivityToolbar);
-        MyOrdersActivityRecyclerView = findViewById(R.id.MyOrdersActivityRecyclerView);
-        this.context = this;
-        databaseReference = new MyFirebaseDatabase().getReference();
-        progressDialog = new ProgressDialog(context);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-
-    public void showProgressDialog() {
-        if (progressDialog != null && !progressDialog.isShowing()) {
-            progressDialog.setMessage("Wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-    }
-
-    public void dismissProgressDialog() {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (progressDialog != null) {
-            if (progressDialog.isShowing()) {
-                progressDialog.show();
+                }
+                fragment = null;
+                fragment = new PastOrdersFragment();
+                if (fragment != null) {
+                    fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.OrdersContainer, fragment, "PastOrdersFragment");
+                    fragmentTransaction.commit();
+                }
             }
-        }
+        });
     }
 
-    public void setAdapter() {
-        if (ordersList != null && ordersList.size() > 0) {
-            myOrderAdapter = new MyOrderAdapter(context,ordersList);
-            MyOrdersActivityRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            MyOrdersActivityRecyclerView.setHasFixedSize(true);
-            MyOrdersActivityRecyclerView.setAdapter(myOrderAdapter);
+    public void initializeOnGoingFragment(){
+        try {
+            MyOrdersActivityOngoingOrdersTextView.setTextColor(context.getColor(R.color.colorPrimary));
+            MyOrdersActivityPastOrdersTextView.setTextColor(context.getColor(R.color.black));
+        }catch (Exception e){
+
+        }
+        fragment = null;
+        fragment = new OngoingOrdersFragment();
+        if (fragment != null) {
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.OrdersContainer, fragment, "OngoingOrdersFragment");
+            fragmentTransaction.commit();
         }
     }
 }

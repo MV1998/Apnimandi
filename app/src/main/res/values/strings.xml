@@ -99,6 +99,8 @@
     <string name="cancel">Cancel Order</string>
     <string name="track_order">Track Order</string>
     <string name="will_reach">We will reach out to you shortly with you order.</string>
+    <string name="ongoing_orders">Ongoing Orders</string>
+    <string name="past_orders">Past Orders</string>
 
     <integer name="splash_timeout">3000</integer>
 </resources>

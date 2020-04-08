@@ -1,57 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/tabhost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TabHost android:id="@+id/tabhost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-            <TabWidget android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
-            <FrameLayout android:id="@android:id/tabcontent"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-                <LinearLayout
-                    android:id="@+id/Ongoing_Orders"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <Button
-                        android:id="@+id/button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ongoing Orders" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/Past_Orders"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <Button
-                        android:id="@+id/button2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Past Orders" />
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-</LinearLayout>
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.PreviousOrderFragment">
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentTop="true">
 
-    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>-->
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </TabWidget>
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
+    </LinearLayout>
+</TabHost>
+
+
+    <!--
+    <?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.PreviousOrderFragment">
+
+        &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/hello_blank_fragment" />
+
+    </FrameLayout>-->

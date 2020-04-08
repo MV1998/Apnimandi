@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
-    card_view:cardCornerRadius="@dimen/_5sdp"
+    card_view:cardCornerRadius="@dimen/_1sdp"
     card_view:cardUseCompatPadding="true"
     app:cardElevation="@dimen/_10sdp"
     app:ignore="NamespaceTypo"
@@ -85,15 +85,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/MyOrderSingleItemCancelOrderButton"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:insetLeft="4dp"
                 android:text="@string/cancel"
+                android:textAllCaps="false"
                 android:layout_alignParentLeft="true">
 
             </com.google.android.material.button.MaterialButton>
@@ -104,6 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:insetLeft="4dp"
+                android:textAllCaps="false"
                 android:text="@string/track_order"
                 android:layout_alignParentRight="true">
 

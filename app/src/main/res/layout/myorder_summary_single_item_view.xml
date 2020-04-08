@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <TextView
         android:id="@+id/SummarySingleItemName"
         android:layout_width="wrap_content"
@@ -16,7 +15,7 @@
         android:padding="@dimen/_3sdp"
         android:text="Mango"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"></TextView>
@@ -30,7 +29,7 @@
         android:padding="@dimen/_3sdp"
         android:text="1"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/SummarySingleItemName"
@@ -45,7 +44,7 @@
         android:padding="@dimen/_3sdp"
         android:text="Rs. 120"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

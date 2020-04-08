@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
 
 import androidx.fragment.app.Fragment;
 
 import com.mohit.varma.apnimandi.R;
 
-
 public class PreviousOrderFragment extends Fragment {
-
 
     public PreviousOrderFragment() {
         // Required empty public constructor
@@ -48,16 +45,6 @@ public class PreviousOrderFragment extends Fragment {
     }
 
     public void setView(View view){
-        TabHost tabs = (TabHost) view.findViewById(R.id.tabhost);
-        tabs.setup();
-        TabHost.TabSpec spec = tabs.newTabSpec("tag1");
-        spec.setContent(R.id.Ongoing_Orders);
-        spec.setIndicator("First");
-        tabs.addTab(spec);
-        spec = tabs.newTabSpec("tag2");
-        spec.setContent(R.id.Past_Orders);
-        spec.setIndicator("second");
-        tabs.addTab(spec);
     }
 
 }

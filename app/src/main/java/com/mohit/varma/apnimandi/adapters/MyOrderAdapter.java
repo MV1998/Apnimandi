@@ -1,16 +1,26 @@
 package com.mohit.varma.apnimandi.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.model.OrderStatus;
 import com.mohit.varma.apnimandi.model.Orders;
@@ -20,13 +30,18 @@ import com.mohit.varma.apnimandi.utilites.Constants;
 import java.util.List;
 
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderAdapterViewHolder>{
-
+    private static final String TAG = "MyOrderAdapter";
     private Context context;
     private List<Orders> ordersList;
+    private Orders orders;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
 
-    public MyOrderAdapter(Context context, List<Orders> ordersList) {
+    public MyOrderAdapter(Context context, List<Orders> ordersList,DatabaseReference databaseReference) {
         this.context = context;
         this.ordersList = ordersList;
+        this.databaseReference = databaseReference;
+        this.firebaseAuth = MyApplication.getFirebaseAuth();
     }
 
     @NonNull
@@ -38,13 +53,70 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
 
     @Override
     public void onBindViewHolder(@NonNull MyOrderAdapterViewHolder holder, int position) {
-        Orders orders = ordersList.get(position);
+        orders = ordersList.get(position);
         holder.MyOrderSingleItemOrderNumber.setText("Order No - "+orders.getOrderId());
         holder.MyOrderSingleItemGrandTotal.setText("\u20B9"+orders.getGrandTotal());
         setOrderStatus(orders.getOrderStatus(),holder.MyOrderSingleItemOrderStatus);
         if(ordersList.get(position).getuCartList().size()>0){
             setAdapter(ordersList.get(position).getuCartList(),holder.MyOrderSingleItemRecyclerView);
         }
+
+        if(ordersList != null && ordersList.size()>0){
+            if(ordersList.get(position).getOrderStatus() == OrderStatus.CANCELLED){
+                holder.MyOrderSingleItemCancelOrderButton.setText("Order Cancelled");
+                holder.MyOrderSingleItemCancelOrderButton.setClickable(false);
+            }else {
+                holder.MyOrderSingleItemCancelOrderButton.setText("Cancel Order");
+                holder.MyOrderSingleItemCancelOrderButton.setClickable(true);
+            }
+        }
+
+        holder.MyOrderSingleItemCancelOrderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                orders = ordersList.get(position);
+                orders.setOrderStatus(OrderStatus.CANCELLED);
+                Log.d(TAG, "onClick: " + new Gson().toJson(orders));
+                databaseReference.child("Orders").orderByChild("orderId").equalTo(orders.getOrderId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                        {
+                            for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                item.getRef().setValue(orders).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        holder.MyOrderSingleItemCancelOrderButton.setText("Order Cancelled");
+                                        holder.MyOrderSingleItemCancelOrderButton.setClickable(false);
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                databaseReference.child("Orders").child(firebaseAuth.getCurrentUser().getPhoneNumber()).child("MyOrders").orderByChild("orderId").equalTo(orders.getOrderId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists())
+                        {
+                            for (DataSnapshot item : dataSnapshot.getChildren()) {
+                                item.getRef().setValue(orders);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override

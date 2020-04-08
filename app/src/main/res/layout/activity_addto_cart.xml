@@ -143,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="3 Item"
+                android:text="0 Item"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"></TextView>
 
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine3"
                 android:layout_alignParentRight="true"
-                android:text="₹190"
+                android:text="₹0"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"></TextView>
 
@@ -173,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="₹30"
+                android:text="₹0"
                 android:textColor="@color/black"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine1"
                 android:textSize="@dimen/_12sdp"></TextView>
@@ -183,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="₹220"
+                android:text="₹0"
                 android:textColor="@color/black"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine2"
                 android:textSize="@dimen/_12sdp"></TextView>

@@ -62,6 +62,7 @@
                                 android:id="@+id/editext_to_put_user_mobile_number"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                style="@style/FootBiteEditTextStyle"
                                 android:inputType="number">
 
                             </com.google.android.material.textfield.TextInputEditText>
@@ -94,6 +95,7 @@
                                 android:id="@+id/editext_to_put_otp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                style="@style/FootBiteEditTextStyle"
                                 android:inputType="number">
 
                             </com.google.android.material.textfield.TextInputEditText>

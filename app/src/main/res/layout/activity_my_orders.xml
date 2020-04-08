@@ -4,26 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activitites.MyOrdersActivity"
     android:background="@color/gray_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activitites.MyOrdersActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/MyOrdersActivityToolbar"
+        style="?actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/orders"
-        style="?actionBarSize"
-        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary"
         app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-        android:background="@color/colorPrimary">
+        app:title="@string/orders"
+        app:titleTextColor="@color/white">
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/MyOrdersActivityRecyclerView"
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/MyOrdersActivityOngoingOrdersTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ongoing Orders"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
+                android:padding="@dimen/_10sdp"
+                android:layout_gravity="center"></TextView>
+<!--            <com.google.android.material.button.MaterialButton
+                android:id="@+id/MyOrdersActivityOngoingOrdersButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="@string/ongoing_orders">
+
+            </com.google.android.material.button.MaterialButton>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+<!--            <com.google.android.material.button.MaterialButton
+                android:id="@+id/MyOrdersActivityPastOrdersButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:text="@string/past_orders">
+
+            </com.google.android.material.button.MaterialButton>-->
+            <TextView
+                android:id="@+id/MyOrdersActivityPastOrdersTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Past Orders"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textSize="@dimen/_14sdp"
+                android:padding="@dimen/_10sdp"
+                android:layout_gravity="center"></TextView>
+            <!--            <com.google.android.material.button.MaterialButton
+                            android:id="@+id/MyOrdersActivityOngoingOrdersButton"
+                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAllCaps="false"
+                            android:text="@string/ongoing_orders">
+
+                        </com.google.android.material.button.MaterialButton>-->
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/OrdersContainer"
+        android:layout_marginTop="@dimen/_3sdp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
+        android:orientation="vertical">
+
+    </FrameLayout>
 
 </LinearLayout>
