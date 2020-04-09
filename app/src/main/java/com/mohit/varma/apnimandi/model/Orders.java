@@ -1,10 +1,12 @@
 package com.mohit.varma.apnimandi.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Orders {
+public class Orders implements Serializable {
     private int orderId;
     private String orderDate;
+    private String estimateDeliveryDate;
     private UserAddress userAddress;
     private List<UCart> uCartList;
     private OrderStatus orderStatus;
@@ -15,9 +17,10 @@ public class Orders {
     public Orders() {
     }
 
-    public Orders(int orderId, String orderDate, UserAddress userAddress, List<UCart> uCartList, OrderStatus orderStatus, PaymentMethod paymentMethod, PaymentStatus paymentStatus, long grandTotal) {
+    public Orders(int orderId, String orderDate,String estimateDeliveryDate, UserAddress userAddress, List<UCart> uCartList, OrderStatus orderStatus, PaymentMethod paymentMethod, PaymentStatus paymentStatus, long grandTotal) {
         this.orderId = orderId;
         this.orderDate = orderDate;
+        this.estimateDeliveryDate = estimateDeliveryDate;
         this.userAddress = userAddress;
         this.uCartList = uCartList;
         this.orderStatus = orderStatus;
@@ -88,5 +91,13 @@ public class Orders {
 
     public void setGrandTotal(long grandTotal) {
         this.grandTotal = grandTotal;
+    }
+
+    public String getEstimateDeliveryDate() {
+        return estimateDeliveryDate;
+    }
+
+    public void setEstimateDeliveryDate(String estimateDeliveryDate) {
+        this.estimateDeliveryDate = estimateDeliveryDate;
     }
 }

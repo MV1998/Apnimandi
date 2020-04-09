@@ -31,6 +31,7 @@ import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.model.UItemDescription;
 import com.mohit.varma.apnimandi.serializables.SerializableUCart;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.util.ArrayList;
@@ -41,7 +42,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     private ImageView ItemDescriptionActivityItemImageView;
     private Toolbar ItemDescriptionActivityToolbar;
     private TextView ItemDescriptionActivityItemName, ItemDescriptionActivityItemPrice,ItemDescriptionActivityDetailTextView,
-            ItemDescriptionActivityCaloriesTextView,ItemDescriptionActivityFatTextView,ItemDescriptionActivityProteinTextView;
+            ItemDescriptionActivityCaloriesTextView,ItemDescriptionActivityFatTextView,ItemDescriptionActivityProteinTextView,
+            ItemDescriptionActivityDeliverCharge;
     private MaterialButton ItemDescriptionActivityBottomRelativeLayoutPlaceOrderButton;
     private View ItemDescriptionActivityRootView;
     private FirebaseAuth firebaseAuth;
@@ -51,6 +53,8 @@ public class ItemDescriptionActivity extends AppCompatActivity {
     private Context context;
     private List<UCart> uCartList = new ArrayList<>();
     private UItemDescription uItemDescription;
+    private Session session;
+    private long deliveryCharge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,9 @@ public class ItemDescriptionActivity extends AppCompatActivity {
                 ItemDescriptionActivityProteinTextView.setText(uItemDescription.getItemProtein());
             }
         }
+
+        deliveryCharge = session.getDeliveryCharge();
+        ItemDescriptionActivityDeliverCharge.setText("\u20B9"+deliveryCharge);
 
         ItemDescriptionActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,7 +147,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         ItemDescriptionActivityRootView = (View) findViewById(R.id.ItemDescriptionActivityRootView);
         ItemDescriptionActivityItemName = (TextView) findViewById(R.id.ItemDescriptionActivityItemName);
         ItemDescriptionActivityItemPrice = (TextView) findViewById(R.id.ItemDescriptionActivityItemPrice);
-
+        ItemDescriptionActivityDeliverCharge = (TextView) findViewById(R.id.ItemDescriptionActivityDeliverCharge);
         ItemDescriptionActivityDetailTextView = (TextView) findViewById(R.id.ItemDescriptionActivityDetailTextView);
         ItemDescriptionActivityCaloriesTextView = (TextView) findViewById(R.id.ItemDescriptionActivityCaloriesTextView);
         ItemDescriptionActivityFatTextView = (TextView) findViewById(R.id.ItemDescriptionActivityFatTextView);
@@ -149,6 +156,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
         this.context = this;
         firebaseAuth = MyApplication.getFirebaseAuth();
         databaseReference = new MyFirebaseDatabase().getReference();
+        session = new Session(context);
     }
 
     public void setImageToGlide(String image_url, ImageView imageView) {

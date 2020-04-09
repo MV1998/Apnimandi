@@ -27,6 +27,7 @@ import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
+import com.mohit.varma.apnimandi.interfaces.ItemClickCallBack;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.serializables.SerializableUCart;
@@ -45,11 +46,13 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
     private DatabaseReference databaseReference;
     private List<UCart> uCartList;
     private View rootView;
+    private ItemClickCallBack itemClickCallBack;
 
-    public HomeInnerAdapter(Context context, List<UItem> uItemList, View rootView) {
+    public HomeInnerAdapter(Context context, List<UItem> uItemList, View rootView,ItemClickCallBack itemClickCallBack) {
         this.context = context;
         this.uItemList = uItemList;
         this.rootView = rootView;
+        this.itemClickCallBack = itemClickCallBack;
         this.firebaseAuth = MyApplication.getFirebaseAuth();
         this.databaseReference = new MyFirebaseDatabase().getReference();
         getAllUCartItems();
@@ -109,6 +112,9 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_added_to_cart));
+                                                        if(itemClickCallBack != null){
+                                                            itemClickCallBack.clickCallBack();
+                                                        }
                                                     }
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override

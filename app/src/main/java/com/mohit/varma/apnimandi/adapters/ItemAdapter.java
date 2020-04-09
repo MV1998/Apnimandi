@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.ItemTouchUIUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +29,7 @@ import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
+import com.mohit.varma.apnimandi.interfaces.ItemClickCallBack;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.serializables.SerializableUCart;
@@ -47,19 +49,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
     private FirebaseAuth firebaseAuth;
     private String category;
     private DatabaseReference databaseReference;
+    private ItemClickCallBack itemClickCallBack;
     private List<UCart> uCartList = new ArrayList<>();
     private View rootView;
-
     public ItemAdapter() {
     }
 
-    public ItemAdapter(List<UItem> items, Context context, String category, View rootView) {
+    public ItemAdapter(List<UItem> items, Context context, String category, View rootView,ItemClickCallBack itemClickCallBack) {
         this.items = items;
         this.searchItems = new ArrayList<>();
         this.searchItems.addAll(items);
         this.context = context;
         this.category = category;
         this.rootView = rootView;
+        this.itemClickCallBack = itemClickCallBack;
         this.firebaseAuth = MyApplication.getFirebaseAuth();
         this.databaseReference = new MyFirebaseDatabase().getReference();
         getAllUCartItems();
@@ -78,7 +81,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
         holder.SingleItemViewItemCutOffPriceTextView.setText(item.getmItemCutOffPrice() + "% Off");
         holder.SingleItemViewItemWeightTextView.setText(item.getmItemWeight());
         holder.SingleItemViewItemNameTextView.setText(item.getmItemName() + "");
-        holder.SingleItemViewItemFinalPriceTextView.setText("\u20B9"+item.getmItemPrice());
+        holder.SingleItemViewItemFinalPriceTextView.setText("\u20B9" + item.getmItemPrice());
 
         if (item.getmItemImage() != null && !item.getmItemImage().isEmpty()) {
             setImageToGlide(item.getmItemImage(), holder.SingleItemViewItemImageView);
@@ -120,6 +123,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.item_added_to_cart));
+                                                            if(itemClickCallBack != null){
+                                                                itemClickCallBack.clickCallBack();
+                                                            }
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override

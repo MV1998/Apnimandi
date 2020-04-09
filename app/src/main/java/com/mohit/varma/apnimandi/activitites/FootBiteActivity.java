@@ -28,8 +28,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.fragments.CategoryFragment;
@@ -197,6 +200,7 @@ public class FootBiteActivity extends AppCompatActivity {
             }
         });
 
+        setDeliveryChargeToSharedPreference();
     }
 
     @Override
@@ -212,7 +216,6 @@ public class FootBiteActivity extends AppCompatActivity {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         switch (item.getItemId()) {
             case R.id.setting:
                 break;
@@ -292,5 +295,24 @@ public class FootBiteActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    public void setDeliveryChargeToSharedPreference(){
+        databaseReference.child("Admin").child("deliveryFee").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.getValue() != null) {
+                        long deliveryFee = (long) dataSnapshot.getValue();
+                        session.setDeliveryCharge(deliveryFee);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -33,7 +33,7 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/orange_shopping_cart"></ImageView>
+                    android:src="@drawable/white_shopping_cart"></ImageView>
 
                 <TextView
                     android:id="@+id/BottomSheetRelativeLayoutThankYouTextView"

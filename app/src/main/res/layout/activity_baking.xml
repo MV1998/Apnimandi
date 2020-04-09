@@ -8,74 +8,137 @@
     android:background="@color/strong_gray_color"
     android:id="@+id/BakingActivityRootView">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/BakingActivityToolbar"
+    <ScrollView
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/backing"
-        app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
-        style="?actionBarSize"
-        android:background="@color/colorPrimary"></androidx.appcompat.widget.Toolbar>
-
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/tools"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/BakingActivitySearchCardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:layout_marginLeft="@dimen/_5sdp"
-        android:layout_marginRight="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:focusable="true"
-        app:cardElevation="@dimen/_10sdp"
-        app:ignore="NamespaceTypo"
-        card_view:cardUseCompatPadding="true"
-        android:layout_below="@+id/BakingActivityToolbar">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bakingLinearLayout">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/BakingActivitySearchView"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/BakingActivityToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                style="@style/AppTheme"
-                card_view:defaultQueryHint="e.g. Apple"
-                ></androidx.appcompat.widget.SearchView>
+                app:title="@string/backing"
+                app:navigationIcon="@drawable/ic_arrow_back_black_24dp"
+                style="?actionBarSize"
+                android:background="@color/colorPrimary"></androidx.appcompat.widget.Toolbar>
+
+            <androidx.cardview.widget.CardView
+                xmlns:app="http://schemas.android.com/tools"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/BakingActivitySearchCardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:focusable="true"
+                app:cardElevation="@dimen/_10sdp"
+                app:ignore="NamespaceTypo"
+                card_view:cardUseCompatPadding="true"
+                android:layout_below="@+id/BakingActivityToolbar">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/BakingActivitySearchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorPrimaryDark"
+                        style="@style/AppTheme"
+                        card_view:defaultQueryHint="e.g. Apple"
+                        ></androidx.appcompat.widget.SearchView>
+
+                    <TextView
+                        android:id="@+id/BakingActivityQueryHint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_14sdp"
+                        android:layout_marginLeft="@dimen/_35sdp"
+                        android:text="@string/search_item_by_name"></TextView>
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@+id/BakingActivitySearchCardView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/BakingActivityRecyclerView"
+                android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
 
             <TextView
-                android:id="@+id/BakingActivityQueryHint"
+                android:id="@+id/BakingActivityNoItemAddedYetTextView"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp"
-                android:layout_marginLeft="@dimen/_35sdp"
-                android:text="@string/search_item_by_name"></TextView>
+                android:text="@string/No_item_added_yet"
+                android:textSize="@dimen/_18sdp"
+                android:textColor="@color/black"></TextView>
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/BakingActivitySearchCardView"
+    <LinearLayout
+        android:id="@+id/bakingLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/BakingActivityRecyclerView"
-        android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/BakingActivityNoItemAddedYetTextView"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/No_item_added_yet"
-        android:textSize="@dimen/_18sdp"
-        android:textColor="@color/black"></TextView>
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bakingLinearLayoutGoToCartTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:text="Go to cart"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"></TextView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bakingLinearLayoutOrderNowTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:text="Order Now"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"></TextView>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

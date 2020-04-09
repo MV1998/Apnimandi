@@ -35,6 +35,14 @@
                 android:padding="@dimen/_5sdp"
                 android:textSize="@dimen/_14sdp"></TextView>
 
+            <ImageView
+                android:id="@+id/MyOrderSingleItemOrderInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/MyOrderSingleItemGrandTotal"
+                android:src="@drawable/ic_info_black_24dp"></ImageView>
+
             <TextView
                 android:id="@+id/MyOrderSingleItemGrandTotal"
                 android:layout_width="wrap_content"
@@ -82,6 +90,15 @@
             android:layout_marginBottom="@dimen/_5sdp"
             android:layout_marginTop="@dimen/_5sdp"
             android:background="@color/gray_color"></View>
+
+        <TextView
+            android:id="@+id/MyOrderSingleItemOrderStatusEstimateDelivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estimate Delivery: One Day"
+            android:paddingLeft="@dimen/_5sdp"
+            android:textStyle="bold"
+            android:textColor="@color/black"></TextView>
 
         <RelativeLayout
             android:layout_width="match_parent"

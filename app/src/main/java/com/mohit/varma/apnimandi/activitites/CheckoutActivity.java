@@ -78,15 +78,20 @@ public class CheckoutActivity extends AppCompatActivity {
             CheckoutActivityPhoneNumber.setText(userAddress.getPhoneNumber());
         }
 
-        if (getIntent().getSerializableExtra("UCartItem") != null && getIntent().getSerializableExtra("UCartGrandTotalPrice") != null) {
-            uCartList = (List<UCart>) getIntent().getSerializableExtra("UCartItem");
-            grandTotal = getIntent().getLongExtra("UCartGrandTotalPrice", 0);
-            if (uCartList != null) {
-                Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-                Log.d(TAG, "onCreate: " + grandTotal);
-                CheckoutActivityPlaceOrderButton.setText(context.getResources().getString(R.string.confirm_order) + " \u20B9" + grandTotal);
-                setAdapter();
-            }
+        /*if (getIntent().getSerializableExtra("UCartItem") != null && getIntent().getSerializableExtra("UCartGrandTotalPrice") != null) {
+            //uCartList = (List<UCart>) getIntent().getSerializableExtra("UCartItem");
+
+        }*/
+
+        uCartList = session.getUCartList();
+        Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
+ /*       grandTotal = getIntent().getLongExtra("UCartGrandTotalPrice", 0);*/
+        grandTotal = session.getGrandTotal();
+        if (uCartList != null) {
+            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
+            Log.d(TAG, "onCreate: " + grandTotal);
+            CheckoutActivityPlaceOrderButton.setText(context.getResources().getString(R.string.confirm_order) + " \u20B9" + grandTotal);
+            setAdapter();
         }
 
         CheckoutActivityToolBar.setNavigationOnClickListener(v -> onBackPressed());
@@ -113,7 +118,7 @@ public class CheckoutActivity extends AppCompatActivity {
                                             int UniqueId = generateUniqueId();
                                             Orders orders = null;
                                             try {
-                                                orders = new Orders(UniqueId, Constants.getLocalDate(), userAddress, uCartList, OrderStatus.ORDER_PLACED, PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.UNPAID, grandTotal);
+                                                orders = new Orders(UniqueId, Constants.getLocalDate(),"", userAddress, uCartList, OrderStatus.ORDER_PLACED, PaymentMethod.CASH_ON_DELIVERY, PaymentStatus.UNPAID, grandTotal);
                                             } catch (ParseException e) {
                                                 e.printStackTrace();
                                             }

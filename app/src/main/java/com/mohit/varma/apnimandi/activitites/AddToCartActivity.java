@@ -22,12 +22,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.AddToCardAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
+import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.io.Serializable;
@@ -52,6 +54,7 @@ public class AddToCartActivity extends AppCompatActivity {
     private MaterialButton AddToCartActivityBottomRelativeLayoutShoppingButton, AddToCartActivityBottomRelativeLayoutPlaceOrderButton,
             AddToCartActivityBottomRelativeLayoutOrderNowButton;
     private long deliveryFee, subTotal, grandTotal;
+    private Session session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +82,12 @@ public class AddToCartActivity extends AppCompatActivity {
                                                 }
                                                 dismissProgressDialog();
                                                 if (uCartList != null && uCartList.size() > 0) {
-                                                    Log.d(TAG, "onDataChange: " + getTotalItemPriceOfAllItem(uCartList));
+                                                    Log.d(TAG, "UCartList------->: " + new Gson().toJson(uCartList));
+                                                    session.setUCartList(uCartList);
                                                     subTotal = getTotalItemPriceOfAllItem(uCartList);
                                                     AddToCartActivityBottomRelativeLayoutSubTotalCountTextView.setText("\u20B9" + subTotal);
                                                     grandTotal = subTotal + deliveryFee;
+                                                    session.setGrandTotal(grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9" + grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size() + " Items");
                                                     AddToCartActivityRecyclerView.setVisibility(View.VISIBLE);
@@ -99,6 +104,8 @@ public class AddToCartActivity extends AppCompatActivity {
                                                     AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
                                                 }
                                             } else {
+                                                session.setUCartList(uCartList);
+                                                Log.d(TAG, "UCartList------->: " + new Gson().toJson(uCartList));
                                                 AddToCartActivityRecyclerView.setVisibility(View.GONE);
                                                 AddToCartActivityBottomRelativeLayout.setVisibility(View.GONE);
                                                 AddToCartActivityNoItemAddedYetLinearLayout.setVisibility(View.VISIBLE);
@@ -212,6 +219,7 @@ public class AddToCartActivity extends AppCompatActivity {
         firebaseAuth = MyApplication.getFirebaseAuth();
         this.context = this;
         progressDialog = new ProgressDialog(context);
+        this.session = new Session(context);
     }
 
     @Override
