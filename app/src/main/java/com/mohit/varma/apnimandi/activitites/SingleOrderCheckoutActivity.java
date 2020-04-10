@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
@@ -22,13 +23,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.adapters.SummaryItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.model.OrderStatus;
 import com.mohit.varma.apnimandi.model.Orders;
 import com.mohit.varma.apnimandi.model.PaymentMethod;
 import com.mohit.varma.apnimandi.model.PaymentStatus;
 import com.mohit.varma.apnimandi.model.UCart;
+import com.mohit.varma.apnimandi.model.UItem;
 import com.mohit.varma.apnimandi.model.UserAddress;
 import com.mohit.varma.apnimandi.utilites.Constants;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
@@ -43,30 +44,42 @@ import static com.mohit.varma.apnimandi.utilites.Constants.REQUEST_CODE_FOR_ADDR
 import static com.mohit.varma.apnimandi.utilites.Constants.USER_ADDRESS_KEY;
 import static com.mohit.varma.apnimandi.utilites.Constants.generateUniqueId;
 
-public class CheckoutActivity extends AppCompatActivity {
-    public static final String TAG = CheckoutActivity.class.getSimpleName();
+public class SingleOrderCheckoutActivity extends AppCompatActivity {
+    public static final String TAG = SingleOrderCheckoutActivity.class.getSimpleName();
     private Toolbar CheckoutActivityToolBar;
     private TextView CheckoutActivityAddChangeAddress, CheckoutActivityUserName, CheckoutActivityAddressLine1,
-            CheckoutActivityAddressLine2, CheckoutActivityCityCode, CheckoutActivityPhoneNumber,BottomSheetRelativeLayoutOrderIdTextView;
+            CheckoutActivityAddressLine2, CheckoutActivityCityCode, CheckoutActivityPhoneNumber,BottomSheetRelativeLayoutOrderIdTextView,
+            SingleItemViewItemWeightTextView,SingleItemViewItemCutOffPriceTextView,SingleItemViewItemNameTextView,SingleItemViewItemFinalPriceTextView;
     private MaterialButton CheckoutActivityPlaceOrderButton;
+    private ImageView SingleItemViewItemImageView;
     private View CheckoutActivityRootView, bottomSheetView;
-    private RecyclerView CheckoutActivityRecyclerView;
     private BottomSheetBehavior bottomSheetBehavior;
     private List<UCart> uCartList = new ArrayList<>();
-    private SummaryItemAdapter summaryItemAdapter;
     private Context context;
     private Session session;
-    private long grandTotal;
+    private long grandTotal,deliveryCharge;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private UserAddress userAddress = null;
-
+    private UItem uItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_checkout);
+        setContentView(R.layout.activity_single_order_checkout);
 
         initViews();
+
+        if (getIntent().getSerializableExtra("uItem") != null) {
+            uItem = (UItem) getIntent().getSerializableExtra("uItem");
+            if(uItem != null) {
+                Log.d(TAG, "SingleOrderCheckoutActivity---->: " + new Gson().toJson(uItem));
+                setImageToGlide(uItem.getmItemImage(),SingleItemViewItemImageView);
+                SingleItemViewItemCutOffPriceTextView.setText(uItem.getmItemCutOffPrice() + "% Off");
+                SingleItemViewItemWeightTextView.setText(uItem.getmItemWeight());
+                SingleItemViewItemNameTextView.setText(uItem.getmItemName() + "");
+                SingleItemViewItemFinalPriceTextView.setText("\u20B9" + uItem.getmItemPrice());
+            }
+        }
 
         userAddress = session.getAddress();
         if (userAddress != null) {
@@ -76,22 +89,6 @@ public class CheckoutActivity extends AppCompatActivity {
             CheckoutActivityAddressLine2.setText(userAddress.getAddressLine2());
             CheckoutActivityCityCode.setText(userAddress.getCityCode());
             CheckoutActivityPhoneNumber.setText(userAddress.getPhoneNumber());
-        }
-
-        /*if (getIntent().getSerializableExtra("UCartItem") != null && getIntent().getSerializableExtra("UCartGrandTotalPrice") != null) {
-            //uCartList = (List<UCart>) getIntent().getSerializableExtra("UCartItem");
-
-        }*/
-
-        uCartList = session.getUCartList();
-        Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
- /*       grandTotal = getIntent().getLongExtra("UCartGrandTotalPrice", 0);*/
-        grandTotal = session.getGrandTotal();
-        if (uCartList != null) {
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-            Log.d(TAG, "onCreate: " + grandTotal);
-            CheckoutActivityPlaceOrderButton.setText(context.getResources().getString(R.string.confirm_order) + " \u20B9" + grandTotal);
-            setAdapter();
         }
 
         CheckoutActivityToolBar.setNavigationOnClickListener(v -> onBackPressed());
@@ -104,6 +101,10 @@ public class CheckoutActivity extends AppCompatActivity {
                 ShowSnackBar.snackBar(context, CheckoutActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
             }
         });
+
+        deliveryCharge = session.getDeliveryCharge();
+        grandTotal = deliveryCharge + (long) uItem.getmItemPrice();
+        CheckoutActivityPlaceOrderButton.setText(context.getResources().getString(R.string.confirm_order) + " \u20B9" + grandTotal);
 
         CheckoutActivityPlaceOrderButton.setOnClickListener(v -> {
             if (IsInternetConnectivity.isConnected(context)) {
@@ -124,6 +125,7 @@ public class CheckoutActivity extends AppCompatActivity {
                                                 orders.setOrderDate(Constants.getLocalDate());
                                                 orders.setUserAddress(userAddress);
                                                 orders.setuCartList(uCartList);
+                                                orders.setuItem(uItem);
                                                 orders.setOrderStatus(OrderStatus.ORDER_PLACED);
                                                 orders.setPaymentMethod(PaymentMethod.CASH_ON_DELIVERY);
                                                 orders.setPaymentStatus( PaymentStatus.UNPAID);
@@ -186,6 +188,7 @@ public class CheckoutActivity extends AppCompatActivity {
                 // React to dragging events
             }
         });
+
     }
 
     public void initViews() {
@@ -198,14 +201,26 @@ public class CheckoutActivity extends AppCompatActivity {
         CheckoutActivityCityCode = findViewById(R.id.CheckoutActivityCityCode);
         CheckoutActivityPlaceOrderButton = findViewById(R.id.CheckoutActivityPlaceOrderButton);
         CheckoutActivityRootView = findViewById(R.id.CheckoutActivityRootView);
-        CheckoutActivityRecyclerView = findViewById(R.id.CheckoutActivityRecyclerView);
+        SingleItemViewItemCutOffPriceTextView = findViewById(R.id.SingleItemViewItemCutOffPriceTextView);
+        SingleItemViewItemNameTextView = findViewById(R.id.SingleItemViewItemNameTextView);
+        SingleItemViewItemWeightTextView = findViewById(R.id.SingleItemViewItemWeightTextView);
         bottomSheetView = findViewById(R.id.AddToCartActivityBottomRelativeLayout);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView);
+        SingleItemViewItemImageView = findViewById(R.id.SingleItemViewItemImageView);
         BottomSheetRelativeLayoutOrderIdTextView = findViewById(R.id.BottomSheetRelativeLayoutOrderIdTextView);
+        SingleItemViewItemFinalPriceTextView = findViewById(R.id.SingleItemViewItemFinalPriceTextView);
         context = this;
         session = new Session(context);
         databaseReference = new MyFirebaseDatabase().getReference();
         firebaseAuth = MyApplication.getFirebaseAuth();
+    }
+
+    public void setVisibleAddressPanel() {
+        CheckoutActivityUserName.setVisibility(View.VISIBLE);
+        CheckoutActivityAddressLine1.setVisibility(View.VISIBLE);
+        CheckoutActivityAddressLine2.setVisibility(View.VISIBLE);
+        CheckoutActivityCityCode.setVisibility(View.VISIBLE);
+        CheckoutActivityPhoneNumber.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -227,20 +242,10 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
-    public void setVisibleAddressPanel() {
-        CheckoutActivityUserName.setVisibility(View.VISIBLE);
-        CheckoutActivityAddressLine1.setVisibility(View.VISIBLE);
-        CheckoutActivityAddressLine2.setVisibility(View.VISIBLE);
-        CheckoutActivityCityCode.setVisibility(View.VISIBLE);
-        CheckoutActivityPhoneNumber.setVisibility(View.VISIBLE);
-    }
-
-    public void setAdapter() {
-        if (uCartList != null && uCartList.size() > 0) {
-            summaryItemAdapter = new SummaryItemAdapter(context, uCartList);
-            CheckoutActivityRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            CheckoutActivityRecyclerView.setHasFixedSize(true);
-            CheckoutActivityRecyclerView.setAdapter(summaryItemAdapter);
-        }
+    public void setImageToGlide(String image_url, ImageView imageView) {
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.market)
+                .error(R.drawable.market);
+        Glide.with(context).load(image_url).apply(options).apply(RequestOptions.centerInsideTransform()).into(imageView);
     }
 }

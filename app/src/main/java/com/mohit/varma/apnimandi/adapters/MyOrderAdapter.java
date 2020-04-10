@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,8 +65,16 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
                 holder.MyOrderSingleItemOrderStatusEstimateDelivery.setText("Estimate Delivery : " + orders.getEstimateDeliveryDate());
             }
         }
-        if (ordersList.get(position).getuCartList().size() > 0) {
+        if (ordersList.get(position).getuCartList() != null&&ordersList.get(position).getuCartList().size() > 0) {
+            holder.ConstraintLayoutRootView.setVisibility(View.GONE);
+            holder.MyOrderSingleItemRecyclerView.setVisibility(View.VISIBLE);
             setAdapter(ordersList.get(position).getuCartList(), holder.MyOrderSingleItemRecyclerView);
+        }else {
+            holder.ConstraintLayoutRootView.setVisibility(View.VISIBLE);
+            holder.MyOrderSingleItemRecyclerView.setVisibility(View.GONE);
+            holder.SummarySingleItemName.setText(ordersList.get(position).getuItem().getmItemName());
+            holder.SummarySingleItemQuantity.setText("Qty: " + ordersList.get(position).getuItem().getmItemWeight());
+            holder.SummarySingleItemPrice.setText("\u20B9" + ordersList.get(position).getuItem().getmItemPrice());
         }
 
         if (ordersList != null && ordersList.size() > 0) {
@@ -158,9 +167,11 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
     public class MyOrderAdapterViewHolder extends RecyclerView.ViewHolder {
         private View MyOrderSingleItemRootView;
         private MaterialButton MyOrderSingleItemCancelOrderButton, MyOrderSingleItemTrackOrderButton;
-        private TextView MyOrderSingleItemOrderNumber, MyOrderSingleItemGrandTotal, MyOrderSingleItemOrderStatus, MyOrderSingleItemOrderStatusEstimateDelivery;
+        private TextView MyOrderSingleItemOrderNumber, MyOrderSingleItemGrandTotal, MyOrderSingleItemOrderStatus, MyOrderSingleItemOrderStatusEstimateDelivery,
+                SummarySingleItemName,SummarySingleItemQuantity,SummarySingleItemPrice;
         private RecyclerView MyOrderSingleItemRecyclerView;
         private ImageView MyOrderSingleItemOrderInfo;
+        private ConstraintLayout ConstraintLayoutRootView;
 
         public MyOrderAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -173,6 +184,10 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.MyOrderA
             MyOrderSingleItemRecyclerView = itemView.findViewById(R.id.MyOrderSingleItemRecyclerView);
             MyOrderSingleItemOrderStatusEstimateDelivery = itemView.findViewById(R.id.MyOrderSingleItemOrderStatusEstimateDelivery);
             MyOrderSingleItemOrderInfo = itemView.findViewById(R.id.MyOrderSingleItemOrderInfo);
+            SummarySingleItemName = itemView.findViewById(R.id.SummarySingleItemName);
+            SummarySingleItemQuantity = itemView.findViewById(R.id.SummarySingleItemQuantity);
+            SummarySingleItemPrice = itemView.findViewById(R.id.SummarySingleItemPrice);
+            ConstraintLayoutRootView = itemView.findViewById(R.id.ConstraintLayoutRootView);
         }
     }
 

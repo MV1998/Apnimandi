@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/ConstraintLayoutRootView"
     android:orientation="vertical">
 
     <TextView
@@ -61,14 +62,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintGuide_end="68dp" />
 
-
-    <!--    <View
-            android:layout_below="@+id/AddToCartActivityBottomRelativeLayoutSubTotalPriceTextView"
-            android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_height="@dimen/_1sdp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="@color/gray_color"></View>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

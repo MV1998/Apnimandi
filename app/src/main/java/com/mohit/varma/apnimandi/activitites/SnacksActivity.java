@@ -50,8 +50,7 @@ public class SnacksActivity extends AppCompatActivity {
     private RecyclerView SnacksActivityRecyclerView;
     private CardView SnacksActivitySearchCardView;
     private SearchView SnacksActivitySearchView;
-    private TextView SnacksActivityNoItemAddedYetTextView,SnacksActivityQueryHint,snacksLinearLayoutGoToCartTextView,snacksLinearLayoutOrderNowTextView;
-    private LinearLayout snacksLinearLayout;
+    private TextView SnacksActivityNoItemAddedYetTextView,SnacksActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -76,15 +75,6 @@ public class SnacksActivity extends AppCompatActivity {
             if (!getIntent().getStringExtra(ITEM_KEY).isEmpty()) {
                 category = getIntent().getStringExtra(ITEM_KEY);
             }
-        }
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            snacksLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            snacksLinearLayout.setVisibility(View.GONE);
         }
 
         firebaseDatabase.child(ITEMS).child(category).addValueEventListener(new ValueEventListener() {
@@ -164,30 +154,12 @@ public class SnacksActivity extends AppCompatActivity {
             }
         });
 
-        snacksLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        snacksLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void initViewsAndInstances() {
         SnacksActivityToolbar = (Toolbar) findViewById(R.id.SnacksActivityToolbar);
         SnacksActivityRecyclerView = (RecyclerView) findViewById(R.id.SnacksActivityRecyclerView);
         SnacksActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.SnacksActivityNoItemAddedYetTextView);
-        snacksLinearLayout = findViewById(R.id.snacksLinearLayout);
-        snacksLinearLayoutGoToCartTextView = findViewById(R.id.snacksLinearLayoutGoToCartTextView);
-        snacksLinearLayoutOrderNowTextView = findViewById(R.id.snacksLinearLayoutOrderNowTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         SnacksActivityRootView = (View) findViewById(R.id.SnacksActivityRootView);
         SnacksActivitySearchView = findViewById(R.id.SnacksActivitySearchView);
@@ -244,11 +216,7 @@ public class SnacksActivity extends AppCompatActivity {
             itemSnacksAdapter = new ItemAdapter(uItemList, context, category, SnacksActivityRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(snacksLinearLayout.getVisibility() == View.VISIBLE){
 
-                    }else {
-                        snacksLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             SnacksActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));

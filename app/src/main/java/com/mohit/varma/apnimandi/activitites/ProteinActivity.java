@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
@@ -50,8 +47,7 @@ public class ProteinActivity extends AppCompatActivity {
     private RecyclerView ProteinActivityRecyclerView;
     private SearchView ProteinActivitySearchView;
     private CardView ProteinActivitySearchCardView;
-    private TextView ProteinActivityNoItemAddedYetTextView, ProteinActivityQueryHint,proteinLinearLayoutGoToCartTextView,proteinLinearLayoutOrderNowTextView;
-    private LinearLayout proteinLinearLayout;
+    private TextView ProteinActivityNoItemAddedYetTextView, ProteinActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -76,15 +72,6 @@ public class ProteinActivity extends AppCompatActivity {
             if (!getIntent().getStringExtra(ITEM_KEY).isEmpty()) {
                 category = getIntent().getStringExtra(ITEM_KEY);
             }
-        }
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            proteinLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            proteinLinearLayout.setVisibility(View.GONE);
         }
 
         firebaseDatabase.child(ITEMS).child(category).addValueEventListener(new ValueEventListener() {
@@ -166,31 +153,12 @@ public class ProteinActivity extends AppCompatActivity {
             }
         });
 
-
-        proteinLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        proteinLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void initViewsAndInstances() {
         ProteinActivityToolbar = (Toolbar) findViewById(R.id.ProteinActivityToolbar);
         ProteinActivityRecyclerView = (RecyclerView) findViewById(R.id.ProteinActivityRecyclerView);
         ProteinActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.ProteinActivityNoItemAddedYetTextView);
-        proteinLinearLayoutGoToCartTextView = findViewById(R.id.proteinLinearLayoutGoToCartTextView);
-        proteinLinearLayoutOrderNowTextView = findViewById(R.id.proteinLinearLayoutOrderNowTextView);
-        proteinLinearLayout = findViewById(R.id.proteinLinearLayout);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         ProteinActivityRootView = (View) findViewById(R.id.ProteinActivityRootView);
         ProteinActivitySearchView = findViewById(R.id.ProteinActivitySearchView);
@@ -247,11 +215,6 @@ public class ProteinActivity extends AppCompatActivity {
             itemProteinAdapter = new ItemAdapter(uItemList, context, category, ProteinActivityRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(proteinLinearLayout.getVisibility() == View.VISIBLE){
-
-                    }else {
-                        proteinLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             ProteinActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));

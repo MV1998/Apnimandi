@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.ItemTouchUIUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,10 +23,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
 import com.mohit.varma.apnimandi.activitites.RegistrationActivity;
+import com.mohit.varma.apnimandi.activitites.SingleOrderCheckoutActivity;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
 import com.mohit.varma.apnimandi.interfaces.ItemClickCallBack;
 import com.mohit.varma.apnimandi.model.UCart;
@@ -151,6 +152,20 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
                 }
             }
         });
+
+        holder.SingleItemViewOrderNowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Log.d(TAG, "SingleItemViewOrderNowButton: " + new Gson().toJson(items.get(position)));
+                    Intent intent = new Intent(context, SingleOrderCheckoutActivity.class);
+                    intent.putExtra("uItem",items.get(position));
+                    context.startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -163,7 +178,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
         private TextView SingleItemViewItemWeightTextView, SingleItemViewItemCutOffPriceTextView, SingleItemViewItemNameTextView,
                 SingleItemViewItemFinalPriceTextView;
         private ImageView SingleItemViewItemImageView;
-        private MaterialButton SingleItemViewAddToCartButton;
+        private MaterialButton SingleItemViewAddToCartButton,SingleItemViewOrderNowButton;
 
         public FruitsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -174,6 +189,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.FruitsViewHold
             SingleItemViewItemFinalPriceTextView = (TextView) itemView.findViewById(R.id.SingleItemViewItemFinalPriceTextView);
             SingleItemViewItemImageView = (ImageView) itemView.findViewById(R.id.SingleItemViewItemImageView);
             SingleItemViewAddToCartButton = (MaterialButton) itemView.findViewById(R.id.SingleItemViewAddToCartButton);
+            SingleItemViewOrderNowButton = (MaterialButton) itemView.findViewById(R.id.SingleItemViewOrderNowButton);
+
         }
     }
 

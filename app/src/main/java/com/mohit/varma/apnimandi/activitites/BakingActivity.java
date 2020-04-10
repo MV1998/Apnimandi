@@ -1,5 +1,12 @@
 package com.mohit.varma.apnimandi.activitites;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -8,21 +15,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
@@ -43,8 +39,7 @@ public class BakingActivity extends AppCompatActivity {
 
     private Toolbar BakingActivityToolbar;
     private RecyclerView BakingActivityRecyclerView;
-    private TextView BakingActivityNoItemAddedYetTextView,BakingActivityQueryHint,bakingLinearLayoutGoToCartTextView,bakingLinearLayoutOrderNowTextView;
-    private LinearLayout bakingLinearLayout;
+    private TextView BakingActivityNoItemAddedYetTextView,BakingActivityQueryHint;
     private CardView BakingActivitySearchCardView;
     private SearchView BakingActivitySearchView;
     private Context context;
@@ -71,15 +66,6 @@ public class BakingActivity extends AppCompatActivity {
             if (!getIntent().getStringExtra(ITEM_KEY).isEmpty()) {
                 category = getIntent().getStringExtra(ITEM_KEY);
             }
-        }
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            bakingLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            bakingLinearLayout.setVisibility(View.GONE);
         }
 
         firebaseDatabase.child(ITEMS).child(category).addValueEventListener(new ValueEventListener() {
@@ -161,30 +147,12 @@ public class BakingActivity extends AppCompatActivity {
             }
         });
 
-        bakingLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        bakingLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void initViewsAndInstances() {
         BakingActivityToolbar = (Toolbar) findViewById(R.id.BakingActivityToolbar);
         BakingActivityRecyclerView = (RecyclerView) findViewById(R.id.BakingActivityRecyclerView);
         BakingActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.BakingActivityNoItemAddedYetTextView);
-        bakingLinearLayout = findViewById(R.id.bakingLinearLayout);
-        bakingLinearLayoutGoToCartTextView = findViewById(R.id.bakingLinearLayoutGoToCartTextView);
-        bakingLinearLayoutOrderNowTextView = findViewById(R.id.bakingLinearLayoutOrderNowTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         BakingActivityRootView = (View) findViewById(R.id.BakingActivityRootView);
         BakingActivitySearchCardView = findViewById(R.id.BakingActivitySearchCardView);
@@ -241,11 +209,7 @@ public class BakingActivity extends AppCompatActivity {
             itemBackingAdapter = new ItemAdapter(uItemList, context, category, BakingActivityRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(bakingLinearLayout.getVisibility() == View.VISIBLE){
 
-                    }else {
-                        bakingLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             BakingActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));

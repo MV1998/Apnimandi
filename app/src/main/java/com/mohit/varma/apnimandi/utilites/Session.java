@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import com.mohit.varma.apnimandi.model.UCart;
 import com.mohit.varma.apnimandi.model.UserAddress;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Session {
@@ -66,10 +65,10 @@ public class Session {
     public static final String CART_ITEM_LIST = "cart_item_list";
 
     public void setUCartList(List<UCart> uCartList){
-            String UCartJson = new Gson().toJson(uCartList);
-            editor.putString(CART_ITEM_LIST,UCartJson);
-            editor.commit();
-            editor.apply();
+        String UCartJson = new Gson().toJson(uCartList);
+        editor.putString(CART_ITEM_LIST,UCartJson);
+        editor.commit();
+        editor.apply();
     }
 
     public List<UCart> getUCartList(){
@@ -89,8 +88,8 @@ public class Session {
 
     public static final String GRAND_TOTAL = "grand_total";
 
-    public void setGrandTotal(long deliveryCharge){
-        editor.putLong(GRAND_TOTAL,deliveryCharge);
+    public void setGrandTotal(long grandTotal){
+        editor.putLong(GRAND_TOTAL,grandTotal);
         editor.commit();
         editor.apply();
     }

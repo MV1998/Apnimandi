@@ -50,8 +50,7 @@ public class VegetablesActivity extends AppCompatActivity {
     private RecyclerView VegetablesActivityRecyclerView;
     private SearchView VegetablesActivitySearchView;
     private CardView VegetablesActivitySearchCardView;
-    private TextView VegetablesActivityNoItemAddedYetTextView,VegetablesActivityQueryHint,vegetableLinearLayoutGoToCartTextView,vegetableLinearLayoutOrderNowTextView;
-    private LinearLayout vegetableLinearLayout;
+    private TextView VegetablesActivityNoItemAddedYetTextView,VegetablesActivityQueryHint;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -76,15 +75,6 @@ public class VegetablesActivity extends AppCompatActivity {
             if (!getIntent().getStringExtra(ITEM_KEY).isEmpty()) {
                 category = getIntent().getStringExtra(ITEM_KEY);
             }
-        }
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            vegetableLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            vegetableLinearLayout.setVisibility(View.GONE);
         }
 
         firebaseDatabase.child(ITEMS).child(category).addValueEventListener(new ValueEventListener() {
@@ -165,30 +155,12 @@ public class VegetablesActivity extends AppCompatActivity {
             }
         });
 
-        vegetableLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        vegetableLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void initViewsAndInstances() {
         VegetablesActivityToolbar = (Toolbar) findViewById(R.id.VegetablesActivityToolbar);
         VegetablesActivityRecyclerView = (RecyclerView) findViewById(R.id.VegetablesActivityRecyclerView);
         VegetablesActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.VegetablesActivityNoItemAddedYetTextView);
-        vegetableLinearLayout = findViewById(R.id.vegetableLinearLayout);
-        vegetableLinearLayoutGoToCartTextView = findViewById(R.id.vegetableLinearLayoutGoToCartTextView);
-        vegetableLinearLayoutOrderNowTextView = findViewById(R.id.vegetableLinearLayoutOrderNowTextView);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         VegetablesActivitySearchView = findViewById(R.id.VegetablesActivitySearchView);
         VegetablesActivityQueryHint = findViewById(R.id.VegetablesActivityQueryHint);
@@ -244,11 +216,6 @@ public class VegetablesActivity extends AppCompatActivity {
             itemVegetablesAdapter = new ItemAdapter(uItemList, context, category, VegetablesActivityRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(vegetableLinearLayout.getVisibility() == View.VISIBLE){
-
-                    }else {
-                        vegetableLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             VegetablesActivityRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));

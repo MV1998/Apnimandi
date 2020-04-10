@@ -73,6 +73,7 @@ public class ItemDescriptionActivity extends AppCompatActivity {
 
         if (item != null) {
             Log.d(TAG, "onCreate: " + new Gson().toJson(item));
+            ItemDescriptionActivityToolbar.setTitle(item.getmItemName());
             setImageToGlide(item.getmItemImage(), ItemDescriptionActivityItemImageView);
             ItemDescriptionActivityItemName.setText(""+item.getmItemName());
             ItemDescriptionActivityItemPrice.setText("\u20B9"+item.getmItemPrice()+"/kg");

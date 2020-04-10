@@ -82,18 +82,50 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/SingleItemViewAddToCartButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="@dimen/_100sdp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:insetLeft="4dp"
-            android:text="@string/add_to_cart"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/SingleItemViewLinearLayoutHorizontalContainerForItemPrice"
-            android:layout_alignParentLeft="true">
+            android:orientation="vertical"
+            android:layout_below="@id/SingleItemViewLinearLayoutHorizontalContainerForItemPrice">
 
-        </com.google.android.material.button.MaterialButton>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/SingleItemViewAddToCartButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:insetLeft="4dp"
+                    android:text="@string/add_to_cart"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentLeft="true">
+
+                </com.google.android.material.button.MaterialButton>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/SingleItemViewOrderNowButton"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:insetLeft="4dp"
+                    android:text="@string/order_now"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentLeft="true">
+
+                </com.google.android.material.button.MaterialButton>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

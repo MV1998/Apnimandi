@@ -87,6 +87,7 @@ public class AddToCartActivity extends AppCompatActivity {
                                                     subTotal = getTotalItemPriceOfAllItem(uCartList);
                                                     AddToCartActivityBottomRelativeLayoutSubTotalCountTextView.setText("\u20B9" + subTotal);
                                                     grandTotal = subTotal + deliveryFee;
+                                                    Log.d(TAG, "grandTotal: " + grandTotal);
                                                     session.setGrandTotal(grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9" + grandTotal);
                                                     AddToCartActivityBottomRelativeLayoutTotalItemTextView.setText(uCartList.size() + " Items");
@@ -130,6 +131,8 @@ public class AddToCartActivity extends AppCompatActivity {
                                             AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView.setText("\u20B9" + dataSnapshot.getValue() + "");
                                             deliveryFee = (long) dataSnapshot.getValue();
                                             grandTotal = subTotal + deliveryFee;
+                                            Log.d(TAG, "grandTotal: " + grandTotal);
+                                            session.setGrandTotal(grandTotal);
                                             AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView.setText("\u20B9" + grandTotal);
                                         }
                                     }

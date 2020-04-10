@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
@@ -50,9 +47,8 @@ public class FruitsActivity extends AppCompatActivity {
     private Toolbar FruitsActivityToolbar;
     private RecyclerView recyclerView;
     private CardView FruitsActivitySearchCardView;
-    private TextView FruitsActivityNoItemAddedYetTextView,FruitsActivityQueryHint,fruitsLinearLayoutGoToCartTextView,fruitsLinearLayoutOrderNowTextView;
+    private TextView FruitsActivityNoItemAddedYetTextView,FruitsActivityQueryHint;
     private SearchView FruitsActivitySearchView;
-    private LinearLayout fruitsLinearLayout;
     private Context context;
     private DatabaseReference firebaseDatabase;
     private String category;
@@ -78,15 +74,6 @@ public class FruitsActivity extends AppCompatActivity {
         }
 
         setToolbar();
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            fruitsLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            fruitsLinearLayout.setVisibility(View.GONE);
-        }
 
         FruitsActivityToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,30 +152,12 @@ public class FruitsActivity extends AppCompatActivity {
             }
         });
 
-        fruitsLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        fruitsLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context,CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public void initViewsAndInstances() {
         FruitsActivityToolbar = (Toolbar) findViewById(R.id.FruitsActivityToolbar);
         recyclerView = findViewById(R.id.fruitsRecyclerViewWidget);
         FruitsActivityNoItemAddedYetTextView = (TextView) findViewById(R.id.FruitsActivityNoItemAddedYetTextView);
-        fruitsLinearLayoutGoToCartTextView = findViewById(R.id.fruitsLinearLayoutGoToCartTextView);
-        fruitsLinearLayoutOrderNowTextView = findViewById(R.id.fruitsLinearLayoutOrderNowTextView);
-        fruitsLinearLayout = findViewById(R.id.fruitsLinearLayout);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         FruitsActivityQueryHint = findViewById(R.id.FruitsActivityQueryHint);
         FruitsActivitySearchView = findViewById(R.id.FruitsActivitySearchView);
@@ -209,11 +178,6 @@ public class FruitsActivity extends AppCompatActivity {
             itemFruitAdapter = new ItemAdapter(uItemList, context, category, FruitsActivityRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(fruitsLinearLayout.getVisibility() == View.VISIBLE){
-
-                    }else {
-                        fruitsLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));

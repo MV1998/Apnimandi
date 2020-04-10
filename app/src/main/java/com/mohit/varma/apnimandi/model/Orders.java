@@ -9,6 +9,7 @@ public class Orders implements Serializable {
     private String estimateDeliveryDate;
     private UserAddress userAddress;
     private List<UCart> uCartList;
+    private UItem uItem;
     private OrderStatus orderStatus;
     private PaymentMethod paymentMethod;
     private PaymentStatus paymentStatus;
@@ -17,7 +18,7 @@ public class Orders implements Serializable {
     public Orders() {
     }
 
-    public Orders(int orderId, String orderDate,String estimateDeliveryDate, UserAddress userAddress, List<UCart> uCartList, OrderStatus orderStatus, PaymentMethod paymentMethod, PaymentStatus paymentStatus, long grandTotal) {
+    /*public Orders(int orderId, String orderDate,String estimateDeliveryDate, UserAddress userAddress, List<UCart> uCartList, OrderStatus orderStatus, PaymentMethod paymentMethod, PaymentStatus paymentStatus, long grandTotal) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.estimateDeliveryDate = estimateDeliveryDate;
@@ -27,7 +28,7 @@ public class Orders implements Serializable {
         this.paymentMethod = paymentMethod;
         this.paymentStatus = paymentStatus;
         this.grandTotal = grandTotal;
-    }
+    }*/
 
     public int getOrderId() {
         return orderId;
@@ -99,5 +100,13 @@ public class Orders implements Serializable {
 
     public void setEstimateDeliveryDate(String estimateDeliveryDate) {
         this.estimateDeliveryDate = estimateDeliveryDate;
+    }
+
+    public UItem getuItem() {
+        return uItem;
+    }
+
+    public void setuItem(UItem uItem) {
+        this.uItem = uItem;
     }
 }

@@ -48,9 +48,8 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
     public static final String TAG = HomeFragment.class.getSimpleName();
 
     private RecyclerView HomeFragmentRecyclerView;
-    private TextView FruitsActivityNoItemAddedYetTextView,homeLinearLayoutGoToCartTextView,homeLinearLayoutOrderNowTextView;
+    private TextView FruitsActivityNoItemAddedYetTextView;
     private Context context;
-    private LinearLayout homeLinearLayout;
     private DatabaseReference firebaseDatabase;
     private String category;
     private List<UItem> uItemList = new LinkedList<>();
@@ -76,15 +75,6 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
 
         list = new LinkedList<>();
         list.add(" ");
-
-        uCartList = session.getUCartList();
-
-        if(uCartList != null && uCartList.size()>0){
-            homeLinearLayout.setVisibility(View.VISIBLE);
-            Log.d(TAG, "onCreate: " + new Gson().toJson(uCartList));
-        }else {
-            homeLinearLayout.setVisibility(View.GONE);
-        }
 
         firebaseDatabase.child(ITEMS).child(Constants.MOST_POPULAR).addValueEventListener(new ValueEventListener() {
             @Override
@@ -124,32 +114,12 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
             }
         });
 
-
-        homeLinearLayoutGoToCartTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AddToCartActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        homeLinearLayoutOrderNowTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CheckoutActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return view;
     }
 
     public void initViewsAndInstances(View view) {
         HomeFragmentRecyclerView = (RecyclerView) view.findViewById(R.id.HomeFragmentRecyclerView);
         HomeFragmentRootView = (View) view.findViewById(R.id.HomeFragmentRootView);
-        homeLinearLayoutGoToCartTextView = view.findViewById(R.id.homeLinearLayoutGoToCartTextView);
-        homeLinearLayoutOrderNowTextView = view.findViewById(R.id.homeLinearLayoutOrderNowTextView);
-        homeLinearLayout = view.findViewById(R.id.homeLinearLayout);
         firebaseDatabase = new MyFirebaseDatabase().getReference();
         this.context = getActivity();
         progressDialog = new ProgressDialog(context);
@@ -231,11 +201,6 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
             homeInnerAdapter = new HomeInnerAdapter(getActivity(), uItemList, HomeFragmentRootView, new ItemClickCallBack() {
                 @Override
                 public void clickCallBack() {
-                    if(homeLinearLayout.getVisibility() == View.VISIBLE){
-
-                    }else {
-                        homeLinearLayout.setVisibility(View.VISIBLE);
-                    }
                 }
             });
             HomeAdapter homeAdapter = new HomeAdapter(list, getActivity(), homeInnerAdapter);
