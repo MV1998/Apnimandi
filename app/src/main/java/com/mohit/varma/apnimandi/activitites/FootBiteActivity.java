@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.fragments.CategoryFragment;
@@ -41,6 +42,7 @@ import com.mohit.varma.apnimandi.fragments.HomeFragment;
 import com.mohit.varma.apnimandi.fragments.PreviousOrderFragment;
 import com.mohit.varma.apnimandi.fragments.RefundTermsPolicyFragment;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
+import com.mohit.varma.apnimandi.model.Orders;
 import com.mohit.varma.apnimandi.model.UserAddress;
 import com.mohit.varma.apnimandi.utilites.Constants;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
@@ -48,8 +50,11 @@ import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FootBiteActivity extends AppCompatActivity {
 

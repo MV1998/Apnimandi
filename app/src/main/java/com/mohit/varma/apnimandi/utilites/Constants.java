@@ -2,12 +2,9 @@ package com.mohit.varma.apnimandi.utilites;
 
 import android.content.Context;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 public class Constants {

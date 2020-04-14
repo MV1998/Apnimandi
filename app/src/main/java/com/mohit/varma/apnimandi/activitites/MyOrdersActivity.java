@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,17 +32,21 @@ import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class MyOrdersActivity extends AppCompatActivity {
+public class MyOrdersActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
     private static final String TAG = "MyOrdersActivity";
     private Toolbar MyOrdersActivityToolbar;
     private TextView MyOrdersActivityOngoingOrdersTextView, MyOrdersActivityPastOrdersTextView;
+    private SwipeRefreshLayout MyOrdersActivitySwipeRefreshLayout;
     private Fragment fragment;
     private FragmentTransaction fragmentTransaction;
     private Context context;
     private DatabaseReference databaseReference;
     private List<Orders> ordersList = new ArrayList<>();
+    private List<Orders> mainOrdersList = new LinkedList<>();
+    private List<Orders> sortOrderList;
     private List<Orders> cancelledOrders;
     private List<Orders> processingOrders;
     private FirebaseAuth firebaseAuth;
@@ -60,6 +65,7 @@ public class MyOrdersActivity extends AppCompatActivity {
             onBackPressed();
         });
         setListener();
+        MyOrdersActivitySwipeRefreshLayout.setOnRefreshListener(this);
 
         if (firebaseAuth != null) {
             if (firebaseAuth.getCurrentUser() != null) {
@@ -75,20 +81,7 @@ public class MyOrdersActivity extends AppCompatActivity {
                                         Orders uItem = Items.getValue(Orders.class);
                                         ordersList.add(uItem);
                                     }
-                                    if (ordersList != null && ordersList.size() > 0) {
-                                        cancelledOrders = new ArrayList<>();
-                                        processingOrders = new ArrayList<>();
-                                        for (int i = 0; i < ordersList.size(); i++) {
-                                            if (ordersList.get(i).getOrderStatus() == OrderStatus.CANCELLED) {
-                                                cancelledOrders.add(ordersList.get(i));
-                                            } else {
-                                                processingOrders.add(ordersList.get(i));
-                                            }
-                                        }
-
-                                        dismissProgressDialog();
-                                        initializeOnGoingFragment();
-                                    }
+                                    dismissProgressDialog();
                                 } else {
                                     dismissProgressDialog();
                                 }
@@ -102,6 +95,49 @@ public class MyOrdersActivity extends AppCompatActivity {
 
                         }
                     });
+                    databaseReference.child("Orders").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            mainOrdersList.clear();
+                            if (dataSnapshot.exists() && dataSnapshot.hasChildren()) {
+                                for (DataSnapshot Items : dataSnapshot.getChildren()) {
+                                    Orders orders = Items.getValue(Orders.class);
+                                    mainOrdersList.add(orders);
+                                }
+                                if (ordersList != null && ordersList.size() > 0) {
+                                    if (mainOrdersList != null && mainOrdersList.size() > 0) {
+                                        sortOrderList = new LinkedList<>();
+                                        for (int i = 0; i <ordersList.size(); i++) {
+                                            for (int j = 0; j <mainOrdersList.size(); j++) {
+                                                if(ordersList.get(i).getOrderId() == mainOrdersList.get(j).getOrderId()){
+                                                    sortOrderList.add(mainOrdersList.get(j));
+                                                }
+                                            }
+                                        }
+                                    }
+                                    cancelledOrders = new ArrayList<>();
+                                    processingOrders = new ArrayList<>();
+                                    for (int i = 0; i < sortOrderList.size(); i++) {
+                                        if (sortOrderList.get(i).getOrderStatus() == OrderStatus.CANCELLED ||sortOrderList.get(i).getOrderStatus() == OrderStatus.DELIVERED) {
+                                            cancelledOrders.add(sortOrderList.get(i));
+                                        } else {
+                                            processingOrders.add(sortOrderList.get(i));
+                                        }
+                                    }
+
+                                    dismissProgressDialog();
+                                    initializeOnGoingFragment();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
             }
         }
@@ -110,6 +146,7 @@ public class MyOrdersActivity extends AppCompatActivity {
     public void initViews() {
         MyOrdersActivityOngoingOrdersTextView = findViewById(R.id.MyOrdersActivityOngoingOrdersTextView);
         MyOrdersActivityPastOrdersTextView = findViewById(R.id.MyOrdersActivityPastOrdersTextView);
+        MyOrdersActivitySwipeRefreshLayout = findViewById(R.id.MyOrdersActivitySwipeRefreshLayout);
         MyOrdersActivityToolbar = findViewById(R.id.MyOrdersActivityToolbar);
         MyOrdersActivityRootView = findViewById(R.id.MyOrdersActivityRootView);
         this.databaseReference = new MyFirebaseDatabase().getReference();
@@ -123,7 +160,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         MyOrdersActivityOngoingOrdersTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(IsInternetConnectivity.isConnected(context)){
+                if (IsInternetConnectivity.isConnected(context)) {
                     try {
                         MyOrdersActivityOngoingOrdersTextView.setTextColor(Color.parseColor("#ee6002"));
                         MyOrdersActivityPastOrdersTextView.setTextColor(Color.parseColor("#000000"));
@@ -139,7 +176,7 @@ public class MyOrdersActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.OrdersContainer, fragment, "OngoingOrdersFragment");
                         fragmentTransaction.commitAllowingStateLoss();
                     }
-                }else {
+                } else {
                     ShowSnackBar.snackBar(context, MyOrdersActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
@@ -148,7 +185,7 @@ public class MyOrdersActivity extends AppCompatActivity {
         MyOrdersActivityPastOrdersTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(IsInternetConnectivity.isConnected(context)){
+                if (IsInternetConnectivity.isConnected(context)) {
                     try {
                         MyOrdersActivityOngoingOrdersTextView.setTextColor(Color.parseColor("#000000"));
                         MyOrdersActivityPastOrdersTextView.setTextColor(Color.parseColor("#ee6002"));
@@ -164,7 +201,7 @@ public class MyOrdersActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.OrdersContainer, fragment, "PastOrdersFragment");
                         fragmentTransaction.commitAllowingStateLoss();
                     }
-                }else {
+                } else {
                     ShowSnackBar.snackBar(context, MyOrdersActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }
             }
@@ -186,6 +223,9 @@ public class MyOrdersActivity extends AppCompatActivity {
             fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.OrdersContainer, fragment, "OngoingOrdersFragment");
             fragmentTransaction.commitAllowingStateLoss();
+            if(MyOrdersActivitySwipeRefreshLayout.isRefreshing()){
+                MyOrdersActivitySwipeRefreshLayout.setRefreshing(false);
+            }
         }
     }
 
@@ -216,5 +256,11 @@ public class MyOrdersActivity extends AppCompatActivity {
                 progressDialog.show();
             }
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        MyOrdersActivitySwipeRefreshLayout.setRefreshing(true);
+        initializeOnGoingFragment();
     }
 }
