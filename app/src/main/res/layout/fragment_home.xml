@@ -1,19 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment"
-    android:id="@+id/HomeFragmentRootView">
+    android:id="@+id/HomeFragmentRootView"
+    android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/HomeFragmentRecyclerView"
-                android:background="@color/gray_color"
-                android:padding="@dimen/_5sdp">
+<!--    <LinearLayout-->
+<!--        android:layout_margin="@dimen/_5sdp"-->
+<!--        android:background="@drawable/orange_strock_bg"-->
+<!--        android:gravity="center"-->
+<!--        android:padding="@dimen/_5sdp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
 
-            </androidx.recyclerview.widget.RecyclerView>
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_300sdp"-->
+<!--            android:layout_height="@dimen/_150sdp"-->
+<!--            android:scaleType="fitXY"-->
+<!--            android:src="@drawable/rationpanel"/>-->
 
+<!--        <TextView-->
+<!--            android:gravity="center"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Stay Home, Stay Safe"-->
+<!--            android:textColor="@color/colorPrimary"-->
+<!--            android:textSize="@dimen/_18sdp"-->
+<!--            android:padding="@dimen/_10sdp"-->
+<!--            android:textStyle="bold"></TextView>-->
 
-</RelativeLayout>
+<!--        <com.google.android.material.button.MaterialButton-->
+<!--            style="@style/Widget.MaterialComponents.Button.OutlinedButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Request Ration"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:layout_alignParentLeft="true">-->
+
+<!--        </com.google.android.material.button.MaterialButton>-->
+
+<!--    </LinearLayout>-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/HomeFragmentRecyclerView"
+        android:background="@color/gray_color"
+        android:padding="@dimen/_5sdp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

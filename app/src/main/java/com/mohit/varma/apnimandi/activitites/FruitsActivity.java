@@ -47,7 +47,7 @@ public class FruitsActivity extends AppCompatActivity {
     private Toolbar FruitsActivityToolbar;
     private RecyclerView recyclerView;
     private CardView FruitsActivitySearchCardView;
-    private TextView FruitsActivityNoItemAddedYetTextView,FruitsActivityQueryHint;
+    private TextView FruitsActivityNoItemAddedYetTextView, FruitsActivityQueryHint;
     private SearchView FruitsActivitySearchView;
     private Context context;
     private DatabaseReference firebaseDatabase;

@@ -3,14 +3,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ScrollView
-        android:fillViewport="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+<!--    <ScrollView-->
+<!--        android:fillViewport="true"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
             <TextView
                 android:layout_width="match_parent"
@@ -42,8 +38,52 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/_10sdp"></androidx.viewpager.widget.ViewPager>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_margin="@dimen/_5sdp"
+            android:background="@drawable/orange_strock_bg"
+            android:gravity="center"
+            android:padding="@dimen/_5sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="@dimen/_300sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:scaleType="fitXY"
+                android:src="@drawable/rationpanel"/>
+
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stay Home, Stay Safe"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_18sdp"
+                android:padding="@dimen/_10sdp"
+                android:textStyle="bold"></TextView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rationRequestButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request Ration"
+                android:textAllCaps="false"
+                android:layout_alignParentLeft="true">
+
+            </com.google.android.material.button.MaterialButton>
+
         </LinearLayout>
 
-    </ScrollView>
+
+    </LinearLayout>
+
+<!--    </ScrollView>-->
 
 </LinearLayout>

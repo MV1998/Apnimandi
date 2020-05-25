@@ -2,13 +2,11 @@ package com.mohit.varma.apnimandi.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,8 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.R;
-import com.mohit.varma.apnimandi.activitites.AddToCartActivity;
-import com.mohit.varma.apnimandi.activitites.CheckoutActivity;
 import com.mohit.varma.apnimandi.adapters.HomeAdapter;
 import com.mohit.varma.apnimandi.adapters.HomeInnerAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
@@ -203,10 +199,10 @@ public class HomeFragment extends Fragment implements NetworkChangedCallBack {
                 public void clickCallBack() {
                 }
             });
-            HomeAdapter homeAdapter = new HomeAdapter(list, getActivity(), homeInnerAdapter);
+            HomeAdapter homeAdapter = new HomeAdapter(list, getActivity(), homeInnerAdapter,HomeFragmentRootView);
             HomeFragmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            HomeFragmentRecyclerView.setHasFixedSize(true);
             HomeFragmentRecyclerView.setAdapter(homeAdapter);
+            HomeFragmentRecyclerView.smoothScrollToPosition(0);
         }
     }
 

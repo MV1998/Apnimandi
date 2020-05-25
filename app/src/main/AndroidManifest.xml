@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitites.SingleOrderCheckoutActivity"></activity>
+        <activity android:name=".activitites.RationRequestActivity"></activity>
+        <activity android:name=".activitites.SingleOrderCheckoutActivity" />
         <activity android:name=".activitites.MyOrdersActivity" />
         <activity android:name=".activitites.AddAddressActivity" />
         <activity android:name=".activitites.CheckoutActivity" />

@@ -85,10 +85,7 @@
                 android:orientation="vertical">
 
             </FrameLayout>
-
         </LinearLayout>
-
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 
 </LinearLayout>

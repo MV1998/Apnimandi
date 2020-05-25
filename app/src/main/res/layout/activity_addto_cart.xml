@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/gray_color"
-                android:padding="@dimen/_5sdp"></androidx.recyclerview.widget.RecyclerView>
+                android:padding="@dimen/_5sdp" />
 
             <RelativeLayout
                 android:id="@+id/AddToCartActivityNoItemAddedYetLinearLayout"
@@ -47,7 +47,7 @@
                     android:layout_height="@dimen/_100sdp"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/orange_shopping_cart"></ImageView>
+                    android:src="@drawable/orange_shopping_cart" />
 
                 <TextView
                     android:id="@+id/AddToCartActivityBottomRelativeLayouCartEmptyTextVieww"
@@ -58,7 +58,7 @@
                     android:text="@string/your_cart_empty"
                     android:textSize="@dimen/_14sdp"
                     android:layout_below="@id/AddToCartActivityNoItemAddedYetImageView"
-                    android:textColor="@color/black"></TextView>
+                    android:textColor="@color/black" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/AddToCartActivityBottomRelativeLayoutOrderNowButton"
@@ -92,9 +92,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/subtotal"
                 android:textColor="@color/black"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine3"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <View
                 android:id="@+id/AddToCartActivityHorizontalLine1"
@@ -105,7 +105,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:background="@color/gray_color"></View>
+                android:background="@color/gray_color" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutDeliveryPriceTextView"
@@ -115,7 +115,7 @@
                 android:textColor="@color/black"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/AddToCartActivityHorizontalLine1"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <View
                 android:id="@+id/AddToCartActivityHorizontalLine2"
@@ -126,7 +126,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:background="@color/gray_color"></View>
+                android:background="@color/gray_color" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalPriceTextView"
@@ -136,7 +136,7 @@
                 android:layout_alignParentLeft="true"
                 android:text="@string/grand_total"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutTotalItemTextView"
@@ -145,7 +145,7 @@
                 android:layout_alignParentRight="true"
                 android:text="0 Item"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <View
                 android:id="@+id/AddToCartActivityHorizontalLine3"
@@ -156,7 +156,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:background="@color/gray_color"></View>
+                android:background="@color/gray_color" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutSubTotalCountTextView"
@@ -166,7 +166,7 @@
                 android:layout_alignParentRight="true"
                 android:text="₹0"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutDeliveryCountItemTextView"
@@ -176,7 +176,7 @@
                 android:text="₹0"
                 android:textColor="@color/black"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine1"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <TextView
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutGrandTotalCountItemTextView"
@@ -186,7 +186,7 @@
                 android:text="₹0"
                 android:textColor="@color/black"
                 android:layout_below="@+id/AddToCartActivityHorizontalLine2"
-                android:textSize="@dimen/_12sdp"></TextView>
+                android:textSize="@dimen/_12sdp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/AddToCartActivityBottomRelativeLayoutShoppingButton"
