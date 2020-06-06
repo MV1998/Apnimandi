@@ -77,14 +77,12 @@ public class AddAddressActivity extends AppCompatActivity {
                 }
             }
         });
-
         AddAddressActivityToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
     }
 
     public void initViews(){
