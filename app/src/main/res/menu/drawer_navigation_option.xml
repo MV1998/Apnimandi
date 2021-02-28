@@ -15,11 +15,6 @@
         android:title="@string/my_ordered"
         android:icon="@drawable/ic_icons8_purchase_order_64"></item>
 
-    <item android:id="@+id/previous_order"
-        android:title="@string/previous_order"
-        android:visible="false"
-        android:icon="@drawable/previousicon"></item>
-
     <item android:id="@+id/refund_terms_policy"
         android:title="@string/refund_terms_policies"
         android:icon="@drawable/return_image"></item>

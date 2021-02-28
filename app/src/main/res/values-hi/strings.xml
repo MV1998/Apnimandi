@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Apni Mandi</string>
 
@@ -33,7 +34,7 @@
     <string name="frequent_asked_question">Frequently Asked Question</string>
     <string name="setting">Settings</string>
     <string name="choose_language">Choose Language</string>
-    <string name="about_footbite">About Apni Mandi</string>
+    <string name="about_footbite">About Dime Store</string>
     <string name="exit">Exit</string>
     <string name="fruits">Fruits</string>
     <string name="snacks">Snacks</string>
@@ -136,7 +137,7 @@
     <string name="shopByCategories">3) Shop by Categories:-</string>
     <string name="shopByCategoriesContent">3) Shop by Categories:-  i ) Click on \"Apni Mandi\" app\n ii ) Home page screen of Apni Mandi will soon appear\n iii ) Now click on the three small horizontal lines on top left of the menu bar.\n iv ) Click on \"Shop by Categories\"\n v ) All the categories will be displayed on your screen\n vi ) Just click on the category you are looking for and start shopping\n vii ) Add multiple items to your cart and then proceed to check out once you done with your shopping\n viii ) You will soon receive a confirmation call from our side.\n ix ) Once the order is confirmed, we will soon shipped your order to your doorstep\n</string>
     <string name="thanksForVisiting">Thank you for visiting, for further information and support feel free to email us on:\n mv501049@gmail.com</string>
-    <string name="thanksForVisitingContent">"Or simply call us on:\n 8602421385\n 7999646778 "</string>
+    <string name="thanksForVisitingContent">"Or simply call us on:\n 8602421385\n 8602421385 "</string>
     <string name="todo">TODO</string>
     <string name="OrderByPhone">OrderByPhone</string>
 

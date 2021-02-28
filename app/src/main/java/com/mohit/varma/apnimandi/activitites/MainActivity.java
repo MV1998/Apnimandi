@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mohit.varma.apnimandi.R;
+import com.mohit.varma.apnimandi.utilites.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     private FirebaseAuth firebaseAuth;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Handler handler = new Handler();
         firebaseAuth = FirebaseAuth.getInstance();
         splashRunner(handler, MainActivity.this);
+        preferenceManager = new PreferenceManager(MainActivity.this);
 
 //        if(sharedPreferences.getBoolean("firsttime",true)){
 //            handler.postDelayed(new Runnable() {
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
        if(firebaseAuth.getCurrentUser() != null) {
             if(firebaseAuth.getCurrentUser().isAnonymous()){
-                intent = new Intent(context, RegistrationActivity.class);
+                intent = new Intent(context, FootBiteActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }else {
@@ -81,9 +84,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } else {
-            intent = new Intent(context, RegistrationActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
+           if(preferenceManager.FirstLaunch()){
+               intent = new Intent(context, IntroSliderActivity.class);
+           }else{
+               intent = new Intent(context, FootBiteActivity.class);
+           }
+           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+           startActivity(intent);
+       }
     }
 }

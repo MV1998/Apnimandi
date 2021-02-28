@@ -31,6 +31,7 @@
         <TextView
             android:id="@+id/SingleItemViewItemCutOffPriceTextView"
             android:layout_width="wrap_content"
+            android:visibility="invisible"
             android:layout_height="wrap_content"
             android:text="40% Off"
             android:background="@color/green_color"
@@ -50,34 +51,35 @@
             android:padding="@dimen/_5sdp"
             android:layout_below="@id/SingleItemViewItemWeightTextView"></ImageView>
 
-        <TextView
-            android:id="@+id/SingleItemViewItemNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Patato"
-            android:textSize="@dimen/_12sdp"
-            android:textColor="@color/black"
-            android:layout_below="@id/SingleItemViewItemImageView"
-            android:layout_marginTop="@dimen/_5sdp"></TextView>
-
         <LinearLayout
             android:id="@+id/SingleItemViewLinearLayoutHorizontalContainerForItemPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
             android:orientation="horizontal"
-            android:layout_below="@id/SingleItemViewItemNameTextView"
+            android:layout_below="@id/SingleItemViewItemImageView"
             android:layout_centerHorizontal="true"
             android:padding="@dimen/_2sdp">
+
+            <TextView
+                android:id="@+id/SingleItemViewItemNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Patato"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"></TextView>
 
             <TextView
                 android:id="@+id/SingleItemViewItemFinalPriceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Rs. 100"
+                android:layout_marginLeft="@dimen/_5sdp"
                 android:textSize="@dimen/_12sdp"
                 android:textColor="@color/black"
-                android:layout_below="@id/SingleItemViewAddToCartItemImageView"
                 ></TextView>
 
         </LinearLayout>

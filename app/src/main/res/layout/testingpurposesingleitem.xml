@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:text="Deals \u0026 Offers"
                 android:textSize="18sp"
+                android:visibility="gone"
                 android:textColor="#000"
                 android:textStyle="bold"
                 android:padding="5dp"
@@ -38,6 +39,7 @@
                 android:layout_below="@id/home_sub_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
+                android:visibility="gone"
                 android:id="@+id/homeViewPager"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/_10sdp"></androidx.viewpager.widget.ViewPager>

@@ -51,6 +51,12 @@ import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class RegistrationActivity extends AppCompatActivity implements NetworkChangedCallBack {
@@ -253,6 +259,7 @@ public class RegistrationActivity extends AppCompatActivity implements NetworkCh
 
             }
         });
+
     }
 
     /**

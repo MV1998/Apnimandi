@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ee6002</color>
-    <color name="colorPrimaryDark">#e54304</color>
-    <color name="colorAccent">#fa8100</color>
+    <color name="colorPrimary">#ff0000</color>
+    <color name="colorPrimaryDark">#ff0000</color>
+    <color name="colorAccent">#ff0000</color>
     <color name="menuTextColor">#ffffff</color>
     <color name="white">#FFFFFF</color>
     <color name="color_category_txt_background">#D3FF6D00</color>
@@ -12,4 +12,33 @@
     <color name="strong_gray_color">#48DCDCDC</color>
     <color name="green_color">#4CAF50</color>
     <color name="light_black">#92000000</color>
+    <color name="screen1">#F44336</color>
+
+    <color name="screen2">#64DD17</color>
+
+    <color name="screen3">#9C27B0</color>
+    <array name="dot_on_page_active">
+
+        <item>#FFFFFF</item>
+
+        <item>#FFFFFF</item>
+
+        <item>#FFFFFF</item>
+
+        <item>#FFFFFF</item>
+
+        <item>#FFFFFF</item>
+    </array>
+    <array name="dot_on_page_not_active">
+
+        <item>#48DCDCDC</item>
+
+        <item>#48DCDCDC</item>
+
+        <item>#48DCDCDC</item>
+
+        <item>#48DCDCDC</item>
+
+        <item>#48DCDCDC</item>
+    </array>
 </resources>

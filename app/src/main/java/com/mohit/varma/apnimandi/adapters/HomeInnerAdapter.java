@@ -2,7 +2,6 @@ package com.mohit.varma.apnimandi.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.activitites.ItemDescriptionActivity;
@@ -144,9 +142,18 @@ public class HomeInnerAdapter extends RecyclerView.Adapter<HomeInnerAdapter.Cust
             @Override
             public void onClick(View v) {
                 try {
-                    Intent intent = new Intent(context, SingleOrderCheckoutActivity.class);
-                    intent.putExtra("uItem",uItemList.get(position));
-                    context.startActivity(intent);
+                    if(firebaseAuth != null){
+                        if(firebaseAuth.getCurrentUser() != null){
+                            if(!firebaseAuth.getCurrentUser().isAnonymous()){
+                                Intent intent = new Intent(context, SingleOrderCheckoutActivity.class);
+                                intent.putExtra("uItem",uItemList.get(position));
+                                context.startActivity(intent);
+                            }else{
+                                Intent intent = new Intent(context, RegistrationActivity.class);
+                                context.startActivity(intent);
+                            }
+                        }
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }

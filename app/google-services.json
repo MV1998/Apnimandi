@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "941859162585-oeukbu12e09sbiffestf49d3tqbn3spm.apps.googleusercontent.com",
+          "client_id": "941859162585-a9gv2e3o279uk2fo9faq089gj1qelpkb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.mohit.varma.apnimandi",
-            "certificate_hash": "a6842159da87d8a65bf0edac1268b219067fff6b"
+            "certificate_hash": "66362653250d8398884c305e775c9a73e51d1e40"
           }
         },
         {

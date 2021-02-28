@@ -19,10 +19,12 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.adapters.ItemAdapter;
 import com.mohit.varma.apnimandi.database.MyFirebaseDatabase;
@@ -56,6 +58,7 @@ public class ProteinActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private View ProteinActivityRootView;
     private Session session;
+    private FirebaseAuth firebaseAuth;
     private List<UCart> uCartList;
 
     @Override
@@ -165,6 +168,7 @@ public class ProteinActivity extends AppCompatActivity {
         ProteinActivitySearchCardView = findViewById(R.id.ProteinActivitySearchCardView);
         ProteinActivityQueryHint = findViewById(R.id.ProteinActivityQueryHint);
         this.context = this;
+        this.firebaseAuth = MyApplication.getFirebaseAuth();
         progressDialog = new ProgressDialog(context);
         this.session = new Session(context);
     }
@@ -236,8 +240,18 @@ public class ProteinActivity extends AppCompatActivity {
         switch (id) {
             case R.id.EachCategoryAddToCart:
                 if (IsInternetConnectivity.isConnected(context)) {
-                    Intent intent = new Intent(context, AddToCartActivity.class);
-                    startActivity(intent);
+                    if(firebaseAuth != null){
+                        if(firebaseAuth.getCurrentUser() != null){
+                            if(!firebaseAuth.getCurrentUser().isAnonymous()){
+                                Intent intent = new Intent(context, AddToCartActivity.class);
+                                startActivity(intent);
+                            }else{
+                                Intent intent = new Intent(context, RegistrationActivity.class);
+                                context.startActivity(intent);
+                            }
+                        }
+                    }
+
                 } else {
                     ShowSnackBar.snackBar(context, ProteinActivityRootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                 }

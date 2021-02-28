@@ -33,16 +33,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.mohit.varma.apnimandi.MyApplication;
 import com.mohit.varma.apnimandi.R;
 import com.mohit.varma.apnimandi.fragments.CategoryFragment;
 import com.mohit.varma.apnimandi.fragments.FrequentlyAskedQuestionFragment;
 import com.mohit.varma.apnimandi.fragments.HomeFragment;
-import com.mohit.varma.apnimandi.fragments.PreviousOrderFragment;
+import com.mohit.varma.apnimandi.fragments.NewCategoryFragment;
 import com.mohit.varma.apnimandi.fragments.RefundTermsPolicyFragment;
 import com.mohit.varma.apnimandi.interfaces.NetworkChangedCallBack;
-import com.mohit.varma.apnimandi.model.Orders;
 import com.mohit.varma.apnimandi.model.UserAddress;
 import com.mohit.varma.apnimandi.utilites.Constants;
 import com.mohit.varma.apnimandi.utilites.IsInternetConnectivity;
@@ -50,11 +48,7 @@ import com.mohit.varma.apnimandi.utilites.Session;
 import com.mohit.varma.apnimandi.utilites.ShowSnackBar;
 import com.mohit.varma.apnimandi.utilites.Webservice;
 
-import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class FootBiteActivity extends AppCompatActivity {
 
@@ -114,12 +108,12 @@ public class FootBiteActivity extends AppCompatActivity {
                     }
                     Toast.makeText(this, "Hello" + firebaseAuth.getCurrentUser().getPhoneNumber(), Toast.LENGTH_SHORT).show();
                     UserAddress userAddress = session.getAddress();
-                    if(userAddress != null){
-                        if(userAddress.getUserName()!= null && !userAddress.getUserName().isEmpty()){
-                            mCustomerName.setText(session.getAddress().getUserName()+"");
+                    if (userAddress != null) {
+                        if (userAddress.getUserName() != null && !userAddress.getUserName().isEmpty()) {
+                            mCustomerName.setText(session.getAddress().getUserName() + "");
                         }
                     }
-                }else {
+                } else {
                     Toast.makeText(FootBiteActivity.this, Constants.getStringFromID(context, R.string.anonymous_welcome_msg), Toast.LENGTH_SHORT).show();
                     mCustomerName.setText(context.getResources().getString(R.string.anonymous));
                 }
@@ -150,7 +144,7 @@ public class FootBiteActivity extends AppCompatActivity {
                     case R.id.Category:
                         if (IsInternetConnectivity.isConnected(context)) {
                             drawerLayout.closeDrawers();
-                            fragment = new CategoryFragment();
+                            fragment = new NewCategoryFragment();
                             setFragment(fragment);
                         } else {
                             ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
@@ -173,11 +167,6 @@ public class FootBiteActivity extends AppCompatActivity {
                         } else {
                             ShowSnackBar.snackBar(context, rootView, context.getResources().getString(R.string.please_check_internet_connectivity));
                         }
-                        break;
-                    case R.id.previous_order:
-                        drawerLayout.closeDrawers();
-                        fragment = new PreviousOrderFragment();
-                        setFragment(fragment);
                         break;
                     case R.id.refund_terms_policy:
                         drawerLayout.closeDrawers();
@@ -222,6 +211,12 @@ public class FootBiteActivity extends AppCompatActivity {
             return true;
         }
         switch (item.getItemId()) {
+            case R.id.orderByImage:
+                openImageActivity();
+                break;
+            case R.id.orderByPhone:
+                openPhoneActivity();
+                break;
             case R.id.setting:
                 break;
             case R.id.language:
@@ -239,7 +234,7 @@ public class FootBiteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        toolbar.setTitle("FootBite");
+        toolbar.setTitle("Apnimandi");
         toolbar.setTitleTextColor(Color.parseColor("#ffffff"));
     }
 
@@ -275,7 +270,6 @@ public class FootBiteActivity extends AppCompatActivity {
     public void showAddToCartAndPreviousSection(Menu menu) {
         if (menu != null) {
             menu.findItem(R.id.cart).setVisible(true);
-            menu.findItem(R.id.previous_order).setVisible(true);
             menu.findItem(R.id.logout).setVisible(true);
             menu.findItem(R.id.myOrdered).setVisible(true);
         }
@@ -297,18 +291,23 @@ public class FootBiteActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                doubleBackToExitPressedOnce=false;
+                doubleBackToExitPressedOnce = false;
             }
         }, 2000);
     }
 
-    public void setDeliveryChargeToSharedPreference(){
+    public void setDeliveryChargeToSharedPreference() {
         databaseReference.child("Admin").child("deliveryFee").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.getValue() != null) {
                         long deliveryFee = (long) dataSnapshot.getValue();
+                        if(deliveryFee == 50){
+                            Log.d(TAG, "onDataChange: open");
+                        }else{
+                            Log.d(TAG, "onDataChange: close");
+                        }
                         session.setDeliveryCharge(deliveryFee);
                     }
                 }
@@ -319,5 +318,15 @@ public class FootBiteActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void openImageActivity() {
+        Intent intent = new Intent(context, OrderByImageActivity.class);
+        startActivity(intent);
+    }
+
+    public void openPhoneActivity(){
+        Intent intent = new Intent(context, OrderByPhoneActivity.class);
+        startActivity(intent);
     }
 }
